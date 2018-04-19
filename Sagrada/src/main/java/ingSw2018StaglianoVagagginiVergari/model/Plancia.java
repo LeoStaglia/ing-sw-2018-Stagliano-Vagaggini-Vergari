@@ -1,4 +1,4 @@
-package model;
+package ingSw2018StaglianoVagagginiVergari.model;
 
 public class Plancia {
     private String colore;
