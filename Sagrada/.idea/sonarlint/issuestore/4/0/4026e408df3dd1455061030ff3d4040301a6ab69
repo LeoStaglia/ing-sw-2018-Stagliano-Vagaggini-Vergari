@@ -1,0 +1,6 @@
+
+Dsquid:S1068"*Remove this unused "colore" private field.(ÎªÄ·úÿÿÿÿ
+Isquid:S1068"/Remove this unused "cartaSchema" private field.(¬œáÆüÿÿÿÿ
+tsquid:S1450"ZRemove the "cartaSchema" field and declare it as a local variable in the relevant methods.(¬œáÆüÿÿÿÿ
+esquid:CommentedOutCodeLine"<This block of commented-out lines of code should be removed.(Ü¸„‹øÿÿÿÿ
+msquid:S00120"WRename this package name to match the regular expression '^[a-z]+(\.[a-z][a-z0-9]*)*$'.(Ã¿ù—
