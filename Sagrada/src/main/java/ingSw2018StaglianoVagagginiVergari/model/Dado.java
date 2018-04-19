@@ -1,4 +1,4 @@
-package Model;
+package ingSw2018StaglianoVagagginiVergari.model;
 
 import java.util.ArrayList;
 import java.util.List;
