@@ -6,9 +6,9 @@ public class TracciatoDelRound {
         private int roundAttuale;
 
         // rimanenzeRiserva out are the dice that remained in the Draft Pool after the end of the round except for one
-        private Set<Dado> rimanenzeRiservaOut=new HashSet<Dado>();
+        private HashSet<Dado> rimanenzeRiservaOut=new HashSet<Dado>();
         // rimanenzeRiserva on are the dice that cover the Round Track
-        private List<Dado>rimanenzeRiservaOn=new ArrayList<Dado>();
+        private ArrayList<Dado>rimanenzeRiservaOn=new ArrayList<Dado>();
 
         public int getRoundAttuale(){
             return roundAttuale;
@@ -29,6 +29,10 @@ public class TracciatoDelRound {
         public Dado getRimanenzeRiservaOn(int i){
             return this.rimanenzeRiservaOn.get(i-1);
         }
+
+         public HashSet<Dado> getRimanenzeRiservaOut(){
+         return this.rimanenzeRiservaOut;
+         }
 
         // method used to calculate the TargetScore(singlePlayer)
         public int calcolaSommaRimanenzeRiserva(){
