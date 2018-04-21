@@ -1,5 +1,7 @@
 package ingSw2018StaglianoVagagginiVergari.model;
 
+import ingSw2018StaglianoVagagginiVergari.model.carteSchema.CartaSchema;
+
 public class Plancia {
     private String colore;
     private CartaSchema cartaSchema;
