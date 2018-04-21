@@ -1,4 +1,6 @@
-package ingSw2018StaglianoVagagginiVergari.model;
+package ingSw2018StaglianoVagagginiVergari.model.carteSchema;
+
+import ingSw2018StaglianoVagagginiVergari.model.Constraint;
 
 import java.io.Serializable;
 
@@ -32,25 +34,5 @@ public abstract class CartaSchema implements Serializable{
         this.fronteScelto=fronteScelto;
     }
 
-
-    public void stampaCarta(){
-        if (fronteScelto){
-            for(int i=0; i<fronte.length; i++){
-                for (int j=0; j<fronte[i].length; j++){
-                    if (j<=fronte[i].length-2)
-                        System.out.print(fronte[i][j].getDescrizione()+" ");
-                    else if(j==fronte[i].length-1){
-                        System.out.println(fronte[i][j].getDescrizione());
-                    }
-                }
-            }
-        }else{
-            for(int i=0; i<retro.length; i++) {
-                for (int j = 0; j < retro[i].length; j++) {
-                    System.out.println(retro[i][j].getDescrizione());
-                }
-            }
-        }
-    }
 
 }

@@ -1,4 +1,6 @@
-package ingSw2018StaglianoVagagginiVergari.model;
+package ingSw2018StaglianoVagagginiVergari.model.carteSchema;
+
+import ingSw2018StaglianoVagagginiVergari.model.Constraint;
 
 import java.io.Serializable;
 import java.util.ArrayList;
