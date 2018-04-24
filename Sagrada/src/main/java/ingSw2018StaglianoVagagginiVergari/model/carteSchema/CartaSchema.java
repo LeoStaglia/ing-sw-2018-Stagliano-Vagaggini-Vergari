@@ -4,7 +4,7 @@ import ingSw2018StaglianoVagagginiVergari.model.Constraint;
 
 import java.io.Serializable;
 
-public abstract class CartaSchema implements Serializable{
+public abstract class CartaSchema implements Serializable, Schema{
     private String nomeFronte;
     private String nomeRetro;
     private int difficoltaFronte;
@@ -34,5 +34,13 @@ public abstract class CartaSchema implements Serializable{
         this.fronteScelto=fronteScelto;
     }
 
+    @Override
+    public int getDifficoltaFronte() {
+        return difficoltaFronte;
+    }
 
+    @Override
+    public int getDifficoltaRetro() {
+        return difficoltaRetro;
+    }
 }
