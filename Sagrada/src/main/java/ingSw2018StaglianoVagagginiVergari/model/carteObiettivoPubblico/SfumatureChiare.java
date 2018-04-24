@@ -1,10 +1,12 @@
 package ingSw2018StaglianoVagagginiVergari.model.carteObiettivoPubblico;
-import ingSw2018StaglianoVagagginiVergari.model.*;
 
-public class SfumatureChiare implements CartaObiettivoPubblico{
+import ingSw2018StaglianoVagagginiVergari.model.CartaObiettivoPubblico;
+import ingSw2018StaglianoVagagginiVergari.model.Plancia;
+
+public class SfumatureChiare implements CartaObiettivoPubblico {
+
     private final int puntiVittoria = 2;
     private final String nome = "SfumatureChiare";
-
 
     //----------------------------all this part is required for Singleton Pattern----------------------------------
 
@@ -16,7 +18,6 @@ public class SfumatureChiare implements CartaObiettivoPubblico{
     public static SfumatureChiare getInstance(){
         return instance;
     }
-
 
     //----------------------------
 
@@ -38,11 +39,17 @@ public class SfumatureChiare implements CartaObiettivoPubblico{
 
         for (int i=0; i<4; i++){
             for(int j=0; j<5; j++){
-                if (planciagioco.leggiPlancia(i,j).getNumero()==1)
-                    uno=uno+1;
-                if (planciagioco.leggiPlancia(i,j).getNumero()==2)
-                    due=due+1;
 
+                if (planciagioco.leggiPlancia(i,j) != null){
+
+
+                    if (planciagioco.leggiPlancia(i,j).getNumero()==1)
+                        uno=uno+1;
+                    if (planciagioco.leggiPlancia(i,j).getNumero()==2)
+                        due=due+1;
+
+
+                }
             }
         }
 
@@ -52,6 +59,7 @@ public class SfumatureChiare implements CartaObiettivoPubblico{
             return due*puntiVittoria;
 
     }
-        
+
+
 
 }

@@ -2,7 +2,7 @@ package ingSw2018StaglianoVagagginiVergari.model;
 import ingSw2018StaglianoVagagginiVergari.model.carteObiettivoPubblico.*;
 
 public class FactoryCartaObiettivoPubblico {
-    public CartaObiettivoPubblico getCartaObiettivoPubblico(int Id){
+    public static CartaObiettivoPubblico getCartaObiettivoPubblico(int Id){
 
 
         if(Id == 1){  //ColoriDiversiRiga

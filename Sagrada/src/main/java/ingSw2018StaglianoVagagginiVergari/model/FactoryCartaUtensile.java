@@ -5,7 +5,7 @@ import ingSw2018StaglianoVagagginiVergari.model.carteUtensile.*;
 public class FactoryCartaUtensile {
 
 
-    public CartaUtensile getCartaUtensile(int Id){
+    public static CartaUtensile getCartaUtensile(int Id){
 
         if(Id == 1){ //PinzaSgrossatrice
             return PennelloPerEglomise.getInstance();            //chiamata per instanziare un singleton
