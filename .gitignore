@@ -23,3 +23,5 @@ hs_err_pid*
 
 #ignore automatic file generated in MAC OS
 .DS_Store
+#ignore idea folder
+**/.idea/

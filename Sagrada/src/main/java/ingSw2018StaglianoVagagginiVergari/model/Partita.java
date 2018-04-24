@@ -12,7 +12,7 @@ public class Partita {
     private List<Dado> sacchetto = new ArrayList<Dado>();
 
     private List<Utente> listaGiocatori = new ArrayList<Utente>();
-    private Utente giocatoreCorrente = new Utente();  // currentPlayer
+    private Utente giocatoreCorrente;  // currentPlayer
 
     ArrayList<Utente> ordineRound = new ArrayList<Utente>();  // mantiene l'ordine del round
 
