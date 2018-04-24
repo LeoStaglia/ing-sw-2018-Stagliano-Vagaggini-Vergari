@@ -44,7 +44,7 @@ public class Utente implements Serializable{
         }
         return risultato;
     }
-    public void scegliFacciaSchema(boolean fronteScelto){
+   /*TODO public void scegliFacciaSchema(boolean fronteScelto){
 
         plancia.getCartaSchema().scegliFaccia(fronteScelto);
         if (fronteScelto){
@@ -55,6 +55,7 @@ public class Utente implements Serializable{
 
 
     }
+    TODO*/
     public Plancia getPlancia(){
         return plancia;
     }
