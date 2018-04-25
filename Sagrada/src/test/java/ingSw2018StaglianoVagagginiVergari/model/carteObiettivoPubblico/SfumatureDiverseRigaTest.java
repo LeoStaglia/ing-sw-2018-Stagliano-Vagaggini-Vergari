@@ -1,24 +1,18 @@
 package ingSw2018StaglianoVagagginiVergari.model.carteObiettivoPubblico;
 
-
 import ingSw2018StaglianoVagagginiVergari.model.CartaObiettivoPubblico;
 import ingSw2018StaglianoVagagginiVergari.model.Dado;
 import ingSw2018StaglianoVagagginiVergari.model.FactoryCartaObiettivoPubblico;
 import ingSw2018StaglianoVagagginiVergari.model.Plancia;
-
-
 import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
 import org.mockito.Mockito;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.when;
 
-class SfumatureChiareTest {
+class SfumatureDiverseRigaTest {
     @Test
     void getInstance() {
-
-
     }
 
     @Test
@@ -32,7 +26,7 @@ class SfumatureChiareTest {
     @Test
     void calcolaPunti() {
 
-        CartaObiettivoPubblico carta1 = FactoryCartaObiettivoPubblico.getCartaObiettivoPubblico(5);
+        CartaObiettivoPubblico carta1 = FactoryCartaObiettivoPubblico.getCartaObiettivoPubblico(3);
 
 
 
@@ -63,20 +57,20 @@ class SfumatureChiareTest {
 
         int[][][] MatriceValoriDadiTest = {     //  ogni riga corrisponde ai valori dei dadi rispetto al test
 
-                {{1, 2, 1, 2, 1}, {2, 1, 2, 1, 2}, {1, 2, 1, 2, 1}, {2, 1, 2, 1, 0}}, // test 0
+                {{1,2,3,4,5}, {1,2,3,4,5}, {1,2,3,4,5}, {2,3,4,0,0}}, // test 0
 
-                {{1, 1, 1, 1, 1}, {1, 1, 1, 1, 1}, {1, 1, 1, 1, 1}, {1, 1, 1, 1, 1}}, // test 1
+                {{0,0,0,0,0}, {5,5,5,5,5}, {5,5,5,5,5}, {5,5,5,5,5}}, // test 1
 
-                {{2, 2, 2, 2, 2}, {2, 2, 2, 2, 2}, {1, 1, 1, 1, 1}, {0, 0, 0, 0, 0}}, // test 2
+                {{6,6,6,6,6}, {1,2,3,4,5}, {5,5,5,5,5}, {0, 0, 0, 0, 0}}, // test 2
 
 
         };
 
 
         int [] MatriceRisultati = {
-                18,  //risultato del test 0
+                15,  //risultato del test 0
                 0,    //risultato del test 1
-                10   //risultato del test 2
+                5   //risultato del test 2
         };
 
         for (int TestCorrente=0; TestCorrente<NumeroTest;TestCorrente++){
@@ -104,7 +98,5 @@ class SfumatureChiareTest {
 
 
     }
-
-
 
 }

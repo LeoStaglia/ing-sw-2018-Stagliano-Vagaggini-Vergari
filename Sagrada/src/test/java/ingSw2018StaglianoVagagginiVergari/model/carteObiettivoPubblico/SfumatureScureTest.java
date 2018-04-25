@@ -1,24 +1,18 @@
 package ingSw2018StaglianoVagagginiVergari.model.carteObiettivoPubblico;
 
-
 import ingSw2018StaglianoVagagginiVergari.model.CartaObiettivoPubblico;
 import ingSw2018StaglianoVagagginiVergari.model.Dado;
 import ingSw2018StaglianoVagagginiVergari.model.FactoryCartaObiettivoPubblico;
 import ingSw2018StaglianoVagagginiVergari.model.Plancia;
-
-
 import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
 import org.mockito.Mockito;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.when;
 
-class SfumatureChiareTest {
+class SfumatureScureTest {
     @Test
     void getInstance() {
-
-
     }
 
     @Test
@@ -32,7 +26,7 @@ class SfumatureChiareTest {
     @Test
     void calcolaPunti() {
 
-        CartaObiettivoPubblico carta1 = FactoryCartaObiettivoPubblico.getCartaObiettivoPubblico(5);
+        CartaObiettivoPubblico carta1 = FactoryCartaObiettivoPubblico.getCartaObiettivoPubblico(7);
 
 
 
@@ -63,11 +57,11 @@ class SfumatureChiareTest {
 
         int[][][] MatriceValoriDadiTest = {     //  ogni riga corrisponde ai valori dei dadi rispetto al test
 
-                {{1, 2, 1, 2, 1}, {2, 1, 2, 1, 2}, {1, 2, 1, 2, 1}, {2, 1, 2, 1, 0}}, // test 0
+                {{5,6,5,6,5}, {6,5,6,5,6}, {5,6,5,6,5}, {6,5,6,0,0}}, // test 0
 
-                {{1, 1, 1, 1, 1}, {1, 1, 1, 1, 1}, {1, 1, 1, 1, 1}, {1, 1, 1, 1, 1}}, // test 1
+                {{5,5,5,5,5}, {5,5,5,5,5}, {5,5,5,5,5}, {5,5,5,5,5}}, // test 1
 
-                {{2, 2, 2, 2, 2}, {2, 2, 2, 2, 2}, {1, 1, 1, 1, 1}, {0, 0, 0, 0, 0}}, // test 2
+                {{6,6,6,6,6}, {6,6,6,6,6}, {5,5,5,5,5}, {0, 0, 0, 0, 0}}, // test 2
 
 
         };
@@ -104,7 +98,5 @@ class SfumatureChiareTest {
 
 
     }
-
-
 
 }

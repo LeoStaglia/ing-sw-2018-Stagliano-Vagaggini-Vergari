@@ -2,38 +2,39 @@ package ingSw2018StaglianoVagagginiVergari.model;
 import ingSw2018StaglianoVagagginiVergari.model.carteObiettivoPubblico.*;
 
 public class FactoryCartaObiettivoPubblico {
+
     public static CartaObiettivoPubblico getCartaObiettivoPubblico(int Id){
 
 
         if(Id == 1){  //ColoriDiversiRiga
-            return SfumatureChiare.getInstance();        //chiamata per instanziare un singleton
+            return ColoriDiversiRiga.getInstance();
 
         } else if(Id == 2){ //ColoriDiversiColonna
-            return SfumatureChiare.getInstance();
+            return ColoriDiversiColonna.getInstance();
 
         } else if(Id == 3){ //SfumatureDiverseRiga
-            return SfumatureChiare.getInstance();
+            return SfumatureDiverseRiga.getInstance();
 
         } else if(Id == 4){ //SfumatureDiverseColonna
-            return SfumatureChiare.getInstance();
+            return SfumatureDiverseColonna.getInstance();
 
         } else if(Id == 5){ //SfumatureChiare
             return SfumatureChiare.getInstance();
 
         } else if(Id == 6){ //SfumatureMedie
-            return SfumatureChiare.getInstance();
+            return SfumatureMedie.getInstance();
 
         } else if(Id == 7){ //SfumatureScure
-            return SfumatureChiare.getInstance();
+            return SfumatureScure.getInstance();
 
         } else if(Id == 8){ //SfumatureDiverse
-            return SfumatureChiare.getInstance();
-
+            return SfumatureDiverse.getInstance();
+/*TODO
         } else if(Id == 9){ //DiagonaliColorate
-            return SfumatureChiare.getInstance();
-
+            return DiagonaliColorate.getInstance();
+*/
         } else if(Id == 10){ //VarietaDiColore
-            return SfumatureChiare.getInstance();
+            return VarietaDiColore.getInstance();
 
         }
 
@@ -41,7 +42,7 @@ public class FactoryCartaObiettivoPubblico {
     }
 
 
-    }
+}
 
 
 

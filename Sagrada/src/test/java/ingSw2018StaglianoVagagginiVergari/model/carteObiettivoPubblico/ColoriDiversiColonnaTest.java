@@ -1,24 +1,19 @@
 package ingSw2018StaglianoVagagginiVergari.model.carteObiettivoPubblico;
 
-
 import ingSw2018StaglianoVagagginiVergari.model.CartaObiettivoPubblico;
 import ingSw2018StaglianoVagagginiVergari.model.Dado;
 import ingSw2018StaglianoVagagginiVergari.model.FactoryCartaObiettivoPubblico;
 import ingSw2018StaglianoVagagginiVergari.model.Plancia;
 
-
 import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
 import org.mockito.Mockito;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.when;
 
-class SfumatureChiareTest {
+class ColoriDiversiColonnaTest {
     @Test
     void getInstance() {
-
-
     }
 
     @Test
@@ -32,7 +27,7 @@ class SfumatureChiareTest {
     @Test
     void calcolaPunti() {
 
-        CartaObiettivoPubblico carta1 = FactoryCartaObiettivoPubblico.getCartaObiettivoPubblico(5);
+        CartaObiettivoPubblico carta1 = FactoryCartaObiettivoPubblico.getCartaObiettivoPubblico(2);
 
 
 
@@ -46,7 +41,7 @@ class SfumatureChiareTest {
         * inside the game board in a row of the MatriceValoriDadiTest and insert
         * the correct result inside the Matrix MatriceRisultati
         *
-        * If you want to insert a "null dice", just insert 0 in the MatriceValoriDadiTest
+        * If you want to insert a "null dice", just insert "n" in the MatriceValoriDadiTest
         *
         *
         * */
@@ -60,23 +55,25 @@ class SfumatureChiareTest {
 
         Dado[][][] MatriceDadi = new Dado[NumeroTest][4][5];
 
+        //g r b y p
 
-        int[][][] MatriceValoriDadiTest = {     //  ogni riga corrisponde ai valori dei dadi rispetto al test
 
-                {{1, 2, 1, 2, 1}, {2, 1, 2, 1, 2}, {1, 2, 1, 2, 1}, {2, 1, 2, 1, 0}}, // test 0
+        String[][][] MatriceColoriDadiTest = {     //  ogni riga corrisponde ai valori dei dadi rispetto al test
 
-                {{1, 1, 1, 1, 1}, {1, 1, 1, 1, 1}, {1, 1, 1, 1, 1}, {1, 1, 1, 1, 1}}, // test 1
+                {{"verde","n","n","n","n"}, {"verde","giallo","rosso","blu","viola"}, {"n","n","n","n","n"}, {"giallo","blu","n","","n"}}, // test 0
 
-                {{2, 2, 2, 2, 2}, {2, 2, 2, 2, 2}, {1, 1, 1, 1, 1}, {0, 0, 0, 0, 0}}, // test 2
+                {{"verde","n","n","n","viola"}, {"rosso","blu","n","n","n"}, {"verde","verde","blu","n","n"}, {"verde","n","n","n","n"}}, // test 1
+
+                {{"verde","giallo","rosso","blu","viola"}, {"rosso","giallo","rosso","blu","viola"}, {"giallo","n","n","n","n"}, {"blu","n","n","n","blu"}}, // test 2
 
 
         };
 
 
         int [] MatriceRisultati = {
-                18,  //risultato del test 0
+                0,  //risultato del test 0
                 0,    //risultato del test 1
-                10   //risultato del test 2
+                5   //risultato del test 2
         };
 
         for (int TestCorrente=0; TestCorrente<NumeroTest;TestCorrente++){
@@ -84,7 +81,7 @@ class SfumatureChiareTest {
                 for(int j=0;j<5;j++){
 
 
-                    if(MatriceValoriDadiTest[TestCorrente][i][j]!= 0)
+                    if(MatriceColoriDadiTest[TestCorrente][i][j]!= "n")  //se non è null
                         MatriceDadi[TestCorrente][i][j] = Mockito.mock(Dado.class);  //viene mockato l'oggetto dado
                     else {
                         MatriceDadi[TestCorrente][i][j] = null;
@@ -93,7 +90,7 @@ class SfumatureChiareTest {
                     when(plancia1.leggiPlancia(i,j)).thenReturn(MatriceDadi[TestCorrente][i][j]);
 
                     if (MatriceDadi[TestCorrente][i][j] != null)
-                        when(MatriceDadi[TestCorrente][i][j].getNumero()).thenReturn(MatriceValoriDadiTest[TestCorrente][i][j]);
+                        when(MatriceDadi[TestCorrente][i][j].getColore()).thenReturn(MatriceColoriDadiTest[TestCorrente][i][j]);
 
                 }
             }
@@ -104,7 +101,5 @@ class SfumatureChiareTest {
 
 
     }
-
-
 
 }
