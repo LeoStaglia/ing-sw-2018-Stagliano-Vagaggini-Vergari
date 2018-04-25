@@ -1,13 +1,12 @@
 package ingSw2018StaglianoVagagginiVergari.model;
 
-import ingSw2018StaglianoVagagginiVergari.model.*;
 import ingSw2018StaglianoVagagginiVergari.model.carteSchema.Schema;
 import ingSw2018StaglianoVagagginiVergari.model.carteSchema.ViaLux;
 import ingSw2018StaglianoVagagginiVergari.model.carteSchema.Virtus;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.Exceptions.MossaIllegaleException;
+import Eccezioni.MossaIllegaleException;
 
 import  static org.mockito.Mockito.*;
 

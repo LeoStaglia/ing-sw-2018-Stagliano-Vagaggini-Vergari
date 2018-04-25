@@ -23,9 +23,5 @@ class UtenteTest {
 
     }
 
-    @Test
-    void scegliFacciaSchema() {
-    }
-
 
 }

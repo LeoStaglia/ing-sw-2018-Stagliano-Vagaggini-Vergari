@@ -1,4 +1,4 @@
-package java.Exceptions;
+package Eccezioni;
 
 public class MossaIllegaleException extends Exception{
 
