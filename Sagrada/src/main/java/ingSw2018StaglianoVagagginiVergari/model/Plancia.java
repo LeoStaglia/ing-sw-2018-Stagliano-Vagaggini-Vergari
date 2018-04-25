@@ -1,6 +1,6 @@
 package ingSw2018StaglianoVagagginiVergari.model;
 
-import java.Exceptions.*;
+import java.*;
 
 import Eccezioni.MossaIllegaleException;
 import ingSw2018StaglianoVagagginiVergari.model.carteSchema.Schema;
