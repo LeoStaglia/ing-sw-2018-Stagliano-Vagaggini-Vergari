@@ -1,6 +1,6 @@
 package ingSw2018StaglianoVagagginiVergari.model;
 
-import model.carteSchema.KaleidoscopicDream;
+import ingSw2018StaglianoVagagginiVergari.model.carteSchema.KaleidoscopicDream;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;

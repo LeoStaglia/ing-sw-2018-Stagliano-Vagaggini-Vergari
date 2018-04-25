@@ -39,7 +39,7 @@ public class Utente implements Serializable{
         risultato.addAll(obiettivoPrivato);
         return risultato;
     }
-   /*TODO public void scegliFacciaSchema(boolean fronteScelto){
+   public void scegliFacciaSchema(boolean fronteScelto){
 
         plancia.getCartaSchema().scegliFaccia(fronteScelto);
         if (fronteScelto){
@@ -50,7 +50,6 @@ public class Utente implements Serializable{
 
 
     }
-    TODO*/
     public Plancia getPlancia(){
         return plancia;
     }
