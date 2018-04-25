@@ -29,10 +29,10 @@ public class FactoryCartaObiettivoPubblico {
 
         } else if(Id == 8){ //SfumatureDiverse
             return SfumatureDiverse.getInstance();
-/*TODO
+
         } else if(Id == 9){ //DiagonaliColorate
             return DiagonaliColorate.getInstance();
-*/
+
         } else if(Id == 10){ //VarietaDiColore
             return VarietaDiColore.getInstance();
 
