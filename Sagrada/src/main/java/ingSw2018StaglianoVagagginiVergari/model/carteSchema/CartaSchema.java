@@ -43,4 +43,12 @@ public abstract class CartaSchema implements Serializable, Schema{
     public int getDifficoltaRetro() {
         return difficoltaRetro;
     }
+
+    public String getNomeFronte() {
+        return nomeFronte;
+    }
+
+    public String getNomeRetro() {
+        return nomeRetro;
+    }
 }

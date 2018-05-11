@@ -1,6 +1,5 @@
 package ingSw2018StaglianoVagagginiVergari.model;
 
-import java.*;
 
 import Eccezioni.MossaIllegaleException;
 import ingSw2018StaglianoVagagginiVergari.model.carteSchema.Schema;
@@ -56,12 +55,12 @@ public class Plancia implements Serializable {
     the first move on the grid.
      */
 
-    private void setCelleAdiacenti(int i, int j, Dado dadoSelezionato) {
+    private void setCelleAdiacenti(int i, int j, Dado dadoSelezionato, boolean attivaUtensile2, boolean attivaUtensile3) {
         if (grigliaGioco[i][j] != null) {
             piazzamentiPermessi[i][j] = false;
 
             if (i == 0 && j == 0) {
-                if (grigliaGioco[i][j + 1] == null && (cartaSchema.getRestrizione(i, j + 1) == Constraint.NONE || cartaSchema.getRestrizione(i, j + 1).getDescrizione().equals(dadoSelezionato.getColore()) || cartaSchema.getRestrizione(i, j + 1).getDescrizione().equals(new Integer(dadoSelezionato.getNumero()).toString()))) {
+                if (grigliaGioco[i][j + 1] == null && (cartaSchema.getRestrizione(i, j + 1) == Constraint.NONE || (cartaSchema.getRestrizione(i, j + 1).getDescrizione().equals(dadoSelezionato.getColore()) || attivaUtensile2) || (cartaSchema.getRestrizione(i, j + 1).getDescrizione().equals(new Integer(dadoSelezionato.getNumero()).toString()) || attivaUtensile3))) {
                     if (!(grigliaGioco[i][j].getNumero() == dadoSelezionato.getNumero() || grigliaGioco[i][j].getColore().equals(dadoSelezionato.getColore()))) {
                         if (piazzamentiPermessi[i][j + 1] == null) {
                             piazzamentiPermessi[i][j + 1] = true;
@@ -72,7 +71,7 @@ public class Plancia implements Serializable {
                 } else {
                     piazzamentiPermessi[i][j + 1] = false;
                 }
-                if (grigliaGioco[i + 1][j] == null && (cartaSchema.getRestrizione(i + 1, j) == Constraint.NONE || cartaSchema.getRestrizione(i + 1, j).getDescrizione().equals(dadoSelezionato.getColore()) || cartaSchema.getRestrizione(i + 1, j).getDescrizione().equals(new Integer(dadoSelezionato.getNumero()).toString()))) {
+                if (grigliaGioco[i + 1][j] == null && (cartaSchema.getRestrizione(i + 1, j) == Constraint.NONE || (cartaSchema.getRestrizione(i + 1, j).getDescrizione().equals(dadoSelezionato.getColore()) || attivaUtensile2) || (cartaSchema.getRestrizione(i + 1, j).getDescrizione().equals(new Integer(dadoSelezionato.getNumero()).toString()) || attivaUtensile3))) {
                     if (!(grigliaGioco[i][j].getNumero() == dadoSelezionato.getNumero() || grigliaGioco[i][j].getColore().equals(dadoSelezionato.getColore()))) {
                         if (piazzamentiPermessi[i + 1][j] == null) {
                             piazzamentiPermessi[i + 1][j] = true;
@@ -84,7 +83,7 @@ public class Plancia implements Serializable {
                     piazzamentiPermessi[i + 1][j] = false;
 
                 }
-                if (grigliaGioco[i + 1][j + 1] == null && (cartaSchema.getRestrizione(i + 1, j + 1) == Constraint.NONE || cartaSchema.getRestrizione(i + 1, j + 1).getDescrizione().equals(dadoSelezionato.getColore()) || cartaSchema.getRestrizione(i + 1, j + 1).getDescrizione().equals(new Integer(dadoSelezionato.getNumero()).toString()))) {
+                if (grigliaGioco[i + 1][j + 1] == null && (cartaSchema.getRestrizione(i + 1, j + 1) == Constraint.NONE || (cartaSchema.getRestrizione(i + 1, j + 1).getDescrizione().equals(dadoSelezionato.getColore()) || attivaUtensile2) || (cartaSchema.getRestrizione(i + 1, j + 1).getDescrizione().equals(new Integer(dadoSelezionato.getNumero()).toString()) || attivaUtensile3))) {
                     if (piazzamentiPermessi[i + 1][j + 1] == null) {
 
                         piazzamentiPermessi[i + 1][j + 1] = true;
@@ -93,7 +92,7 @@ public class Plancia implements Serializable {
                     piazzamentiPermessi[i+1][j+1]=false;
                 }
             } else if (i == 0 && j < 4 && j > 0) {
-                if (grigliaGioco[i][j - 1] == null && (cartaSchema.getRestrizione(i, j - 1) == Constraint.NONE || cartaSchema.getRestrizione(i, j - 1).getDescrizione().equals(dadoSelezionato.getColore()) || cartaSchema.getRestrizione(i, j - 1).getDescrizione().equals(new Integer(dadoSelezionato.getNumero()).toString()))) {
+                if (grigliaGioco[i][j - 1] == null && (cartaSchema.getRestrizione(i, j - 1) == Constraint.NONE || (cartaSchema.getRestrizione(i, j - 1).getDescrizione().equals(dadoSelezionato.getColore()) || attivaUtensile2) || (cartaSchema.getRestrizione(i, j - 1).getDescrizione().equals(new Integer(dadoSelezionato.getNumero()).toString()) || attivaUtensile3))) {
                     if (!(grigliaGioco[i][j].getNumero() == dadoSelezionato.getNumero() || grigliaGioco[i][j].getColore().equals(dadoSelezionato.getColore()))) {
                         if (piazzamentiPermessi[i][j - 1] == null) {
 
@@ -106,7 +105,7 @@ public class Plancia implements Serializable {
                 } else {
                     piazzamentiPermessi[i][j - 1] = false;
                 }
-                if (grigliaGioco[i][j + 1] == null && (cartaSchema.getRestrizione(i, j + 1) == Constraint.NONE || cartaSchema.getRestrizione(i, j + 1).getDescrizione().equals(dadoSelezionato.getColore()) || cartaSchema.getRestrizione(i, j + 1).getDescrizione().equals(new Integer(dadoSelezionato.getNumero()).toString()))) {
+                if (grigliaGioco[i][j + 1] == null && (cartaSchema.getRestrizione(i, j + 1) == Constraint.NONE || (cartaSchema.getRestrizione(i, j + 1).getDescrizione().equals(dadoSelezionato.getColore()) || attivaUtensile2) || (cartaSchema.getRestrizione(i, j + 1).getDescrizione().equals(new Integer(dadoSelezionato.getNumero()).toString()) || attivaUtensile3))) {
                     if (!(grigliaGioco[i][j].getNumero() == dadoSelezionato.getNumero() || grigliaGioco[i][j].getColore().equals(dadoSelezionato.getColore()))) {
                         if (piazzamentiPermessi[i][j + 1] == null) {
 
@@ -118,7 +117,7 @@ public class Plancia implements Serializable {
                 } else {
                     piazzamentiPermessi[i][j + 1] = false;
                 }
-                if (grigliaGioco[i + 1][j] == null && (cartaSchema.getRestrizione(i + 1, j) == Constraint.NONE || cartaSchema.getRestrizione(i + 1, j).getDescrizione().equals(dadoSelezionato.getColore()) || cartaSchema.getRestrizione(i + 1, j).getDescrizione().equals(new Integer(dadoSelezionato.getNumero()).toString()))) {
+                if (grigliaGioco[i + 1][j] == null && (cartaSchema.getRestrizione(i + 1, j) == Constraint.NONE || (cartaSchema.getRestrizione(i + 1, j).getDescrizione().equals(dadoSelezionato.getColore()) || attivaUtensile2) || (cartaSchema.getRestrizione(i + 1, j).getDescrizione().equals(new Integer(dadoSelezionato.getNumero()).toString()) || attivaUtensile3))) {
                     if (!(grigliaGioco[i][j].getNumero() == dadoSelezionato.getNumero() || grigliaGioco[i][j].getColore().equals(dadoSelezionato.getColore()))) {
                         if (piazzamentiPermessi[i + 1][j] == null) {
                             piazzamentiPermessi[i + 1][j] = true;
@@ -131,7 +130,7 @@ public class Plancia implements Serializable {
                 } else {
                     piazzamentiPermessi[i + 1][j] = false;
                 }
-                if (grigliaGioco[i + 1][j - 1] == null && (cartaSchema.getRestrizione(i + 1, j - 1) == Constraint.NONE || cartaSchema.getRestrizione(i + 1, j - 1).getDescrizione().equals(dadoSelezionato.getColore()) || cartaSchema.getRestrizione(i + 1, j - 1).getDescrizione().equals(new Integer(dadoSelezionato.getNumero()).toString()))) {
+                if (grigliaGioco[i + 1][j - 1] == null && (cartaSchema.getRestrizione(i + 1, j - 1) == Constraint.NONE || (cartaSchema.getRestrizione(i + 1, j - 1).getDescrizione().equals(dadoSelezionato.getColore()) || attivaUtensile2) || (cartaSchema.getRestrizione(i + 1, j - 1).getDescrizione().equals(new Integer(dadoSelezionato.getNumero()).toString()) || attivaUtensile3))) {
                     if (piazzamentiPermessi[i + 1][j - 1] == null) {
 
                         piazzamentiPermessi[i + 1][j - 1] = true;
@@ -140,7 +139,7 @@ public class Plancia implements Serializable {
                 } else {
                     piazzamentiPermessi[i + 1][j - 1] = false;
                 }
-                if (grigliaGioco[i + 1][j + 1] == null && (cartaSchema.getRestrizione(i + 1, j + 1) == Constraint.NONE || cartaSchema.getRestrizione(i + 1, j + 1).getDescrizione().equals(dadoSelezionato.getColore()) || cartaSchema.getRestrizione(i + 1, j + 1).getDescrizione().equals(new Integer(dadoSelezionato.getNumero()).toString()))) {
+                if (grigliaGioco[i + 1][j + 1] == null && (cartaSchema.getRestrizione(i + 1, j + 1) == Constraint.NONE || (cartaSchema.getRestrizione(i + 1, j + 1).getDescrizione().equals(dadoSelezionato.getColore()) || attivaUtensile2) || (cartaSchema.getRestrizione(i + 1, j + 1).getDescrizione().equals(new Integer(dadoSelezionato.getNumero()).toString()) || attivaUtensile3))) {
                     if (piazzamentiPermessi[i + 1][j + 1] == null) {
 
                         piazzamentiPermessi[i + 1][j + 1] = true;
@@ -150,7 +149,7 @@ public class Plancia implements Serializable {
                 }
 
             } else if (i == 0 && j == 4) {
-                if (grigliaGioco[i][j - 1] == null && (cartaSchema.getRestrizione(i, j - 1) == Constraint.NONE || cartaSchema.getRestrizione(i, j - 1).getDescrizione().equals(dadoSelezionato.getColore()) || cartaSchema.getRestrizione(i, j - 1).getDescrizione().equals(new Integer(dadoSelezionato.getNumero()).toString()))) {
+                if (grigliaGioco[i][j - 1] == null && (cartaSchema.getRestrizione(i, j - 1) == Constraint.NONE || (cartaSchema.getRestrizione(i, j - 1).getDescrizione().equals(dadoSelezionato.getColore()) || attivaUtensile2) || (cartaSchema.getRestrizione(i, j - 1).getDescrizione().equals(new Integer(dadoSelezionato.getNumero()).toString()) || attivaUtensile3))) {
                     if (!(grigliaGioco[i][j].getNumero() == dadoSelezionato.getNumero() || grigliaGioco[i][j].getColore().equals(dadoSelezionato.getColore()))) {
                         if (piazzamentiPermessi[i][j - 1] == null) {
 
@@ -162,7 +161,7 @@ public class Plancia implements Serializable {
                 } else {
                     piazzamentiPermessi[i][j - 1] = false;
                 }
-                if (grigliaGioco[i + 1][j] == null && (cartaSchema.getRestrizione(i + 1, j) == Constraint.NONE || cartaSchema.getRestrizione(i + 1, j).getDescrizione().equals(dadoSelezionato.getColore()) || cartaSchema.getRestrizione(i + 1, j).getDescrizione().equals(new Integer(dadoSelezionato.getNumero()).toString()))) {
+                if (grigliaGioco[i + 1][j] == null && (cartaSchema.getRestrizione(i + 1, j) == Constraint.NONE || (cartaSchema.getRestrizione(i + 1, j).getDescrizione().equals(dadoSelezionato.getColore()) || attivaUtensile2) || (cartaSchema.getRestrizione(i + 1, j).getDescrizione().equals(new Integer(dadoSelezionato.getNumero()).toString()) || attivaUtensile3))) {
                     if (!(grigliaGioco[i][j].getNumero() == dadoSelezionato.getNumero() || grigliaGioco[i][j].getColore().equals(dadoSelezionato.getColore()))) {
                         if (piazzamentiPermessi[i + 1][j] == null) {
 
@@ -176,7 +175,7 @@ public class Plancia implements Serializable {
                 } else {
                     piazzamentiPermessi[i + 1][j] = false;
                 }
-                if (grigliaGioco[i + 1][j - 1] == null && (cartaSchema.getRestrizione(i + 1, j - 1) == Constraint.NONE || cartaSchema.getRestrizione(i + 1, j - 1).getDescrizione().equals(dadoSelezionato.getColore()) || cartaSchema.getRestrizione(i + 1, j - 1).getDescrizione().equals(new Integer(dadoSelezionato.getNumero()).toString()))) {
+                if (grigliaGioco[i + 1][j - 1] == null && (cartaSchema.getRestrizione(i + 1, j - 1) == Constraint.NONE || (cartaSchema.getRestrizione(i + 1, j - 1).getDescrizione().equals(dadoSelezionato.getColore()) || attivaUtensile2) || (cartaSchema.getRestrizione(i + 1, j - 1).getDescrizione().equals(new Integer(dadoSelezionato.getNumero()).toString()) || attivaUtensile3))) {
                     if (piazzamentiPermessi[i + 1][j - 1] == null) {
 
                         piazzamentiPermessi[i + 1][j - 1] = true;
@@ -186,7 +185,7 @@ public class Plancia implements Serializable {
 
                 }
             } else if (i >= 1 && i < 3 && j == 0) {
-                if (grigliaGioco[i - 1][j] == null && (cartaSchema.getRestrizione(i - 1, j) == Constraint.NONE || cartaSchema.getRestrizione(i - 1, j).getDescrizione().equals(dadoSelezionato.getColore()) || cartaSchema.getRestrizione(i - 1, j).getDescrizione().equals(new Integer(dadoSelezionato.getNumero()).toString()))) {
+                if (grigliaGioco[i - 1][j] == null && (cartaSchema.getRestrizione(i - 1, j) == Constraint.NONE || (cartaSchema.getRestrizione(i - 1, j).getDescrizione().equals(dadoSelezionato.getColore()) || attivaUtensile2) || (cartaSchema.getRestrizione(i - 1, j).getDescrizione().equals(new Integer(dadoSelezionato.getNumero()).toString()) || attivaUtensile3))) {
                     if (!(grigliaGioco[i][j].getNumero() == dadoSelezionato.getNumero() || grigliaGioco[i][j].getColore().equals(dadoSelezionato.getColore()))) {
                         if (piazzamentiPermessi[i - 1][j] == null) {
 
@@ -199,7 +198,7 @@ public class Plancia implements Serializable {
                 } else {
                     piazzamentiPermessi[i - 1][j] = false;
                 }
-                if (grigliaGioco[i][j + 1] == null && (cartaSchema.getRestrizione(i, j + 1) == Constraint.NONE || cartaSchema.getRestrizione(i, j + 1).getDescrizione().equals(dadoSelezionato.getColore()) || cartaSchema.getRestrizione(i, j + 1).getDescrizione().equals(new Integer(dadoSelezionato.getNumero()).toString()))) {
+                if (grigliaGioco[i][j + 1] == null && (cartaSchema.getRestrizione(i, j + 1) == Constraint.NONE || (cartaSchema.getRestrizione(i, j + 1).getDescrizione().equals(dadoSelezionato.getColore()) || attivaUtensile2) || (cartaSchema.getRestrizione(i, j + 1).getDescrizione().equals(new Integer(dadoSelezionato.getNumero()).toString()) || attivaUtensile3))) {
                     if (!(grigliaGioco[i][j].getNumero() == dadoSelezionato.getNumero() || grigliaGioco[i][j].getColore().equals(dadoSelezionato.getColore()))) {
                         if (piazzamentiPermessi[i][j + 1] == null) {
 
@@ -212,7 +211,7 @@ public class Plancia implements Serializable {
                 } else {
                     piazzamentiPermessi[i][j + 1] = false;
 
-                }if (grigliaGioco[i + 1][j] == null && (cartaSchema.getRestrizione(i + 1, j) == Constraint.NONE || cartaSchema.getRestrizione(i + 1, j).getDescrizione().equals(dadoSelezionato.getColore()) || cartaSchema.getRestrizione(i + 1, j).getDescrizione().equals(new Integer(dadoSelezionato.getNumero()).toString()))) {
+                }if (grigliaGioco[i + 1][j] == null && (cartaSchema.getRestrizione(i + 1, j) == Constraint.NONE || (cartaSchema.getRestrizione(i + 1, j).getDescrizione().equals(dadoSelezionato.getColore()) || attivaUtensile2) || (cartaSchema.getRestrizione(i + 1, j).getDescrizione().equals(new Integer(dadoSelezionato.getNumero()).toString()) || attivaUtensile3))) {
                     if (!(grigliaGioco[i][j].getNumero() == dadoSelezionato.getNumero() || grigliaGioco[i][j].getColore().equals(dadoSelezionato.getColore()))) {
 
                         if (piazzamentiPermessi[i + 1][j] == null) {
@@ -226,7 +225,7 @@ public class Plancia implements Serializable {
                 } else {
                     piazzamentiPermessi[i + 1][j] = false;
                 }
-                if (grigliaGioco[i - 1][j + 1] == null && (cartaSchema.getRestrizione(i - 1, j + 1) == Constraint.NONE || cartaSchema.getRestrizione(i - 1, j + 1).getDescrizione().equals(dadoSelezionato.getColore()) || cartaSchema.getRestrizione(i - 1, j + 1).getDescrizione().equals(new Integer(dadoSelezionato.getNumero()).toString()))) {
+                if (grigliaGioco[i - 1][j + 1] == null && (cartaSchema.getRestrizione(i - 1, j + 1) == Constraint.NONE || (cartaSchema.getRestrizione(i - 1, j + 1).getDescrizione().equals(dadoSelezionato.getColore()) || attivaUtensile2) || (cartaSchema.getRestrizione(i - 1, j + 1).getDescrizione().equals(new Integer(dadoSelezionato.getNumero()).toString()) || attivaUtensile3))) {
                     if (piazzamentiPermessi[i - 1][j + 1] == null) {
 
                         piazzamentiPermessi[i - 1][j + 1] = true;
@@ -235,7 +234,7 @@ public class Plancia implements Serializable {
                     piazzamentiPermessi[i - 1][j + 1] = false;
 
                 }
-                if (grigliaGioco[i + 1][j + 1] == null && (cartaSchema.getRestrizione(i + 1, j + 1) == Constraint.NONE || cartaSchema.getRestrizione(i + 1, j + 1).getDescrizione().equals(dadoSelezionato.getColore()) || cartaSchema.getRestrizione(i + 1, j + 1).getDescrizione().equals(new Integer(dadoSelezionato.getNumero()).toString()))) {
+                if (grigliaGioco[i + 1][j + 1] == null && (cartaSchema.getRestrizione(i + 1, j + 1) == Constraint.NONE || (cartaSchema.getRestrizione(i + 1, j + 1).getDescrizione().equals(dadoSelezionato.getColore()) || attivaUtensile2) || (cartaSchema.getRestrizione(i + 1, j + 1).getDescrizione().equals(new Integer(dadoSelezionato.getNumero()).toString()) || attivaUtensile3))) {
                     if (piazzamentiPermessi[i + 1][j + 1] == null) {
 
                         piazzamentiPermessi[i + 1][j + 1] = true;
@@ -245,7 +244,7 @@ public class Plancia implements Serializable {
 
                 }
             } else if (i > 0 && i < 3 && j > 0 && j < 4) {
-                if (grigliaGioco[i - 1][j] == null && (cartaSchema.getRestrizione(i - 1, j) == Constraint.NONE || cartaSchema.getRestrizione(i - 1, j).getDescrizione().equals(dadoSelezionato.getColore()) || cartaSchema.getRestrizione(i - 1, j).getDescrizione().equals(new Integer(dadoSelezionato.getNumero()).toString()))) {
+                if (grigliaGioco[i - 1][j] == null && (cartaSchema.getRestrizione(i - 1, j) == Constraint.NONE || (cartaSchema.getRestrizione(i - 1, j).getDescrizione().equals(dadoSelezionato.getColore()) || attivaUtensile2) || (cartaSchema.getRestrizione(i - 1, j).getDescrizione().equals(new Integer(dadoSelezionato.getNumero()).toString()) || attivaUtensile3))) {
                     if (!(grigliaGioco[i][j].getNumero() == dadoSelezionato.getNumero() || grigliaGioco[i][j].getColore().equals(dadoSelezionato.getColore()))) {
                         if (piazzamentiPermessi[i - 1][j] == null) {
 
@@ -258,7 +257,7 @@ public class Plancia implements Serializable {
                 } else {
                     piazzamentiPermessi[i - 1][j] = false;
 
-                }if(grigliaGioco[i+1][j] == null && (cartaSchema.getRestrizione(i + 1, j) == Constraint.NONE || cartaSchema.getRestrizione(i + 1, j).getDescrizione().equals(dadoSelezionato.getColore()) || cartaSchema.getRestrizione(i + 1, j).getDescrizione().equals(new Integer(dadoSelezionato.getNumero()).toString()))){
+                }if(grigliaGioco[i+1][j] == null && (cartaSchema.getRestrizione(i + 1, j) == Constraint.NONE || (cartaSchema.getRestrizione(i + 1, j).getDescrizione().equals(dadoSelezionato.getColore()) || attivaUtensile2) || (cartaSchema.getRestrizione(i + 1, j).getDescrizione().equals(new Integer(dadoSelezionato.getNumero()).toString()) || attivaUtensile3))){
                     if (!(grigliaGioco[i][j].getNumero() == dadoSelezionato.getNumero() || grigliaGioco[i][j].getColore().equals(dadoSelezionato.getColore()))) {
                         if (piazzamentiPermessi[i+1][j] == null) {
 
@@ -269,7 +268,7 @@ public class Plancia implements Serializable {
                     }
                 }else{
                     piazzamentiPermessi[i+1][j] = false;
-                }if (grigliaGioco[i][j+1] == null && (cartaSchema.getRestrizione(i, j+1) == Constraint.NONE || cartaSchema.getRestrizione(i, j+1).getDescrizione().equals(dadoSelezionato.getColore()) || cartaSchema.getRestrizione(i, j+1).getDescrizione().equals(new Integer(dadoSelezionato.getNumero()).toString()))){
+                }if (grigliaGioco[i][j+1] == null && (cartaSchema.getRestrizione(i, j+1) == Constraint.NONE || (cartaSchema.getRestrizione(i, j+1).getDescrizione().equals(dadoSelezionato.getColore()) || attivaUtensile2) || (cartaSchema.getRestrizione(i, j+1).getDescrizione().equals(new Integer(dadoSelezionato.getNumero()).toString()) || attivaUtensile3))){
                     if (!(grigliaGioco[i][j].getNumero() == dadoSelezionato.getNumero() || grigliaGioco[i][j].getColore().equals(dadoSelezionato.getColore()))) {
                         if (piazzamentiPermessi[i][j+1] == null) {
 
@@ -281,7 +280,7 @@ public class Plancia implements Serializable {
                     }
                 }else{
                     piazzamentiPermessi[i][j+1] = false;
-                }if (grigliaGioco[i][j-1] == null && (cartaSchema.getRestrizione(i, j-1) == Constraint.NONE || cartaSchema.getRestrizione(i, j-1).getDescrizione().equals(dadoSelezionato.getColore()) || cartaSchema.getRestrizione(i, j-1).getDescrizione().equals(new Integer(dadoSelezionato.getNumero()).toString()))){
+                }if (grigliaGioco[i][j-1] == null && (cartaSchema.getRestrizione(i, j-1) == Constraint.NONE || (cartaSchema.getRestrizione(i, j-1).getDescrizione().equals(dadoSelezionato.getColore()) || attivaUtensile2) || (cartaSchema.getRestrizione(i, j-1).getDescrizione().equals(new Integer(dadoSelezionato.getNumero()).toString()) || attivaUtensile3))){
                     if (!(grigliaGioco[i][j].getNumero() == dadoSelezionato.getNumero() || grigliaGioco[i][j].getColore().equals(dadoSelezionato.getColore()))) {
                         if (piazzamentiPermessi[i][j-1] == null) {
 
@@ -292,28 +291,28 @@ public class Plancia implements Serializable {
                     }
                 }else{
                     piazzamentiPermessi[i][j-1] = false;
-                }if (grigliaGioco[i+1][j+1] == null && (cartaSchema.getRestrizione(i+1, j+1) == Constraint.NONE || cartaSchema.getRestrizione(i+1, j+1).getDescrizione().equals(dadoSelezionato.getColore()) || cartaSchema.getRestrizione(i+1, j+1).getDescrizione().equals(new Integer(dadoSelezionato.getNumero()).toString()))){
+                }if (grigliaGioco[i+1][j+1] == null && (cartaSchema.getRestrizione(i+1, j+1) == Constraint.NONE || (cartaSchema.getRestrizione(i+1, j+1).getDescrizione().equals(dadoSelezionato.getColore()) || attivaUtensile2) || (cartaSchema.getRestrizione(i+1, j+1).getDescrizione().equals(new Integer(dadoSelezionato.getNumero()).toString()) || attivaUtensile3))){
                     if (piazzamentiPermessi[i+1][j+1] == null){
                         piazzamentiPermessi[i+1][j+1]=true;
                     }
                 }else{
                     piazzamentiPermessi[i+1][j+1]=false;
 
-                }if (grigliaGioco[i+1][j-1] == null && (cartaSchema.getRestrizione(i+1, j-1) == Constraint.NONE || cartaSchema.getRestrizione(i+1, j-1).getDescrizione().equals(dadoSelezionato.getColore()) || cartaSchema.getRestrizione(i+1, j-1).getDescrizione().equals(new Integer(dadoSelezionato.getNumero()).toString()))){
+                }if (grigliaGioco[i+1][j-1] == null && (cartaSchema.getRestrizione(i+1, j-1) == Constraint.NONE || (cartaSchema.getRestrizione(i+1, j-1).getDescrizione().equals(dadoSelezionato.getColore()) || attivaUtensile2) || (cartaSchema.getRestrizione(i+1, j-1).getDescrizione().equals(new Integer(dadoSelezionato.getNumero()).toString()) || attivaUtensile3))){
                     if (piazzamentiPermessi[i+1][j-1] == null){
                         piazzamentiPermessi[i+1][j-1]=true;
                     }
                 }else{
                     piazzamentiPermessi[i+1][j-1]=false;
 
-                }if (grigliaGioco[i-1][j-1] == null && (cartaSchema.getRestrizione(i-1, j-1) == Constraint.NONE || cartaSchema.getRestrizione(i-1, j-1).getDescrizione().equals(dadoSelezionato.getColore()) || cartaSchema.getRestrizione(i-1, j-1).getDescrizione().equals(new Integer(dadoSelezionato.getNumero()).toString()))){
+                }if (grigliaGioco[i-1][j-1] == null && (cartaSchema.getRestrizione(i-1, j-1) == Constraint.NONE || (cartaSchema.getRestrizione(i-1, j-1).getDescrizione().equals(dadoSelezionato.getColore()) || attivaUtensile2) || (cartaSchema.getRestrizione(i-1, j-1).getDescrizione().equals(new Integer(dadoSelezionato.getNumero()).toString()) || attivaUtensile3))){
                     if (piazzamentiPermessi[i-1][j-1] == null){
                         piazzamentiPermessi[i-1][j-1]=true;
                     }
                 }else{
                     piazzamentiPermessi[i-1][j-1]=false;
 
-                }if (grigliaGioco[i-1][j+1] == null && (cartaSchema.getRestrizione(i-1, j+1) == Constraint.NONE || cartaSchema.getRestrizione(i-1, j+1).getDescrizione().equals(dadoSelezionato.getColore()) || cartaSchema.getRestrizione(i-1, j+1).getDescrizione().equals(new Integer(dadoSelezionato.getNumero()).toString()))){
+                }if (grigliaGioco[i-1][j+1] == null && (cartaSchema.getRestrizione(i-1, j+1) == Constraint.NONE || (cartaSchema.getRestrizione(i-1, j+1).getDescrizione().equals(dadoSelezionato.getColore()) || attivaUtensile2) || (cartaSchema.getRestrizione(i-1, j+1).getDescrizione().equals(new Integer(dadoSelezionato.getNumero()).toString()) || attivaUtensile3))){
                     if (piazzamentiPermessi[i-1][j+1] == null){
                         piazzamentiPermessi[i-1][j+1]=true;
                     }
@@ -323,7 +322,7 @@ public class Plancia implements Serializable {
                 }
 
             } else if (i == 3 && j == 0) {
-                    if (grigliaGioco[i - 1][j] == null && (cartaSchema.getRestrizione(i - 1, j) == Constraint.NONE || cartaSchema.getRestrizione(i - 1, j).getDescrizione().equals(dadoSelezionato.getColore()) || cartaSchema.getRestrizione(i - 1, j).getDescrizione().equals(new Integer(dadoSelezionato.getNumero()).toString()))) {
+                    if (grigliaGioco[i - 1][j] == null && (cartaSchema.getRestrizione(i - 1, j) == Constraint.NONE || (cartaSchema.getRestrizione(i - 1, j).getDescrizione().equals(dadoSelezionato.getColore()) || attivaUtensile2) || (cartaSchema.getRestrizione(i - 1, j).getDescrizione().equals(new Integer(dadoSelezionato.getNumero()).toString()) || attivaUtensile3))) {
                         if (!(grigliaGioco[i][j].getNumero() == dadoSelezionato.getNumero() || grigliaGioco[i][j].getColore().equals(dadoSelezionato.getColore()))) {
                             if (piazzamentiPermessi[i - 1][j] == null) {
 
@@ -335,7 +334,7 @@ public class Plancia implements Serializable {
                     } else {
                         piazzamentiPermessi[i - 1][j] = false;
                     }
-                    if (grigliaGioco[i][j + 1] == null && (cartaSchema.getRestrizione(i, j + 1) == Constraint.NONE || cartaSchema.getRestrizione(i, j + 1).getDescrizione().equals(dadoSelezionato.getColore()) || cartaSchema.getRestrizione(i, j + 1).getDescrizione().equals(new Integer(dadoSelezionato.getNumero()).toString()))) {
+                    if (grigliaGioco[i][j + 1] == null && (cartaSchema.getRestrizione(i, j + 1) == Constraint.NONE || (cartaSchema.getRestrizione(i, j + 1).getDescrizione().equals(dadoSelezionato.getColore()) || attivaUtensile2) || (cartaSchema.getRestrizione(i, j + 1).getDescrizione().equals(new Integer(dadoSelezionato.getNumero()).toString()) || attivaUtensile3))) {
                         if (!(grigliaGioco[i][j].getNumero() == dadoSelezionato.getNumero() || grigliaGioco[i][j].getColore().equals(dadoSelezionato.getColore()))) {
                             if (piazzamentiPermessi[i][j + 1] == null) {
 
@@ -349,7 +348,7 @@ public class Plancia implements Serializable {
                         piazzamentiPermessi[i][j + 1] = false;
 
                     }
-                    if (grigliaGioco[i - 1][j + 1] == null && (cartaSchema.getRestrizione(i - 1, j + 1) == Constraint.NONE || cartaSchema.getRestrizione(i - 1, j + 1).getDescrizione().equals(dadoSelezionato.getColore()) || cartaSchema.getRestrizione(i - 1, j + 1).getDescrizione().equals(new Integer(dadoSelezionato.getNumero()).toString()))) {
+                    if (grigliaGioco[i - 1][j + 1] == null && (cartaSchema.getRestrizione(i - 1, j + 1) == Constraint.NONE || (cartaSchema.getRestrizione(i - 1, j + 1).getDescrizione().equals(dadoSelezionato.getColore()) || attivaUtensile2) || (cartaSchema.getRestrizione(i - 1, j + 1).getDescrizione().equals(new Integer(dadoSelezionato.getNumero()).toString()) || attivaUtensile3))) {
                         if (piazzamentiPermessi[i - 1][j + 1] == null) {
 
                             piazzamentiPermessi[i - 1][j + 1] = true;
@@ -361,7 +360,7 @@ public class Plancia implements Serializable {
                     }
 
                 } else if (i == 3 && j >= 1 && j < 4) {
-                    if (grigliaGioco[i - 1][j] == null && (cartaSchema.getRestrizione(i - 1, j) == Constraint.NONE || cartaSchema.getRestrizione(i - 1, j).getDescrizione().equals(dadoSelezionato.getColore()) || cartaSchema.getRestrizione(i - 1, j).getDescrizione().equals(new Integer(dadoSelezionato.getNumero()).toString()))) {
+                    if (grigliaGioco[i - 1][j] == null && (cartaSchema.getRestrizione(i - 1, j) == Constraint.NONE || (cartaSchema.getRestrizione(i - 1, j).getDescrizione().equals(dadoSelezionato.getColore()) || attivaUtensile2) || (cartaSchema.getRestrizione(i - 1, j).getDescrizione().equals(new Integer(dadoSelezionato.getNumero()).toString()) || attivaUtensile3))) {
                         if (!(grigliaGioco[i][j].getNumero() == dadoSelezionato.getNumero() || grigliaGioco[i][j].getColore().equals(dadoSelezionato.getColore()))) {
                             if (piazzamentiPermessi[i - 1][j] == null) {
 
@@ -375,7 +374,7 @@ public class Plancia implements Serializable {
                         piazzamentiPermessi[i - 1][j] = false;
 
                     }
-                    if (grigliaGioco[i][j + 1] == null && (cartaSchema.getRestrizione(i, j + 1) == Constraint.NONE || cartaSchema.getRestrizione(i, j + 1).getDescrizione().equals(dadoSelezionato.getColore()) || cartaSchema.getRestrizione(i, j + 1).getDescrizione().equals(new Integer(dadoSelezionato.getNumero()).toString()))) {
+                    if (grigliaGioco[i][j + 1] == null && (cartaSchema.getRestrizione(i, j + 1) == Constraint.NONE || (cartaSchema.getRestrizione(i, j + 1).getDescrizione().equals(dadoSelezionato.getColore()) || attivaUtensile2) || (cartaSchema.getRestrizione(i, j + 1).getDescrizione().equals(new Integer(dadoSelezionato.getNumero()).toString()) || attivaUtensile3))) {
                         if (!(grigliaGioco[i][j].getNumero() == dadoSelezionato.getNumero() || grigliaGioco[i][j].getColore().equals(dadoSelezionato.getColore()))) {
                             if (piazzamentiPermessi[i][j + 1] == null) {
 
@@ -389,7 +388,7 @@ public class Plancia implements Serializable {
                         piazzamentiPermessi[i][j + 1] = false;
 
                     }
-                    if (grigliaGioco[i][j - 1] == null && (cartaSchema.getRestrizione(i, j - 1) == Constraint.NONE || cartaSchema.getRestrizione(i, j - 1).getDescrizione().equals(dadoSelezionato.getColore()) || cartaSchema.getRestrizione(i, j - 1).getDescrizione().equals(new Integer(dadoSelezionato.getNumero()).toString()))) {
+                    if (grigliaGioco[i][j - 1] == null && (cartaSchema.getRestrizione(i, j - 1) == Constraint.NONE || (cartaSchema.getRestrizione(i, j - 1).getDescrizione().equals(dadoSelezionato.getColore()) || attivaUtensile2) || (cartaSchema.getRestrizione(i, j - 1).getDescrizione().equals(new Integer(dadoSelezionato.getNumero()).toString()) || attivaUtensile3))) {
                         if (!(grigliaGioco[i][j].getNumero() == dadoSelezionato.getNumero() || grigliaGioco[i][j].getColore().equals(dadoSelezionato.getColore()))) {
                             if (piazzamentiPermessi[i][j - 1] == null) {
 
@@ -402,7 +401,7 @@ public class Plancia implements Serializable {
                         piazzamentiPermessi[i][j - 1] = false;
 
                     }
-                    if (grigliaGioco[i - 1][j - 1] == null && (cartaSchema.getRestrizione(i - 1, j - 1) == Constraint.NONE || cartaSchema.getRestrizione(i - 1, j - 1).getDescrizione().equals(dadoSelezionato.getColore()) || cartaSchema.getRestrizione(i - 1, j - 1).getDescrizione().equals(new Integer(dadoSelezionato.getNumero()).toString()))) {
+                    if (grigliaGioco[i - 1][j - 1] == null && (cartaSchema.getRestrizione(i - 1, j - 1) == Constraint.NONE || (cartaSchema.getRestrizione(i - 1, j - 1).getDescrizione().equals(dadoSelezionato.getColore()) || attivaUtensile2) || (cartaSchema.getRestrizione(i - 1, j - 1).getDescrizione().equals(new Integer(dadoSelezionato.getNumero()).toString()) || attivaUtensile3))) {
                         if (piazzamentiPermessi[i - 1][j - 1] == null) {
 
                             piazzamentiPermessi[i - 1][j - 1] = true;
@@ -411,7 +410,7 @@ public class Plancia implements Serializable {
                         piazzamentiPermessi[i - 1][j - 1] = false;
 
                     }
-                    if (grigliaGioco[i - 1][j + 1] == null && (cartaSchema.getRestrizione(i - 1, j + 1) == Constraint.NONE || cartaSchema.getRestrizione(i - 1, j + 1).getDescrizione().equals(dadoSelezionato.getColore()) || cartaSchema.getRestrizione(i - 1, j + 1).getDescrizione().equals(new Integer(dadoSelezionato.getNumero()).toString()))) {
+                    if (grigliaGioco[i - 1][j + 1] == null && (cartaSchema.getRestrizione(i - 1, j + 1) == Constraint.NONE || (cartaSchema.getRestrizione(i - 1, j + 1).getDescrizione().equals(dadoSelezionato.getColore()) || attivaUtensile2) || (cartaSchema.getRestrizione(i - 1, j + 1).getDescrizione().equals(new Integer(dadoSelezionato.getNumero()).toString()) || attivaUtensile3))) {
                         if (piazzamentiPermessi[i - 1][j + 1] == null) {
 
                             piazzamentiPermessi[i - 1][j + 1] = true;
@@ -421,7 +420,7 @@ public class Plancia implements Serializable {
 
                     }
                 } else if (i == 3 && j == 4) {
-                    if (grigliaGioco[i - 1][j] == null && (cartaSchema.getRestrizione(i - 1, j) == Constraint.NONE || cartaSchema.getRestrizione(i - 1, j).getDescrizione().equals(dadoSelezionato.getColore()) || cartaSchema.getRestrizione(i - 1, j).getDescrizione().equals(new Integer(dadoSelezionato.getNumero()).toString()))) {
+                    if (grigliaGioco[i - 1][j] == null && (cartaSchema.getRestrizione(i - 1, j) == Constraint.NONE || (cartaSchema.getRestrizione(i - 1, j).getDescrizione().equals(dadoSelezionato.getColore()) || attivaUtensile2) || (cartaSchema.getRestrizione(i - 1, j).getDescrizione().equals(new Integer(dadoSelezionato.getNumero()).toString()) || attivaUtensile3))) {
                         if (!(grigliaGioco[i][j].getNumero() == dadoSelezionato.getNumero() || grigliaGioco[i][j].getColore().equals(dadoSelezionato.getColore()))) {
                             if (piazzamentiPermessi[i - 1][j] == null) {
 
@@ -435,7 +434,7 @@ public class Plancia implements Serializable {
                         piazzamentiPermessi[i - 1][j] = false;
 
                     }
-                    if (grigliaGioco[i][j - 1] == null && (cartaSchema.getRestrizione(i, j - 1) == Constraint.NONE || cartaSchema.getRestrizione(i, j - 1).getDescrizione().equals(dadoSelezionato.getColore()) || cartaSchema.getRestrizione(i, j - 1).getDescrizione().equals(new Integer(dadoSelezionato.getNumero()).toString()))) {
+                    if (grigliaGioco[i][j - 1] == null && (cartaSchema.getRestrizione(i, j - 1) == Constraint.NONE || (cartaSchema.getRestrizione(i, j - 1).getDescrizione().equals(dadoSelezionato.getColore()) || attivaUtensile2) || (cartaSchema.getRestrizione(i, j - 1).getDescrizione().equals(new Integer(dadoSelezionato.getNumero()).toString()) || attivaUtensile3))) {
                         if (!(grigliaGioco[i][j].getNumero() == dadoSelezionato.getNumero() || grigliaGioco[i][j].getColore().equals(dadoSelezionato.getColore()))) {
                             if (piazzamentiPermessi[i][j - 1] == null) {
 
@@ -449,7 +448,7 @@ public class Plancia implements Serializable {
                         piazzamentiPermessi[i][j - 1] = false;
 
                     }
-                    if (grigliaGioco[i - 1][j - 1] == null && (cartaSchema.getRestrizione(i - 1, j - 1) == Constraint.NONE || cartaSchema.getRestrizione(i - 1, j - 1).getDescrizione().equals(dadoSelezionato.getColore()) || cartaSchema.getRestrizione(i - 1, j - 1).getDescrizione().equals(new Integer(dadoSelezionato.getNumero()).toString()))) {
+                    if (grigliaGioco[i - 1][j - 1] == null && (cartaSchema.getRestrizione(i - 1, j - 1) == Constraint.NONE || (cartaSchema.getRestrizione(i - 1, j - 1).getDescrizione().equals(dadoSelezionato.getColore()) || attivaUtensile2) || (cartaSchema.getRestrizione(i - 1, j - 1).getDescrizione().equals(new Integer(dadoSelezionato.getNumero()).toString()) || attivaUtensile3))) {
                         if (!(grigliaGioco[i][j].getNumero() == dadoSelezionato.getNumero() || grigliaGioco[i][j].getColore().equals(dadoSelezionato.getColore()))) {
                             if (piazzamentiPermessi[i - 1][j - 1] == null) {
 
@@ -463,7 +462,7 @@ public class Plancia implements Serializable {
                         piazzamentiPermessi[i - 1][j - 1] = false;
                     }
                 } else if (i > 0 && i < 3 && j == 4) {
-                    if (grigliaGioco[i - 1][j] == null && (cartaSchema.getRestrizione(i - 1, j) == Constraint.NONE || cartaSchema.getRestrizione(i - 1, j).getDescrizione().equals(dadoSelezionato.getColore()) || cartaSchema.getRestrizione(i - 1, j).getDescrizione().equals(new Integer(dadoSelezionato.getNumero()).toString()))) {
+                    if (grigliaGioco[i - 1][j] == null && (cartaSchema.getRestrizione(i - 1, j) == Constraint.NONE || (cartaSchema.getRestrizione(i - 1, j).getDescrizione().equals(dadoSelezionato.getColore()) || attivaUtensile2) || (cartaSchema.getRestrizione(i - 1, j).getDescrizione().equals(new Integer(dadoSelezionato.getNumero()).toString()) || attivaUtensile3))) {
                         if (!(grigliaGioco[i][j].getNumero() == dadoSelezionato.getNumero() || grigliaGioco[i][j].getColore().equals(dadoSelezionato.getColore()))) {
                             if (piazzamentiPermessi[i - 1][j] == null) {
 
@@ -476,7 +475,7 @@ public class Plancia implements Serializable {
                     } else {
                         piazzamentiPermessi[i - 1][j] = false;
                     }
-                    if (grigliaGioco[i + 1][j] == null && (cartaSchema.getRestrizione(i + 1, j) == Constraint.NONE || cartaSchema.getRestrizione(i + 1, j).getDescrizione().equals(dadoSelezionato.getColore()) || cartaSchema.getRestrizione(i + 1, j).getDescrizione().equals(new Integer(dadoSelezionato.getNumero()).toString()))) {
+                    if (grigliaGioco[i + 1][j] == null && (cartaSchema.getRestrizione(i + 1, j) == Constraint.NONE || (cartaSchema.getRestrizione(i + 1, j).getDescrizione().equals(dadoSelezionato.getColore()) || attivaUtensile2) || (cartaSchema.getRestrizione(i + 1, j).getDescrizione().equals(new Integer(dadoSelezionato.getNumero()).toString()) || attivaUtensile3))) {
                         if (!(grigliaGioco[i][j].getNumero() == dadoSelezionato.getNumero() || grigliaGioco[i][j].getColore().equals(dadoSelezionato.getColore()))) {
                             if (piazzamentiPermessi[i + 1][j] == null) {
 
@@ -490,7 +489,7 @@ public class Plancia implements Serializable {
                         piazzamentiPermessi[i + 1][j] = false;
 
                     }
-                    if (grigliaGioco[i][j - 1] == null && (cartaSchema.getRestrizione(i, j - 1) == Constraint.NONE || cartaSchema.getRestrizione(i, j - 1).getDescrizione().equals(dadoSelezionato.getColore()) || cartaSchema.getRestrizione(i, j - 1).getDescrizione().equals(new Integer(dadoSelezionato.getNumero()).toString()))) {
+                    if (grigliaGioco[i][j - 1] == null && (cartaSchema.getRestrizione(i, j - 1) == Constraint.NONE || (cartaSchema.getRestrizione(i, j - 1).getDescrizione().equals(dadoSelezionato.getColore()) || attivaUtensile2) || (cartaSchema.getRestrizione(i, j - 1).getDescrizione().equals(new Integer(dadoSelezionato.getNumero()).toString()) || attivaUtensile3))) {
                         if (!(grigliaGioco[i][j].getNumero() == dadoSelezionato.getNumero() || grigliaGioco[i][j].getColore().equals(dadoSelezionato.getColore()))) {
                             if (piazzamentiPermessi[i][j - 1] == null) {
 
@@ -503,7 +502,7 @@ public class Plancia implements Serializable {
                     } else {
                         piazzamentiPermessi[i][j - 1] = false;
                     }
-                    if (grigliaGioco[i - 1][j - 1] == null && (cartaSchema.getRestrizione(i - 1, j - 1) == Constraint.NONE || cartaSchema.getRestrizione(i - 1, j - 1).getDescrizione().equals(dadoSelezionato.getColore()) || cartaSchema.getRestrizione(i - 1, j - 1).getDescrizione().equals(new Integer(dadoSelezionato.getNumero()).toString()))) {
+                    if (grigliaGioco[i - 1][j - 1] == null && (cartaSchema.getRestrizione(i - 1, j - 1) == Constraint.NONE || (cartaSchema.getRestrizione(i - 1, j - 1).getDescrizione().equals(dadoSelezionato.getColore()) || attivaUtensile2) || (cartaSchema.getRestrizione(i - 1, j - 1).getDescrizione().equals(new Integer(dadoSelezionato.getNumero()).toString()) || attivaUtensile3))) {
                         if (piazzamentiPermessi[i - 1][j - 1] == null) {
 
                             piazzamentiPermessi[i - 1][j - 1] = true;
@@ -512,7 +511,7 @@ public class Plancia implements Serializable {
                         piazzamentiPermessi[i - 1][j - 1] = false;
 
                     }
-                    if (grigliaGioco[i + 1][j - 1] == null && (cartaSchema.getRestrizione(i + 1, j - 1) == Constraint.NONE || cartaSchema.getRestrizione(i + 1, j - 1).getDescrizione().equals(dadoSelezionato.getColore()) || cartaSchema.getRestrizione(i + 1, j - 1).getDescrizione().equals(new Integer(dadoSelezionato.getNumero()).toString()))) {
+                    if (grigliaGioco[i + 1][j - 1] == null && (cartaSchema.getRestrizione(i + 1, j - 1) == Constraint.NONE || (cartaSchema.getRestrizione(i + 1, j - 1).getDescrizione().equals(dadoSelezionato.getColore()) || attivaUtensile2) || (cartaSchema.getRestrizione(i + 1, j - 1).getDescrizione().equals(new Integer(dadoSelezionato.getNumero()).toString()) || attivaUtensile3))) {
                         if (piazzamentiPermessi[i + 1][j - 1] == null) {
 
                             piazzamentiPermessi[i + 1][j - 1] = true;
@@ -528,7 +527,7 @@ public class Plancia implements Serializable {
 
         //run-time calculus of available moves based on a selected dice (parameter).
 
-        public Boolean[][] calcolaMosse (Dado dadoSelezionato){
+        public Boolean[][] calcolaMosse (Dado dadoSelezionato, boolean attivaUtensile2, boolean attivaUtensile3){
             boolean primoPiazzamanto = true;
             int i, j;
 
@@ -549,7 +548,7 @@ public class Plancia implements Serializable {
                 i = 0;
                 for (j = 0; j < 5; j++) {
                     Constraint restrizione = cartaSchema.getRestrizione(i, j);
-                    if (restrizione == Constraint.NONE || restrizione.getDescrizione().equals(dadoSelezionato.getColore()) || restrizione.getDescrizione().equals(new Integer(dadoSelezionato.getNumero()).toString()))
+                    if (restrizione == Constraint.NONE || (restrizione.getDescrizione().equals(dadoSelezionato.getColore()) || attivaUtensile2) || (restrizione.getDescrizione().equals(new Integer(dadoSelezionato.getNumero()).toString()) || attivaUtensile3))
                         piazzamentiPermessi[i][j] = true;
                     else
                         piazzamentiPermessi[i][j] = false;
@@ -558,7 +557,7 @@ public class Plancia implements Serializable {
                 j = 0;
                 for (i = 0; i < 4; i++) {
                     Constraint restrizione = cartaSchema.getRestrizione(i, j);
-                    if (restrizione == Constraint.NONE || restrizione.getDescrizione().equals(dadoSelezionato.getColore()) || restrizione.getDescrizione().equals(new Integer(dadoSelezionato.getNumero()).toString()))
+                    if (restrizione == Constraint.NONE || (restrizione.getDescrizione().equals(dadoSelezionato.getColore()) || attivaUtensile2) || (restrizione.getDescrizione().equals(new Integer(dadoSelezionato.getNumero()).toString()) || attivaUtensile3))
                         piazzamentiPermessi[i][j] = true;
                     else
                         piazzamentiPermessi[i][j] = false;
@@ -567,7 +566,7 @@ public class Plancia implements Serializable {
                 j = 4;
                 for (i = 0; i < 4; i++) {
                     Constraint restrizione = cartaSchema.getRestrizione(i, j);
-                    if (restrizione == Constraint.NONE || restrizione.getDescrizione().equals(dadoSelezionato.getColore()) || restrizione.getDescrizione().equals(new Integer(dadoSelezionato.getNumero()).toString()))
+                    if (restrizione == Constraint.NONE || (restrizione.getDescrizione().equals(dadoSelezionato.getColore()) || attivaUtensile2) || (restrizione.getDescrizione().equals(new Integer(dadoSelezionato.getNumero()).toString()) || attivaUtensile3))
                         piazzamentiPermessi[i][j] = true;
                     else
                         piazzamentiPermessi[i][j] = false;
@@ -576,7 +575,7 @@ public class Plancia implements Serializable {
                 i = 3;
                 for (j = 0; j < 5; j++) {
                     Constraint restrizione = cartaSchema.getRestrizione(i, j);
-                    if (restrizione == Constraint.NONE || restrizione.getDescrizione().equals(dadoSelezionato.getColore()) || restrizione.getDescrizione().equals(new Integer(dadoSelezionato.getNumero()).toString()))
+                    if (restrizione == Constraint.NONE || (restrizione.getDescrizione().equals(dadoSelezionato.getColore()) || attivaUtensile2) || (restrizione.getDescrizione().equals(new Integer(dadoSelezionato.getNumero()).toString()) || attivaUtensile3))
                         piazzamentiPermessi[i][j] = true;
                     else
                         piazzamentiPermessi[i][j] = false;
@@ -592,7 +591,7 @@ public class Plancia implements Serializable {
             } else {
                 for (i = 0; i < 4; i++) {
                     for (j = 0; j < 5; j++) {
-                        setCelleAdiacenti(i, j, dadoSelezionato);
+                        setCelleAdiacenti(i, j, dadoSelezionato, attivaUtensile2, attivaUtensile3);
                     }
                 }
                 for (i=0; i<4; i++){
