@@ -1,5 +1,6 @@
 package ingSw2018StaglianoVagagginiVergari.model;
 
+import ingSw2018StaglianoVagagginiVergari.server.model.Dado;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;

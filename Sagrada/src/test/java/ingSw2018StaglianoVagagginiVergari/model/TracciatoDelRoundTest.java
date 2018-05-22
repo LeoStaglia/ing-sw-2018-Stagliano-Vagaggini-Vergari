@@ -1,5 +1,7 @@
 package ingSw2018StaglianoVagagginiVergari.model;
 
+import ingSw2018StaglianoVagagginiVergari.server.model.Dado;
+import ingSw2018StaglianoVagagginiVergari.server.model.TracciatoDelRound;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 

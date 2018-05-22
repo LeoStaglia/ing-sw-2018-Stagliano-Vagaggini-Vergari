@@ -1,9 +1,11 @@
 package ingSw2018StaglianoVagagginiVergari.model;
 
 import Eccezioni.MossaIllegaleException;
-import ingSw2018StaglianoVagagginiVergari.model.carteSchema.Schema;
-import ingSw2018StaglianoVagagginiVergari.model.carteSchema.ViaLux;
-import ingSw2018StaglianoVagagginiVergari.model.carteSchema.Virtus;
+import ingSw2018StaglianoVagagginiVergari.server.model.Dado;
+import ingSw2018StaglianoVagagginiVergari.server.model.Plancia;
+import ingSw2018StaglianoVagagginiVergari.server.model.carteSchema.Schema;
+import ingSw2018StaglianoVagagginiVergari.server.model.carteSchema.ViaLux;
+import ingSw2018StaglianoVagagginiVergari.server.model.carteSchema.Virtus;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import  static org.mockito.Mockito.*;

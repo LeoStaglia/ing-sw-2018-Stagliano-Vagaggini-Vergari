@@ -1,91 +1,90 @@
-package ingSw2018StaglianoVagagginiVergari.model;
+package ingSw2018StaglianoVagagginiVergari.server.model.carteSchema;
 
 import ingSw2018StaglianoVagagginiVergari.server.model.Constraint;
-import ingSw2018StaglianoVagagginiVergari.server.model.carteSchema.KaleidoscopicDream;
-import org.junit.jupiter.api.Test;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
-import static org.junit.jupiter.api.Assertions.*;
-
-class KaleidoscopicDreamTest{
-
-
-
-
-    @Test
-    void get() {
-       //Verifying singleton integrity.
-        KaleidoscopicDream k1 = KaleidoscopicDream.get();
-        KaleidoscopicDream k2 = KaleidoscopicDream.get();
-        assertEquals(k1, k2);
-
-    }
-
-
-
-    @Test
-    void getRestrizione() {
-        KaleidoscopicDream k = KaleidoscopicDream.get();
-        //<---------------------------------------> Testing the integrity of the front face of the card and the method getRestrizione()
-        k.scegliFaccia(true); //here we can test the method called scegliFaccia
+public class KaleidoscopicDream extends CartaSchema implements Serializable{
+    private static KaleidoscopicDream istanza;
+    private static Constraint[][] costruisciGrigliaFronte(){
         ArrayList<Constraint> constraints = new ArrayList<Constraint>();
         constraints.add(Constraint.GIALLO);
         constraints.add(Constraint.BLU);
         constraints.add(Constraint.NONE);
         constraints.add(Constraint.NONE);
         constraints.add(Constraint.UNO);
+
         constraints.add(Constraint.VERDE);
         constraints.add(Constraint.NONE);
         constraints.add(Constraint.CINQUE);
         constraints.add(Constraint.NONE);
         constraints.add(Constraint.QUATTRO);
+
         constraints.add(Constraint.TRE);
         constraints.add(Constraint.NONE);
         constraints.add(Constraint.ROSSO);
         constraints.add(Constraint.NONE);
         constraints.add(Constraint.VERDE);
+
         constraints.add(Constraint.DUE);
         constraints.add(Constraint.NONE);
         constraints.add(Constraint.NONE);
         constraints.add(Constraint.BLU);
         constraints.add(Constraint.GIALLO);
-        for (int i = 0; i < 4; i++) {
-            for (int j = 0; j < 5; j++) {
-                assertEquals(k.getRestrizione(i, j), constraints.remove(0));
+        Constraint[][] risultato = new Constraint[4][5];
+        for (int i=0; i<4; i++){
+            for (int j=0; j<5; j++){
+                risultato[i][j]= constraints.remove(0);
             }
         }
-        //<---------------------------------------> Testing the integrity of the back face of the card and the method getRestrizione()
-        k.scegliFaccia(false);
+        return risultato;
+
+    }
+    private static Constraint[][] costruisciGrigliaRetro(){
+        ArrayList<Constraint> constraints = new ArrayList<Constraint>();
         constraints.add(Constraint.VIOLA);
         constraints.add(Constraint.SEI);
         constraints.add(Constraint.NONE);
         constraints.add(Constraint.NONE);
         constraints.add(Constraint.TRE);
+
         constraints.add(Constraint.CINQUE);
         constraints.add(Constraint.VIOLA);
         constraints.add(Constraint.TRE);
         constraints.add(Constraint.NONE);
         constraints.add(Constraint.NONE);
+
         constraints.add(Constraint.NONE);
         constraints.add(Constraint.DUE);
         constraints.add(Constraint.VIOLA);
         constraints.add(Constraint.UNO);
         constraints.add(Constraint.NONE);
+
         constraints.add(Constraint.NONE);
         constraints.add(Constraint.UNO);
         constraints.add(Constraint.CINQUE);
         constraints.add(Constraint.VIOLA);
         constraints.add(Constraint.QUATTRO);
-        for (int i = 0; i < 4; i++) {
-            for (int j = 0; j < 5; j++) {
-                assertEquals(k.getRestrizione(i, j), constraints.remove(0));
+        Constraint[][] risultato = new Constraint[4][5];
+        for (int i=0; i<4; i++){
+            for (int j=0; j<5; j++){
+                risultato[i][j]= constraints.remove(0);
             }
-
         }
-
+        return risultato;
 
     }
 
+    private KaleidoscopicDream(){
+        super("Kaleidoscopic Dream", "Firmitas", 4,5,costruisciGrigliaFronte(), costruisciGrigliaRetro());
+    }
+
+    public static KaleidoscopicDream get(){
+        if (istanza==null){
+            istanza= new KaleidoscopicDream();
+        }
+        return istanza;
+    }
 
 }

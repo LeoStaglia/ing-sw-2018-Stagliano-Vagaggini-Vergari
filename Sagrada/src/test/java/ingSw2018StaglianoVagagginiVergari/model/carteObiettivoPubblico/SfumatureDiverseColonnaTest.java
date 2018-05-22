@@ -1,9 +1,9 @@
 package ingSw2018StaglianoVagagginiVergari.model.carteObiettivoPubblico;
 
-import ingSw2018StaglianoVagagginiVergari.model.CartaObiettivoPubblico;
-import ingSw2018StaglianoVagagginiVergari.model.Dado;
-import ingSw2018StaglianoVagagginiVergari.model.FactoryCartaObiettivoPubblico;
-import ingSw2018StaglianoVagagginiVergari.model.Plancia;
+import ingSw2018StaglianoVagagginiVergari.server.model.CartaObiettivoPubblico;
+import ingSw2018StaglianoVagagginiVergari.server.model.Dado;
+import ingSw2018StaglianoVagagginiVergari.server.model.FactoryCartaObiettivoPubblico;
+import ingSw2018StaglianoVagagginiVergari.server.model.Plancia;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 

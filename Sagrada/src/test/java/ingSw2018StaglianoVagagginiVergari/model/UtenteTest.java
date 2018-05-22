@@ -1,5 +1,8 @@
 package ingSw2018StaglianoVagagginiVergari.model;
 
+import ingSw2018StaglianoVagagginiVergari.server.model.Constraint;
+import ingSw2018StaglianoVagagginiVergari.server.model.Plancia;
+import ingSw2018StaglianoVagagginiVergari.server.model.Utente;
 import org.junit.jupiter.api.Test;
 import  static org.mockito.Mockito.*;
 import static org.junit.jupiter.api.Assertions.*;
