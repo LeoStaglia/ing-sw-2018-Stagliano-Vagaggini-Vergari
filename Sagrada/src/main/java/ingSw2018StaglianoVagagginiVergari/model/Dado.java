@@ -28,4 +28,12 @@ public class Dado implements Serializable{
     public void lanciaDado(){                        //
        this.numero=random.nextInt(6)+1;
     }
+
+    public void incrementa(){
+        if(this.numero!=6)  this.numero = this.numero + 1;
+    }
+
+    public void decrementa(){
+        if(this.numero!=1)  this.numero=this.numero-1;
+    }
 }

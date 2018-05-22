@@ -1,6 +1,7 @@
 package ingSw2018StaglianoVagagginiVergari.model;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
 
@@ -23,6 +24,8 @@ public class Partita {
     private List<Integer> mazzoCarteObiettivoPubblico= new ArrayList<Integer>();
     private List<CartaUtensile> listaCartaUtensile = new ArrayList<CartaUtensile>();
     private List<CartaObiettivoPubblico> listaCartaObiettivoPubblico = new ArrayList<CartaObiettivoPubblico>();
+
+    private HashMap<Utente,Integer> listaPunteggiUtente=new HashMap<Utente,Integer>();
     private Random random = new Random();
 
     //  private String idPartita;   it is needed only in case of multiple games
@@ -89,6 +92,7 @@ public class Partita {
     // reinsert a die in the Draft Pool
     public void reInserisciDadoinRiserva(Dado d) {
         riserva.add(d);
+        /*TODO dadoSelezionato=null;*/
     }
 
     // remove a Player from the List of Players (game not started)
@@ -188,7 +192,7 @@ public class Partita {
     }
 
 //method to set the List of Tool Cards in multiplayer
-    public void setListaCartaUtensile(List<CartaUtensile> listaCartaUtensile) {
+    public void setListaCartaUtensile() {
 
         if (listaGiocatori.size() > 1) {
             for (int i = 0; i < 3; i++) {
@@ -201,7 +205,7 @@ public class Partita {
 
 
     //method to set the List of Tool Cards in singlePlayer, n is the difficult(1-5) chosen by the player
-    public void setListaCartaUtensile(List<CartaUtensile> listaCartaUtensile, int n) {
+    public void setListaCartaUtensile(int n) {
         if (listaGiocatori.size() == 1 && n > 0) {
 
             for (int i = 0; i < n; i++) {
@@ -212,7 +216,7 @@ public class Partita {
     }
 
     //method to set the List of Public Objective Cards
-     public void setListaCartaObiettivoPubblico(List<CartaObiettivoPubblico> listaCartaObiettivoPubblico) {
+     public void setListaCartaObiettivoPubblico() {
 
         if (listaGiocatori.size() > 1) {
             for (int i = 0; i < 3; i++) {
@@ -229,6 +233,34 @@ public class Partita {
         }
 
     }
+
+
+
+    public void calcolaPunteggioFinale(){
+
+
+        for (Utente u:listaGiocatori) {
+            int punteggio=u.getSegnalini();
+
+            for (CartaObiettivoPubblico c:listaCartaObiettivoPubblico) {
+                punteggio+=c.calcolaPunti(u.getPlancia());
+
+            }
+
+            for (int i=0;i<4;i++) {
+                for(int j=0;j<5;j++){
+                    if(u.getPlancia().leggiPlancia(i,j).getColore().equalsIgnoreCase(u.getObiettivoPrivato().get(0).getColore().getDescrizione())){
+                        punteggio+=u.getPlancia().leggiPlancia(i,j).getNumero();
+                    }
+                }
+
+            }
+            listaPunteggiUtente.put(u,punteggio);
+        }
+
+        // TODO aggiungere calcolo SinglePlayer
+    }
+
 
     // various getter
 
