@@ -69,7 +69,7 @@ public class Utente implements Serializable{
         return segnalini;
     }
 
-    private void setSegnalini(int difficolta){
+    public void setSegnalini(int difficolta){
         this.segnalini=difficolta;
     }
 

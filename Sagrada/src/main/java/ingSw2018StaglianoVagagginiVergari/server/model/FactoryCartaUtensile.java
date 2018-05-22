@@ -1,5 +1,5 @@
 package ingSw2018StaglianoVagagginiVergari.server.model;
-import ingSw2018StaglianoVagagginiVergari.model.carteUtensile.*;
+import ingSw2018StaglianoVagagginiVergari.server.model.carteUtensile.*;
 import ingSw2018StaglianoVagagginiVergari.server.model.carteUtensile.PennelloPerEglomise;
 
 

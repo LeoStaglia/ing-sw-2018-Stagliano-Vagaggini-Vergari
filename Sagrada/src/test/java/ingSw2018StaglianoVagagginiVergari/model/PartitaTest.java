@@ -46,14 +46,14 @@ class PartitaTest {
         p.incrementaTurno();
         p.nextRound();
         p.setOrdineRound();
-        for (Utente u:p.ordineRound) {
+        for (Utente u:p.getOrdineRound()) {
             System.out.println(u);
         }
         p.setOrdineRoundTool8Start();
 
         System.out.println(p.getTurno());
 
-        for (Utente u:p.ordineRound) {
+        for (Utente u:p.getOrdineRound()) {
             System.out.println(u);
         }
 
@@ -194,14 +194,14 @@ class PartitaTest {
         test.add(mockedUtente4);
         test.add(mockedUtente3);
 
-        p.ordineRound.add(mockedUtente1);
-        p.ordineRound.add(mockedUtente2);
-        p.ordineRound.add(mockedUtente3);
-        p.ordineRound.add(mockedUtente4);
-        p.ordineRound.add(mockedUtente4);
-        p.ordineRound.add(mockedUtente3);
-        p.ordineRound.add(mockedUtente2);
-        p.ordineRound.add(mockedUtente1);
+        p.getOrdineRound().add(mockedUtente1);
+        p.getOrdineRound().add(mockedUtente2);
+        p.getOrdineRound().add(mockedUtente3);
+        p.getOrdineRound().add(mockedUtente4);
+        p.getOrdineRound().add(mockedUtente4);
+        p.getOrdineRound().add(mockedUtente3);
+        p.getOrdineRound().add(mockedUtente2);
+        p.getOrdineRound().add(mockedUtente1);
 
         p.setOrdineRound();
         p.setOrdineRound();

@@ -1,11 +1,12 @@
 package ingSw2018StaglianoVagagginiVergari.server.model.carteUtensile;
+
 import ingSw2018StaglianoVagagginiVergari.server.model.CartaUtensile;
 import ingSw2018StaglianoVagagginiVergari.server.model.Partita;
 
-public class PennelloPerEglomise implements CartaUtensile {
-    boolean costo ;
-    String Nome = "PennelloPerEglomise";
-    int Id = 2;
+public class Martelletto implements CartaUtensile {
+    boolean costo ; ;
+    String Nome = "Martelletto";
+    int Id = 7;
     // Utente Utilizzatore;   quando avremo dichiarato Utente, decommentare
 
 
@@ -15,13 +16,13 @@ public class PennelloPerEglomise implements CartaUtensile {
 
     //----------------------------all this part is required for Singleton Pattern----------------------------------
 
-    private static PennelloPerEglomise instance = new PennelloPerEglomise();
+    private static Martelletto instance = new Martelletto();
 
-    private PennelloPerEglomise(){   //il costruttore è privato per il singleton pattern
-        boolean costo=false ;
+    private Martelletto(){   //il costruttore è privato per il singleton pattern
+        costo=false;
     }
 
-    public static PennelloPerEglomise getInstance(){
+    public static Martelletto getInstance(){
         return instance;
     }
 
@@ -31,8 +32,9 @@ public class PennelloPerEglomise implements CartaUtensile {
 
 
 
-    public void usaEffettoCarta(Partita p) {  // viene passata solo la Partita, dato che si ha traccia dell'utente corrente
-        System.out.println("");
+    public void usaEffettoCarta(Partita p) {
+        costo=true;
+       p.rilanciaDadiInRiserva();
 
     }
 
@@ -43,8 +45,8 @@ public class PennelloPerEglomise implements CartaUtensile {
         else return 1;
     }
 
+
     public int getId() {
         return Id;
     }
 }
-

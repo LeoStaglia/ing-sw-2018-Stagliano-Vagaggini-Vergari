@@ -51,5 +51,9 @@ public class TracciatoDelRound {
         return rimanenzeRiservaOn.remove(i - 1);
     }
 
+    public void setRimanenzeRiservaOn(int i,Dado d) {
+        this.rimanenzeRiservaOn.set(i - 1,d);
+    }
+
 }
 

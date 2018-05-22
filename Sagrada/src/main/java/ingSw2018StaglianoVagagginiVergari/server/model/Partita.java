@@ -15,11 +15,11 @@ public class Partita {
 
     private ArrayList<GameObserver> gameObservers;
     private Dado dadoSelezionato = null;
-    private List<String> setOfColors = new ArrayList<String>();
-    private List<Dado> riserva = new ArrayList<Dado>();
-    private List<Dado> sacchetto = new ArrayList<Dado>();
+    private ArrayList<String> setOfColors = new ArrayList<String>();
+    private ArrayList<Dado> riserva = new ArrayList<Dado>();
+    private ArrayList<Dado> sacchetto = new ArrayList<Dado>();
 
-    private List<Utente> listaGiocatori = new ArrayList<Utente>();
+    private ArrayList<Utente> listaGiocatori = new ArrayList<Utente>();
     private Utente giocatoreCorrente;  // currentPlayer
 
     ArrayList<Utente> ordineRound = new ArrayList<Utente>();  // mantiene l'ordine del round
@@ -28,10 +28,10 @@ public class Partita {
     private TracciatoDelRound tracciatoDelRound = new TracciatoDelRound();
     private HashMap<Utente,Integer> listaPunteggiUtente=new HashMap<Utente,Integer>();
 
-    private List<Integer> mazzoCarteUtensile= new ArrayList<Integer>();
-    private List<Integer> mazzoCarteObiettivoPubblico= new ArrayList<Integer>();
-    private List<Object> listaCartaUtensile = new ArrayList<Object>();
-    private List<CartaObiettivoPubblico> listaCartaObiettivoPubblico = new ArrayList<CartaObiettivoPubblico>();
+    private ArrayList<Integer> mazzoCarteUtensile= new ArrayList<Integer>();
+    private ArrayList<Integer> mazzoCarteObiettivoPubblico= new ArrayList<Integer>();
+    private ArrayList<CartaUtensile> listaCartaUtensile = new ArrayList<CartaUtensile>();
+    private ArrayList<CartaObiettivoPubblico> listaCartaObiettivoPubblico = new ArrayList<CartaObiettivoPubblico>();
     private ArrayList<Plancia> listaPlance = new ArrayList<>();
     private ArrayList<Constraint> listaObiettiviPrivati = new ArrayList<>();
     private ArrayList<Schema> listaCarteSchema= new ArrayList<>();
@@ -129,6 +129,8 @@ public class Partita {
 
     public void incrementaTurno() {
         this.turno = this.turno + 1;
+        this.setGiocatoreCorrente();  //TODO ricontrollare prima inizializzazione
+
     }
 
     public void reInizializzaTurno() {
@@ -225,7 +227,13 @@ public class Partita {
     }
 
     public Utente getCurrentPlayer() {
-        return ordineRound.get(turno - 1);
+        return giocatoreCorrente;
+    }
+
+
+    // method called after the end of a turn to update the current player
+    public void setGiocatoreCorrente() {
+        this.giocatoreCorrente = ordineRound.get(turno - 1);
     }
 
     // return 1 if there is no player
@@ -328,57 +336,6 @@ public class Partita {
     }
 
 
-    // various getter
-
-    public List<Dado> getRiserva() {
-        return riserva;
-    }
-
-    public List<Utente> getListaGiocatori() {
-        return listaGiocatori;
-    }
-
-    public List<Dado> getSacchetto() {
-        return sacchetto;
-    }
-
-    public TracciatoDelRound getTracciatoDelRound() {
-        return tracciatoDelRound;
-    }
-
-    public List<Object> getListaCartaUtensile() {
-        return listaCartaUtensile;
-    }
-
-    public List<CartaObiettivoPubblico> getListaCartaObiettivoPubblico() {
-        return listaCartaObiettivoPubblico;
-    }
-
-    public Random getRandom() {
-        return random;
-    }
-
-    public Utente getGiocatoreCorrente() {
-        return giocatoreCorrente;
-    }
-
-    public List<String> getSetOfColors() {
-        return setOfColors;
-    }
-
-    public ArrayList<Utente> getOrdineRound() {
-        return ordineRound;
-    }
-
-    public Dado getDadoSelezionato() {
-        return dadoSelezionato;
-    }
-
-    public int getTurno() {
-        return turno;
-    }
-
-    // end various getter
 
     public void calcolaPunteggioFinale(){
 
@@ -405,6 +362,55 @@ public class Partita {
 
         // TODO aggiungere calcolo SinglePlayer
     }
+
+
+    // various getter
+
+    public ArrayList<Dado> getRiserva() {
+        return riserva;
+    }
+
+    public ArrayList<Utente> getListaGiocatori() {
+        return listaGiocatori;
+    }
+
+    public ArrayList<Dado> getSacchetto() {
+        return sacchetto;
+    }
+
+    public TracciatoDelRound getTracciatoDelRound() {
+        return tracciatoDelRound;
+    }
+
+    public ArrayList<CartaUtensile> getListaCartaUtensile() {
+        return listaCartaUtensile;
+    }
+
+    public ArrayList<CartaObiettivoPubblico> getListaCartaObiettivoPubblico() {
+        return listaCartaObiettivoPubblico;
+    }
+
+    public Random getRandom() {
+        return random;
+    }
+
+    public ArrayList<String> getSetOfColors() {
+        return setOfColors;
+    }
+
+    public ArrayList<Utente> getOrdineRound() {
+        return ordineRound;
+    }
+
+    public Dado getDadoSelezionato() {
+        return dadoSelezionato;
+    }
+
+    public int getTurno() {
+        return turno;
+    }
+
+    // end various getter
 
 }
 

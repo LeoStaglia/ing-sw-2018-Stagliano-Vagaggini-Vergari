@@ -1,5 +1,4 @@
 package ingSw2018StaglianoVagagginiVergari.server.model;
-import ingSw2018StaglianoVagagginiVergari.model.carteObiettivoPubblico.*;
 import ingSw2018StaglianoVagagginiVergari.server.model.carteObiettivoPubblico.*;
 
 public class FactoryCartaObiettivoPubblico {
