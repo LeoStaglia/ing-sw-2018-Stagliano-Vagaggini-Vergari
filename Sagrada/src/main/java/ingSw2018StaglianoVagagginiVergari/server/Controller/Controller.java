@@ -75,7 +75,7 @@ public class Controller extends UnicastRemoteObject implements RemoteController 
 
     //Fase di scelta dello schema, il controller riceve la view e l'id, setta la faccia della carta schema scelta.
     public void scegliSchema(GameObserver view, String idUser,boolean carta1, boolean fronte){
-        partita.sceltaSchema(view, idUser, fronte);
+        partita.sceltaSchema(view, idUser,carta1, fronte);
 
     }
 
