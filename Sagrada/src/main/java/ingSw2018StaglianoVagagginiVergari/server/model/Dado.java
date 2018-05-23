@@ -13,9 +13,15 @@ public class Dado implements Serializable{
 
 
     public Dado(String colore){
-        numero=random.nextInt(6)+1;  //
+        numero=random.nextInt(6)+1;
         this.colore=colore;
     }
+
+    public Dado(String colore, int numero){
+        this.numero=numero;
+        this.colore=colore;
+    }
+
     public int getNumero() {
         return numero;
     }

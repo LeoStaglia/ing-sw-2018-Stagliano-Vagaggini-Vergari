@@ -527,7 +527,7 @@ public class Plancia implements Serializable {
 
         //run-time calculus of available moves based on a selected dice (parameter).
 
-        public Boolean[][] calcolaMosse (Dado dadoSelezionato, boolean attivaUtensile2, boolean attivaUtensile3){
+    public Boolean[][] calcolaMosse (Dado dadoSelezionato, boolean attivaUtensile2, boolean attivaUtensile3){
             boolean primoPiazzamanto = true;
             int i, j;
 
@@ -606,4 +606,165 @@ public class Plancia implements Serializable {
             }
             return piazzamentiPermessi;
         }
+
+
+    public void Tool9( Dado dadoSelezionato){
+
+
+
+
+        /*
+        *  - scegli un dado dalla riserva
+        *
+        *  piazza il dado in una posizione che non sia adiacente a un altro dado:
+        *
+        *  - calcolo le posizioni corrette del dado tramite il metodo calcolaMosse( dado  selezionato)
+        *  - a questo punto ho la matrice dei possibili piazzamenti
+        *  - modifico la matrice mettendo a false tutti i dadi che hanno un altro dado adiacente
+        *
+        *
+        * */
+
+
+
+
+        Boolean[][] NuoviPiazzamentiPermessi = new Boolean[4][5];
+
+
+        Boolean[][] IsDadoInPlanciaCorrente = new Boolean[4][5];
+
+
+
+
+
+        //imposto tutta la matrice NuoviPiazzamentiPermessi :  se nella carta schema, nella posizone [i][j] c'è un colore o un numero diverso, metti la matrice  NuoviPiazzamentiPermessi[i][j]=false
+
+        // imposto true nella matrice IsDadoInPlanciaCorrente ogni volta che è presente un dado, false altrmenti
+
+
+
+        for (int i=0; i<4;i++){
+
+            //System.out.println();
+            for (int j=0;j<5;j++){
+
+                if (leggiPlancia(i,j) != null)
+                    IsDadoInPlanciaCorrente[i][j] = true;
+
+                else
+                    IsDadoInPlanciaCorrente[i][j] = false;
+
+
+                if( !  ( (getCartaSchema().getRestrizione(i,j).getDescrizione().equalsIgnoreCase(dadoSelezionato.getColore()))     ||       (getCartaSchema().getRestrizione(i,j).getDescrizione().equalsIgnoreCase(new Integer(dadoSelezionato.getNumero()).toString() )  )  ||  (getCartaSchema().getRestrizione(i,j).getDescrizione().equalsIgnoreCase("N")   )))
+                    NuoviPiazzamentiPermessi[i][j]=false;
+                else
+                    NuoviPiazzamentiPermessi[i][j]=true;
+
+
+                //System.out.print(IsDadoInPlanciaCorrente[i][j] + " ");
+
+
+
+
+            }
+        }
+
+
+
+
+        System.out.println("\nquesta è la matrice definitiva di posizionamento");
+
+
+
+
+
+
+
+        //scorro la matrice IsDadoInPlanciaCorrente e in base al fatto che una posizione abbia un dado adiacente o meno, setto false
+
+        for (int i=0;i<4;i++){
+            System.out.println();
+            for(int j=0;j<5;j++){
+
+
+
+
+                if (i==0 && j==0){
+                    if ( IsDadoInPlanciaCorrente[i][j+1] || IsDadoInPlanciaCorrente[i+1][j] )
+                        NuoviPiazzamentiPermessi[i][j] = false;
+
+                }
+
+                else if (i==0 && j==4){
+                    if ( IsDadoInPlanciaCorrente[i][j-1] || IsDadoInPlanciaCorrente[i+1][j] )
+                        NuoviPiazzamentiPermessi[i][j] = false;
+
+                }
+
+                else if (i==3 && j==0){
+                    if ( IsDadoInPlanciaCorrente[i][j+1] || IsDadoInPlanciaCorrente[i-1][j] )
+                        NuoviPiazzamentiPermessi[i][j] = false;
+
+                }
+
+                else if (i==3 && j==4){
+                    if ( IsDadoInPlanciaCorrente[i][j-1] || IsDadoInPlanciaCorrente[i-1][j] )
+                        NuoviPiazzamentiPermessi[i][j] = false;
+
+                }
+
+                else if (  i==0   &&  (  j==1 ||  j==2 ||  j==3 )) {
+                    if ( IsDadoInPlanciaCorrente[i][j+1] || IsDadoInPlanciaCorrente[i][j-1] || IsDadoInPlanciaCorrente[i+1][j] )
+                        NuoviPiazzamentiPermessi[i][j] = false;
+
+                }
+
+                else if (  ( i==1 || i==2  )   && j==4  ) {
+                    if ( IsDadoInPlanciaCorrente[i+1][j] || IsDadoInPlanciaCorrente[i-1][j] || IsDadoInPlanciaCorrente[i][j-1] )
+                        NuoviPiazzamentiPermessi[i][j] = false;
+
+                }
+
+                else if (  i==3   &&  ( j==1 || j==2 || j==3 )) {
+                    if ( IsDadoInPlanciaCorrente[i][j+1] || IsDadoInPlanciaCorrente[i][j-1] || IsDadoInPlanciaCorrente[i-1][j] )
+                        NuoviPiazzamentiPermessi[i][j] = false;
+
+                }
+
+                else if (  ( i==1 || i==2  )   && j==0  ) {
+                    if ( IsDadoInPlanciaCorrente[i+1][j] || IsDadoInPlanciaCorrente[i-1][j] || IsDadoInPlanciaCorrente[i][j+1] )
+                        NuoviPiazzamentiPermessi[i][j] = false;
+
+                }
+
+                else{
+                    if ( IsDadoInPlanciaCorrente[i+1][j] || IsDadoInPlanciaCorrente[i-1][j] || IsDadoInPlanciaCorrente[i][j+1] || IsDadoInPlanciaCorrente[i][j-1] )
+                        NuoviPiazzamentiPermessi[i][j] = false;
+
+                }
+
+
+                // devo mettere a false tutte le posizioni in cui ci sono i dadi
+                if (IsDadoInPlanciaCorrente[i][j])
+                    NuoviPiazzamentiPermessi[i][j]=false;
+
+
+
+
+
+                System.out.print(NuoviPiazzamentiPermessi[i][j]+" ");
+
+
+
+            }
+        }
+
+
+
+        piazzamentiPermessi = NuoviPiazzamentiPermessi;   //i cambiamenti vengono salvati dentro alla matrice piazzamentiPermessi
+
+
+
+    }
+
 }

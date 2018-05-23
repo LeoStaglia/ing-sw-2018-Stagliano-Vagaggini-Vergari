@@ -190,6 +190,9 @@ public class Partita {
         riserva.add(d);
     }
 
+    //reinsert a die in the Dice Bag
+    public void reInserisciDadoInSacchetto(Dado d){ sacchetto.add(d);}
+
     // remove a Player from the List of Players (game not started)
     public void removeUtente(Utente user) {
         listaGiocatori.remove(user);
@@ -409,6 +412,16 @@ public class Partita {
     public int getTurno() {
         return turno;
     }
+
+    public Dado getDadoRandomFromSacchetto(){
+
+        return sacchetto.remove(random.nextInt(sacchetto.size()));
+
+    }
+
+
+
+
 
     // end various getter
 
