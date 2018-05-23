@@ -67,10 +67,15 @@ public class Partita {
 
 
     public void preparaPartita() throws RemoteException {
+
         for (GameObserver view: gameObservers){
             Utente u = new Utente(this.getPlanciaFromList(), this.getPrivatoFromList());
+            listaGiocatori.add(u);
             view.notifyUser(u.getId(), u.getPlancia().getCartaSchema().stringRepresentation(true), u.getPlancia().getCartaSchema().stringRepresentation(false), u.getObiettivoPrivato().get(0).toString());
         }
+
+        inizializzaOrdineRound();
+        setGiocatoreCorrente();
 
     }
 
@@ -251,7 +256,10 @@ public class Partita {
 
     // increments the round
     public void nextRound() {
+        //TODO possibile inserimento metodo se nel round è stata utilizzata la carta 8
+        setOrdineRound();
         tracciatoDelRound.nextRound();
+        reInizializzaTurno();
     }
 
     // method called by card tool 7;

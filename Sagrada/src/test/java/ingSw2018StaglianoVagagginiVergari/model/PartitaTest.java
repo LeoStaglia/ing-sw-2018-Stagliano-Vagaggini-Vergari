@@ -43,9 +43,8 @@ class PartitaTest {
         p.getListaGiocatori().add(mockedUtente3);
         p.getListaGiocatori().add(mockedUtente4);
         p.inizializzaOrdineRound();
-        p.incrementaTurno();
         p.nextRound();
-        p.setOrdineRound();
+        p.incrementaTurno();
         for (Utente u:p.getOrdineRound()) {
             System.out.println(u);
         }
@@ -214,9 +213,7 @@ class PartitaTest {
     void getCurrentPlayer() {
         Partita p=new Partita();
         int n=7;
-        for(int i=1;i<n;i++) {
-            p.incrementaTurno();
-        }
+
         Utente mockedUtente1= Mockito.mock(Utente.class);
         when(mockedUtente1.getId()).thenReturn("1");
         Utente mockedUtente2= Mockito.mock(Utente.class);
@@ -234,6 +231,11 @@ class PartitaTest {
         p.getOrdineRound().add(mockedUtente3);
         p.getOrdineRound().add(mockedUtente2);
         p.getOrdineRound().add(mockedUtente1);
+
+        for(int i=1;i<n;i++) {
+            p.incrementaTurno();
+        }
+
         assertEquals(p.getCurrentPlayer(),mockedUtente2);
     }
 
