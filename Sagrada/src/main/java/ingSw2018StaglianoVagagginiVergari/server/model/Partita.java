@@ -239,6 +239,11 @@ public class Partita {
         this.giocatoreCorrente = ordineRound.get(turno - 1);
     }
 
+    // set the current player as the one passed
+    public void setGiocatoreCorrente(Utente u) {
+        this.giocatoreCorrente = u;
+    }
+
     // return 1 if there is no player
     public boolean isEmpty() {
         return (listaGiocatori.size() == 0);
