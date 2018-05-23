@@ -1,11 +1,13 @@
 package ingSw2018StaglianoVagagginiVergari.server.model.carteUtensile;
+
 import ingSw2018StaglianoVagagginiVergari.server.model.CartaUtensile;
 import ingSw2018StaglianoVagagginiVergari.server.model.Partita;
 
+
 public class PennelloPerEglomise implements CartaUtensile {
-    boolean costo ;
-    String Nome = "PennelloPerEglomise";
-    int Id = 2;
+    private boolean costo ;
+    private String Nome = "Pennello Per Eglomise";
+    private int id = 2;
     // Utente Utilizzatore;   quando avremo dichiarato Utente, decommentare
 
 
@@ -16,11 +18,6 @@ public class PennelloPerEglomise implements CartaUtensile {
     //----------------------------all this part is required for Singleton Pattern----------------------------------
 
     private static PennelloPerEglomise instance = new PennelloPerEglomise();
-
-    private PennelloPerEglomise(){   //il costruttore è privato per il singleton pattern
-        boolean costo=false ;
-    }
-
     public static PennelloPerEglomise getInstance(){
         return instance;
     }
@@ -30,21 +27,24 @@ public class PennelloPerEglomise implements CartaUtensile {
 
 
 
+    public void usaEffettoCarta(Partita p) {
 
-    public void usaEffettoCarta(Partita p) {  // viene passata solo la Partita, dato che si ha traccia dell'utente corrente
-        System.out.println("");
+        p.getCurrentPlayer().getPlancia().calcolaMosse(p.getDadoSelezionato(), true, false);
 
     }
 
+    @Override
     public int getCosto() {
-        if(costo){
+        if (costo) {
+
             return 2;
+        }else{
+            return 1;
         }
-        else return 1;
     }
 
+    @Override
     public int getId() {
-        return Id;
+        return id;
     }
 }
-
