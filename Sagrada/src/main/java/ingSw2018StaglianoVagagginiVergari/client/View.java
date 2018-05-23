@@ -15,11 +15,14 @@ public class View extends UnicastRemoteObject implements GameObserver, Remote {
     private RemoteController controller;
     private Scanner command;
     private ViewStatus status;
-    private String[][] schemaFronte;
-    private String[][] schemaRetro;
+    private String[][] schemaFronte1;
+    private String[][] schemaRetro1;
+    private String[][] schemaFronte2;
+    private String[][] schemaRetro2;
     private String obiettivoPrivato;
     private boolean updateView;
     private boolean fronteScelto;
+    private boolean carta1;
 
 
     public View(RemoteController controller) throws RemoteException {
@@ -30,6 +33,7 @@ public class View extends UnicastRemoteObject implements GameObserver, Remote {
     }
     public void run() throws RemoteException, InterruptedException {
         int cmd=0;
+        boolean carta1=false;
         while(cmd!=1 || cmd!=2) {
             System.out.println("(1) Per partecipare alla partita (2) per uscire");
             cmd = command.nextInt();
@@ -42,48 +46,60 @@ public class View extends UnicastRemoteObject implements GameObserver, Remote {
                 } catch (FullGameException e) {
                     System.out.println(e.getMessage());
                 }
+                System.out.println("Preparazione partita... Attendi. (0) per uscire");
                 synchronized (this) {
-                    System.out.println("Preparazione partita... Attendi. (0) per uscire");
                     while (status == ViewStatus.Preparazione){
-                        cmd = command.nextInt();
-                        if (cmd==0){
+                        if (command.nextInt()==0){
                             controller.abbandonaPartita(this);
                             System.exit(0);
                         }
                     }
                 }
                 if (getStatus()==ViewStatus.SelezioneSchema){
-                    System.out.println("(1) per fronte (2) per retro");
-                    int comando = command.nextInt();
-                    while(comando!=2 || comando!=1){
-                        comando = command.nextInt();
+                    System.out.println("CARTA 1: Fronte");
+                    stampaSchema(true, true);
+                    System.out.println("CARTA 1: Retro");
+                    stampaSchema(true, false);
+                    System.out.println("CARTA 2: Fronte");
+                    stampaSchema(false, true);
+                    System.out.println("CARTA 2: Retro");
+                    stampaSchema(false, false);
+                    while(cmd!=1 || cmd!=2) {
+                        System.out.println("(1) per scegliere la prima carta (2) per scegliere la seconda carta");
+                        cmd = command.nextInt();
                     }
-                    if (comando==1){
-                        controller.scegliSchema(this, id, true);
-                    }else if (comando==2){
-                        controller.scegliSchema(this, id, false);
+                    if (cmd==1){
+                        carta1=true;
+                    }else{
+                        carta1 = false;
+                    }
+                    while(cmd!=1 || cmd!=2) {
+                        System.out.println("(1) per scegliere il fronte (2) per scegliere il retro");
+                        cmd = command.nextInt();
+                    }
+                    if (cmd==1){
+                        controller.scegliSchema(this, id, carta1, true);
+                    }else{
+                        controller.scegliSchema(this, id, carta1, false);
                     }
                     while(!updateView){
 
                     }
                     updateView=false;
-                    System.out.println("Hai scelto lo schema");
-                    if (fronteScelto){
-                        stampaSchema(true);
-                    }else{
-                        stampaSchema(false);
-                    }
+
                 }
             }
 
     }
 
     @Override
-    public synchronized void notifyUser(String id, String[][] schemaFronte, String[][] retro, String obiettivoPrivato) throws RemoteException {
+    public synchronized void notifyUser(String id, String[][] schemaFronte1, String[][] schemaRetro1, String[][] schemaFronte2, String[][] schemaRetro2, String obiettivoPrivato) throws RemoteException {
         this.id = id;
         this.setStatus(ViewStatus.SelezioneSchema);
-        this.schemaFronte=schemaFronte;
-        this.schemaRetro=schemaRetro;
+        this.schemaFronte1=schemaFronte1;
+        this.schemaRetro1=schemaRetro1;
+        this.schemaFronte1=schemaFronte2;
+        this.schemaRetro1=schemaRetro2;
         this.obiettivoPrivato=obiettivoPrivato;
 
     }
@@ -97,17 +113,28 @@ public class View extends UnicastRemoteObject implements GameObserver, Remote {
     }
 
 
-    private void stampaSchema(boolean fronte){
+    private void stampaSchema(boolean carta1,boolean fronte){
         for (int i=0; i<4; i++){
             System.out.println("");
             for(int j = 0; j<5; j++){
-                if (fronte){
-                    System.out.print(schemaFronte[i][j]);
+                if (carta1) {
+                    if (fronte) {
+                        System.out.print(schemaFronte1[i][j]);
+                    } else {
+                        System.out.println(schemaRetro1[i][j]);
+                    }
+                    if (j != 4) {
+                        System.out.print(" ");
+                    }
                 }else{
-                    System.out.println(schemaRetro[i][j]);
-                }
-                if (j!=4){
-                    System.out.print(" ");
+                    if (fronte) {
+                        System.out.print(schemaFronte2[i][j]);
+                    } else {
+                        System.out.println(schemaRetro2[i][j]);
+                    }
+                    if (j != 4) {
+                        System.out.print(" ");
+                    }
                 }
             }
         }
@@ -115,8 +142,9 @@ public class View extends UnicastRemoteObject implements GameObserver, Remote {
     }
 
     @Override
-    public synchronized void notifyScheme(boolean fronteScelto) {
+    public synchronized void notifyScheme(boolean carta1, boolean fronteScelto) {
         updateView=true;
         this.fronteScelto=fronteScelto;
+        this.carta1=carta1;
     }
 }

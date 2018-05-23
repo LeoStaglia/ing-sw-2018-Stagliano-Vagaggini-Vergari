@@ -56,4 +56,12 @@ public class PennelloPastaSalda implements CartaUtensile {
     public int getId() {
         return id;
     }
+
+    public void setxCell(int xCell) {
+        this.xCell = xCell;
+    }
+
+    public void setyCell(int yCell) {
+        this.yCell = yCell;
+    }
 }

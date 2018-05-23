@@ -27,7 +27,7 @@ public class Partita {
     private int turno = 1;
     private TracciatoDelRound tracciatoDelRound = new TracciatoDelRound();
     private HashMap<Utente,Integer> listaPunteggiUtente=new HashMap<Utente,Integer>();
-
+    private HashMap<Utente, Coppia<Schema, Schema>> scelteSchemi= new HashMap<>();
     private ArrayList<Integer> mazzoCarteUtensile= new ArrayList<Integer>();
     private ArrayList<Integer> mazzoCarteObiettivoPubblico= new ArrayList<Integer>();
     private ArrayList<CartaUtensile> listaCartaUtensile = new ArrayList<CartaUtensile>();
@@ -46,6 +46,7 @@ public class Partita {
         riempiSetofColors();
         riempiSacchetto();
         Utente.inizializzaIdSet();
+        inizializzaCarteSchema();
         inizializzaMazzoCarteUtensile();
         inizializzaMazzoCarteObiettivoPubblico();
         setListaCartaObiettivoPubblico();
@@ -71,7 +72,8 @@ public class Partita {
         for (GameObserver view: gameObservers){
             Utente u = new Utente(this.getPlanciaFromList(), this.getPrivatoFromList());
             listaGiocatori.add(u);
-            view.notifyUser(u.getId(), u.getPlancia().getCartaSchema().stringRepresentation(true), u.getPlancia().getCartaSchema().stringRepresentation(false), u.getObiettivoPrivato().get(0).toString());
+            scelteSchemi.put(u, new Coppia<Schema, Schema>(getSchemaFromList(), getSchemaFromList()));
+            view.notifyUser(u.getId(),scelteSchemi.get(u).getFirst().stringRepresentation(true),scelteSchemi.get(u).getFirst().stringRepresentation(false),scelteSchemi.get(u).getSecond().stringRepresentation(true), scelteSchemi.get(u).getSecond().stringRepresentation(false), u.getObiettivoPrivato().get(0).toString());
         }
 
         inizializzaOrdineRound();
@@ -79,12 +81,18 @@ public class Partita {
 
     }
 
-    public void sceltaSchema(GameObserver view, String idUser, boolean fronte){
+    public void sceltaSchema(GameObserver view, String idUser,boolean carta1, boolean fronte){
         for (Utente u: listaGiocatori){
             if (u.getId().equals(idUser)){
-                u.scegliFacciaSchema(fronte);
+                if (carta1){
+                    u.getPlancia().inserisciCartaSchema(scelteSchemi.get(u).getFirst());
+                    u.scegliFacciaSchema(fronte);
+                }else{
+                    u.getPlancia().inserisciCartaSchema(scelteSchemi.get(u).getSecond());
+                    u.scegliFacciaSchema(fronte);
+                }
             }
-            view.notifyScheme(fronte);
+            view.notifyScheme(carta1, fronte);
         }
 
     }
