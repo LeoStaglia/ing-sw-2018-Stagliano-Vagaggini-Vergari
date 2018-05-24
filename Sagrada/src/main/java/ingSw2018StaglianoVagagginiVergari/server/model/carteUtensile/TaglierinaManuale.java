@@ -39,6 +39,26 @@ public class TaglierinaManuale implements CartaUtensile {
     //----------------------------
 
 
+    public void setR(int r) {
+        this.r = r;
+    }
+
+    public void setI(int i) {
+        this.i = i;
+    }
+
+    public void setJ(int j) {
+        this.j = j;
+    }
+
+    public void setX(int x) {
+        this.x = x;
+    }
+
+    public void setY(int y) {
+        this.y = y;
+    }
+
     public void usaEffettoCarta(Partita p) {
         costo=true;
         String color=null;
