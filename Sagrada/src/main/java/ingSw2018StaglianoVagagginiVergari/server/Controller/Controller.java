@@ -9,6 +9,7 @@ import ingSw2018StaglianoVagagginiVergari.server.model.CartaUtensile;
 import ingSw2018StaglianoVagagginiVergari.server.model.Partita;
 import ingSw2018StaglianoVagagginiVergari.server.model.carteUtensile.*;
 
+import java.rmi.Remote;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.*;
@@ -25,10 +26,11 @@ public class Controller extends UnicastRemoteObject implements RemoteController 
 
     private ControllerStatus status;
 
+    private boolean timerSetted;
+
     public Controller() throws RemoteException {
         partita = new Partita();
-        status = ControllerStatus.Preparazione;
-        t= new Timer();
+        status = ControllerStatus.AggiuntaObserver;
     }
 
     public synchronized void partecipaPartita(GameObserver view) throws InterruptedException, RemoteException, FullGameException{
@@ -40,6 +42,7 @@ public class Controller extends UnicastRemoteObject implements RemoteController 
             partita.addObserver(view);
 
             if (partita.numberOfObserver() == 2) {
+                    t = new Timer();
                     t.schedule(new TimerTask() {
                         @Override
                         public void run() {
@@ -48,19 +51,22 @@ public class Controller extends UnicastRemoteObject implements RemoteController 
                                     setStatus(ControllerStatus.Preparazione);
                                     partita.preparaPartita();
                                     setStatus(ControllerStatus.SceltaSchema);
+                                    System.out.println("preparazione partita effettuata");
                                 }
                             } catch (RemoteException e) {
                                 e.printStackTrace();
                             }
                         }
-                    }, 2000);
+                    }, 6000);
+                timerSetted=true;
 
-                }else if (partita.numberOfObserver() == 4) {
+            }else if (partita.numberOfObserver() == 4) {
                     setStatus(ControllerStatus.Preparazione);
                     t.cancel();
                     partita.preparaPartita();
                     setStatus(ControllerStatus.SceltaSchema);
                 }
+
         }else{
             throw new FullGameException("La partita è già in corso.");
         }
@@ -68,14 +74,15 @@ public class Controller extends UnicastRemoteObject implements RemoteController 
     public synchronized void abbandonaPartita(GameObserver view){
         if (getStatus()==ControllerStatus.AggiuntaObserver) {
             partita.removeObserver(view);
-            if (partita.numberOfObserver() < 2) {
+            if (partita.numberOfObserver() < 2 && timerSetted) {
                 t.cancel();
+                timerSetted=false;
             }
         }
     }
 
     //Fase di scelta dello schema, il controller riceve la view e l'id, setta la faccia della carta schema scelta.
-    public void scegliSchema(GameObserver view, String idUser,boolean carta1, boolean fronte){
+    public void scegliSchema(GameObserver view, String idUser,boolean carta1, boolean fronte) throws RemoteException{
         partita.sceltaSchema(view, idUser,carta1, fronte);
 
     }

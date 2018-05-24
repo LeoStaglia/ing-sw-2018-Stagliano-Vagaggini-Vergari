@@ -15,6 +15,6 @@ public class CartaObiettivoPrivato implements Serializable {
 
     @Override
     public String toString(){
-        return "Somma dei valori su tutti i dadi di colore "+colore.getDescrizione();
+        return colore.getDescrizione();
     }
 }

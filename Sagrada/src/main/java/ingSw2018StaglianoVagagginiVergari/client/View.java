@@ -4,6 +4,7 @@ import Eccezioni.FullGameException;
 import ingSw2018StaglianoVagagginiVergari.common.GameObserver;
 import ingSw2018StaglianoVagagginiVergari.common.RemoteController;
 
+import java.io.IOException;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
@@ -27,14 +28,14 @@ public class View extends UnicastRemoteObject implements GameObserver, Remote {
 
     public View(RemoteController controller) throws RemoteException {
         this.controller=controller;
-        status = ViewStatus.Preparazione;
+        setStatus(ViewStatus.Preparazione);
         command = new Scanner(System.in);
         updateView=false;
     }
-    public void run() throws RemoteException, InterruptedException {
+    public void run() throws IOException, InterruptedException {
         int cmd=0;
         boolean carta1=false;
-        while(cmd!=1 || cmd!=2) {
+        while(cmd!=1 && cmd!=2) {
             System.out.println("(1) Per partecipare alla partita (2) per uscire");
             cmd = command.nextInt();
         }
@@ -45,16 +46,22 @@ public class View extends UnicastRemoteObject implements GameObserver, Remote {
                     controller.partecipaPartita(this);
                 } catch (FullGameException e) {
                     System.out.println(e.getMessage());
+                    System.exit(0);
                 }
                 System.out.println("Preparazione partita... Attendi. (0) per uscire");
-                synchronized (this) {
-                    while (status == ViewStatus.Preparazione){
+                while (status==ViewStatus.Preparazione){
+                    if (System.in.available()>0){
                         if (command.nextInt()==0){
                             controller.abbandonaPartita(this);
                             System.exit(0);
                         }
                     }
                 }
+                System.out.println(status);
+                while(!updateView){
+                    System.out.print("");
+                }
+                updateView=false;
                 if (getStatus()==ViewStatus.SelezioneSchema){
                     System.out.println("CARTA 1: Fronte");
                     stampaSchema(true, true);
@@ -64,7 +71,8 @@ public class View extends UnicastRemoteObject implements GameObserver, Remote {
                     stampaSchema(false, true);
                     System.out.println("CARTA 2: Retro");
                     stampaSchema(false, false);
-                    while(cmd!=1 || cmd!=2) {
+                    cmd=0;
+                    while(cmd!=1 && cmd!=2) {
                         System.out.println("(1) per scegliere la prima carta (2) per scegliere la seconda carta");
                         cmd = command.nextInt();
                     }
@@ -73,7 +81,8 @@ public class View extends UnicastRemoteObject implements GameObserver, Remote {
                     }else{
                         carta1 = false;
                     }
-                    while(cmd!=1 || cmd!=2) {
+                    cmd=0;
+                    while(cmd!=1 && cmd!=2) {
                         System.out.println("(1) per scegliere il fronte (2) per scegliere il retro");
                         cmd = command.nextInt();
                     }
@@ -86,6 +95,8 @@ public class View extends UnicastRemoteObject implements GameObserver, Remote {
 
                     }
                     updateView=false;
+                    System.out.println("Lo schema che hai scelto è il seguente:");
+                    stampaSchema(carta1, fronteScelto);
 
                 }
             }
@@ -98,10 +109,11 @@ public class View extends UnicastRemoteObject implements GameObserver, Remote {
         this.setStatus(ViewStatus.SelezioneSchema);
         this.schemaFronte1=schemaFronte1;
         this.schemaRetro1=schemaRetro1;
-        this.schemaFronte1=schemaFronte2;
-        this.schemaRetro1=schemaRetro2;
+        this.schemaFronte2=schemaFronte2;
+        this.schemaRetro2=schemaRetro2;
         this.obiettivoPrivato=obiettivoPrivato;
-
+        updateView=true;
+        System.out.println("NOTIFICA");
     }
 
     public synchronized void setStatus(ViewStatus status){
@@ -121,7 +133,7 @@ public class View extends UnicastRemoteObject implements GameObserver, Remote {
                     if (fronte) {
                         System.out.print(schemaFronte1[i][j]);
                     } else {
-                        System.out.println(schemaRetro1[i][j]);
+                        System.out.print(schemaRetro1[i][j]);
                     }
                     if (j != 4) {
                         System.out.print(" ");
@@ -130,7 +142,7 @@ public class View extends UnicastRemoteObject implements GameObserver, Remote {
                     if (fronte) {
                         System.out.print(schemaFronte2[i][j]);
                     } else {
-                        System.out.println(schemaRetro2[i][j]);
+                        System.out.print(schemaRetro2[i][j]);
                     }
                     if (j != 4) {
                         System.out.print(" ");

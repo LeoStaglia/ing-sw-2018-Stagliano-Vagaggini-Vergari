@@ -81,7 +81,7 @@ public class Partita {
 
     }
 
-    public void sceltaSchema(GameObserver view, String idUser,boolean carta1, boolean fronte){
+    public void sceltaSchema(GameObserver view, String idUser,boolean carta1, boolean fronte) throws RemoteException{
         for (Utente u: listaGiocatori){
             if (u.getId().equals(idUser)){
                 if (carta1){
