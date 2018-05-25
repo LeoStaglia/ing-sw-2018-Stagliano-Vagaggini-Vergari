@@ -39,7 +39,7 @@ public class Lathekin implements CartaUtensile {
 
     @Override
     public void usaEffettoCarta(Partita p){
-
+        costo=true;
         if (p.getCurrentPlayer().getPlancia().leggiPlancia(xDie, yDie)!=null){
             Dado d = p.getCurrentPlayer().getPlancia().leggiPlancia(xDie, yDie); // d è uguale a Dado selezionato
             p.getCurrentPlayer().getPlancia().rimuoviDado(xDie, yDie);
@@ -89,5 +89,10 @@ public class Lathekin implements CartaUtensile {
     @Override
     public String getDescrizione() {
         return descrizione;
+    }
+
+    @Override
+    public String getNome() {
+        return Nome;
     }
 }

@@ -1,6 +1,7 @@
 package ingSw2018StaglianoVagagginiVergari.server.model;
 
 import ingSw2018StaglianoVagagginiVergari.common.GameObserver;
+import ingSw2018StaglianoVagagginiVergari.common.RemoteController;
 import ingSw2018StaglianoVagagginiVergari.server.model.carteSchema.CartaSchema;
 import ingSw2018StaglianoVagagginiVergari.server.model.carteSchema.FactorySchema;
 import ingSw2018StaglianoVagagginiVergari.server.model.carteSchema.Schema;
@@ -24,7 +25,7 @@ public class Partita {
 
     ArrayList<Utente> ordineRound = new ArrayList<Utente>();  // mantiene l'ordine del round
 
-    private int turno = 1;
+    private int turno=1;
     private TracciatoDelRound tracciatoDelRound = new TracciatoDelRound();
     private HashMap<Utente,Integer> listaPunteggiUtente=new HashMap<Utente,Integer>();
     private HashMap<Utente, Coppia<Schema, Schema>> scelteSchemi= new HashMap<>();
@@ -49,8 +50,6 @@ public class Partita {
         inizializzaCarteSchema();
         inizializzaMazzoCarteUtensile();
         inizializzaMazzoCarteObiettivoPubblico();
-        setListaCartaObiettivoPubblico();
-        setListaCartaUtensile();
         inizializzaPlance();
         inizializzaObiettiviPrivati();
         gameObservers= new ArrayList<>();
@@ -69,13 +68,16 @@ public class Partita {
 
     public void preparaPartita() throws RemoteException {
 
+
         for (GameObserver view: gameObservers){
             Utente u = new Utente(this.getPlanciaFromList(), this.getPrivatoFromList());
             listaGiocatori.add(u);
             scelteSchemi.put(u, new Coppia<Schema, Schema>(getSchemaFromList(), getSchemaFromList()));
             view.notifyUser(u.getId(),scelteSchemi.get(u).getFirst().stringRepresentation(true),scelteSchemi.get(u).getFirst().stringRepresentation(false),scelteSchemi.get(u).getSecond().stringRepresentation(true), scelteSchemi.get(u).getSecond().stringRepresentation(false), u.getObiettivoPrivato().get(0).toString());
         }
-
+        riempiRiserva();
+        setListaCartaObiettivoPubblico();
+        setListaCartaUtensile();
         inizializzaOrdineRound();
         setGiocatoreCorrente();
 
@@ -148,15 +150,16 @@ public class Partita {
 
     public void reInizializzaTurno() {
         this.turno = 1;
+        riempiRiserva();
     }
 
     // populate the SetofColors
     public void riempiSetofColors() {
-        setOfColors.add("Blu");
-        setOfColors.add("Viola");
-        setOfColors.add("Verde");
-        setOfColors.add("Rosso");
-        setOfColors.add("Giallo");
+        if(!setOfColors.contains("Blu")) setOfColors.add("Blu");
+        if(!setOfColors.contains("Viola"))setOfColors.add("Viola");
+        if(!setOfColors.contains("Verde"))setOfColors.add("Verde");
+        if(!setOfColors.contains("Rosso"))setOfColors.add("Rosso");
+        if(!setOfColors.contains("Giallo"))setOfColors.add("Giallo");
     }
 
     // populate the Dice Bag
@@ -303,7 +306,7 @@ public class Partita {
 
     // populate the stack of Tool Cards(12)
     private void inizializzaMazzoCarteUtensile() {
-        for (int i = 0; i < 12; i++) {
+        for (int i = 1; i <= 12; i++) {
             mazzoCarteUtensile.add(i);
         }
     }
@@ -311,14 +314,13 @@ public class Partita {
 
     // populate the stack of Public Objective Cards(10)
     public void inizializzaMazzoCarteObiettivoPubblico() {
-        for (int i = 0; i < 10; i++) {
+        for (int i = 1; i <= 10; i++) {
             mazzoCarteObiettivoPubblico.add(i);
         }
     }
 
     //method to set the List of Tool Cards in multiplayer
     public void setListaCartaUtensile() {
-
         if (listaGiocatori.size() > 1) {
             for (int i = 0; i < 3; i++) {
                 int o=mazzoCarteUtensile.remove(random.nextInt(mazzoCarteUtensile.size()));
@@ -387,11 +389,52 @@ public class Partita {
         // TODO aggiungere calcolo SinglePlayer
     }
 
-    public boolean contaSchemi(){
+    public boolean contaSchemi() throws RemoteException{
         int n=0;
         for (Utente u:listaGiocatori) {
             if(u.getPlancia().getCartaSchema()==null) return false;
         }
+        // preparazione updateView iniziale
+        for (GameObserver view:gameObservers) {
+            HashMap<String,String[][]> planceGiocatori=new HashMap<>();
+            for (Utente u:listaGiocatori) {
+                planceGiocatori.put(u.getId(),u.getPlancia().rappresentazionePlancia());
+            }
+
+            HashMap<String,String> listCartaUtensile=new HashMap<>();
+
+
+            for (CartaUtensile c: listaCartaUtensile) {
+                StringBuilder builder=new StringBuilder();
+                if(c.getCosto()==1) {builder.append("F");}
+                else{ builder.append("T");}
+                builder.append(c.getNome());
+                listCartaUtensile.put(builder.toString(),c.getDescrizione());
+            }
+
+            ArrayList<String> dadiRiserva=new ArrayList<>();
+            for (Dado d:riserva) {
+                dadiRiserva.add(d.toString());
+            }
+
+
+            ArrayList<String> carteObiettivoPubblico=new ArrayList<>();
+            for (CartaObiettivoPubblico c:listaCartaObiettivoPubblico) {
+                carteObiettivoPubblico.add(c.getNome());
+                //TODO inserire descrizione carta
+            }
+            HashMap<String,String> listCarteObiettivoPrivato=new HashMap<>();
+
+            for (Utente u:listaGiocatori) {
+                listCarteObiettivoPrivato.put(u.getId(),u.getObiettivoPrivato().get(0).getColore().getDescrizione());
+            }
+
+            view.updateView(planceGiocatori,listCartaUtensile,getCurrentPlayer().getId(),getTurno(),getTracciatoDelRound().getRoundAttuale(),dadiRiserva,"null",carteObiettivoPubblico,listCarteObiettivoPrivato);
+        }
+
+
+
+
         return true;
     }
 

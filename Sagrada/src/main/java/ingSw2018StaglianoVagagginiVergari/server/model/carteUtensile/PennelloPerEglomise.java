@@ -33,7 +33,7 @@ public class PennelloPerEglomise implements CartaUtensile {
 
 
     public void usaEffettoCarta(Partita p) {
-
+        costo=true;
         p.getCurrentPlayer().getPlancia().calcolaMosse(p.getDadoSelezionato(), true, false);
 
     }
@@ -56,5 +56,10 @@ public class PennelloPerEglomise implements CartaUtensile {
     @Override
     public String getDescrizione() {
         return descrizione;
+    }
+
+    @Override
+    public String getNome() {
+        return Nome;
     }
 }

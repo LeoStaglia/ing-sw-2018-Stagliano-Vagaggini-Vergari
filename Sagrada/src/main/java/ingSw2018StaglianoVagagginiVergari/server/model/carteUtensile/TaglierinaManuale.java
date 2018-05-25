@@ -99,5 +99,10 @@ public class TaglierinaManuale implements CartaUtensile {
     public String getDescrizione() {
         return descrizione;
     }
+
+    @Override
+    public String getNome() {
+        return Nome;
+    }
 }
 

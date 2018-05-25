@@ -9,40 +9,40 @@ public class FactoryCartaUtensile {
     public static CartaUtensile getCartaUtensile(int Id){
 
         if(Id == 1){ //PinzaSgrossatrice
-            return PennelloPerEglomise.getInstance();            //chiamata per instanziare un singleton
+            return PinzaSgrossatrice.getInstance();            //chiamata per instanziare un singleton
 
         } else if(Id == 2){ //PennelloPerEglomise
             return PennelloPerEglomise.getInstance();
 
         } else if(Id == 3){ //AlesatorePerLaminaDiRame
-            return PennelloPerEglomise.getInstance();
+            return AlesatoreRame.getInstance();
 
         } else if(Id == 4){ //Lathekin
-            return PennelloPerEglomise.getInstance();
+            return Lathekin.getInstance();
 
         } else if(Id == 5){ //TaglierinaCircolare
-            return PennelloPerEglomise.getInstance();
+            return TaglierinaCircolare.getInstance();
 
         } else if(Id == 6){ //PennelloPerPastaSalda
-            return PennelloPerEglomise.getInstance();
+            return PennelloPastaSalda.getInstance();
 
         } else if(Id == 7){ //Martelletto
-            return PennelloPerEglomise.getInstance();
+            return Martelletto.getInstance();
 
         } else if(Id == 8){ //TenagliaARotelle
-            return PennelloPerEglomise.getInstance();
+            return TenagliaARotelle.getInstance();
 
         } else if(Id == 9){ //RigaInSughero
-            return PennelloPerEglomise.getInstance();
+            return RigaInSughero.getInstance();
 
         } else if(Id == 10){ //TamponeDiamantato
-            return PennelloPerEglomise.getInstance();
+            return TamponeDiamantato.getInstance();
 
         } else if(Id == 11){ //DiluentePerPastaSalda
-            return PennelloPerEglomise.getInstance();
+            return DiluentePerPastaSalda.getInstance();
 
         } else if(Id == 12){ //TaglierinaManuale
-            return PennelloPerEglomise.getInstance();
+            return TaglierinaManuale.getInstance();
 
         }
 

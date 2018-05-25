@@ -47,10 +47,14 @@ public class View extends UnicastRemoteObject implements GameObserver, Remote {
     private String[][] schemaFronte2;
     private String[][] schemaRetro2;
     private String obiettivoPrivato;
+    private HashMap<String,String> carteObiettivoPrivato=new HashMap<>();
     //private boolean updateView;
     private boolean fronteScelto;
     private boolean carta1;
 
+    //
+    private boolean startGame=false;
+    //
 
     //==================
 
@@ -60,7 +64,7 @@ public class View extends UnicastRemoteObject implements GameObserver, Remote {
 
     private String id ;
 
-    private List<CartaObiettivoPubblico> carteObiettivoPubblico = new ArrayList<CartaObiettivoPubblico>();  //todo non devo avere oggetti del Model, da cambiare
+    private ArrayList<String> carteObiettivoPubblico = new ArrayList<>();
 
     private HashMap<String, String> carteUtensile = new HashMap<String, String>();
 
@@ -166,7 +170,9 @@ public class View extends UnicastRemoteObject implements GameObserver, Remote {
 
             //==============================
 
-
+            while(!startGame){
+                System.out.print("");
+            }
 
 
 
@@ -658,11 +664,11 @@ public class View extends UnicastRemoteObject implements GameObserver, Remote {
 
     }
 
-    public void printCarteObiettivoPubblico(List<CartaObiettivoPubblico> listaCartaObiettivoPubblico) {
+    public void printCarteObiettivoPubblico(ArrayList<String> listaCartaObiettivoPubblico) {
 
         System.out.print("\nCarte Obiettivo Pubblico:   ");
-        for (CartaObiettivoPubblico carta : listaCartaObiettivoPubblico) {
-            System.out.print(carta.getNome() + "   ");
+        for (String carta : listaCartaObiettivoPubblico) {
+            System.out.print(carta + "   ");
 
         }
         System.out.println();
@@ -670,9 +676,11 @@ public class View extends UnicastRemoteObject implements GameObserver, Remote {
 
     }
 
-    public void printCartaObiettivoPrivato(String ob) {
 
-        System.out.print("\nCarta Obiettivo Privato:   " + ob);
+
+    public void printCartaObiettivoPrivato(HashMap<String,String > ob) {
+
+        System.out.print("\nCarta Obiettivo Privato:   " + ob.get(id));
         System.out.println();
 
 
@@ -691,10 +699,10 @@ public class View extends UnicastRemoteObject implements GameObserver, Remote {
 
             String SegnaliniAndNome = (String) en.getKey();
 
-            if (SegnaliniAndNome.toLowerCase().startsWith("t")) {
+            if (SegnaliniAndNome.toLowerCase().startsWith("f")) {
                 System.out.print("(" + i + ")" + "C=1 " + SegnaliniAndNome.substring(1, SegnaliniAndNome.length()));
 
-            } else if (SegnaliniAndNome.toLowerCase().startsWith("f")) {
+            } else if (SegnaliniAndNome.toLowerCase().startsWith("t")) {
                 System.out.print("(" + i + ")" + "C=2 " + SegnaliniAndNome.substring(1, SegnaliniAndNome.length()));
 
 
@@ -782,7 +790,7 @@ public class View extends UnicastRemoteObject implements GameObserver, Remote {
 
         printCarteObiettivoPubblico(carteObiettivoPubblico);
 
-        printCartaObiettivoPrivato("Rosso");    //todo gli obbiettivi privati ancora non sono gestiti correttamente
+        printCartaObiettivoPrivato(carteObiettivoPrivato);
 
         printCarteUtensile(carteUtensile);
 
@@ -817,12 +825,12 @@ public class View extends UnicastRemoteObject implements GameObserver, Remote {
 
     }
 
-    public void updateView(HashMap< String,String[][]> planceGiocatori , HashMap<String,String> listaCartaUtensile, String giocatoreCorrente, int turno, int round, ArrayList<String > dadiRiserva, String dadoSelezionato) throws RemoteException {
+    public void updateView(HashMap< String,String[][]> planceGiocatori , HashMap<String,String> listaCartaUtensile, String giocatoreCorrente, int turno, int round, ArrayList<String > dadiRiserva, String dadoSelezionato,ArrayList<String> carteObiettivoPubblico,HashMap<String,String> carteObiettivoPrivato) throws RemoteException {
 
 
         //per la carta utensile    map <"TPennello Per Eglomise" "descrizione">
 
-
+        this.startGame=true;
         this.planceGiocatori = planceGiocatori;
         this.carteUtensile = listaCartaUtensile;
         this.giocatoreCorrente= giocatoreCorrente;
@@ -830,6 +838,8 @@ public class View extends UnicastRemoteObject implements GameObserver, Remote {
         this.round = round;
         this.dadiRiserva = dadiRiserva;
         this.dadoSelezionato = dadoSelezionato;
+        this.carteObiettivoPubblico=carteObiettivoPubblico;
+        this.carteObiettivoPrivato=carteObiettivoPrivato;
 
         this.updateView = true;
 
@@ -946,10 +956,10 @@ public class View extends UnicastRemoteObject implements GameObserver, Remote {
         planceGiocatori.put("marcello", Plancia3);
         planceGiocatori.put("pippo", Plancia3);
 
-
+  /*
         carteObiettivoPubblico.add(FactoryCartaObiettivoPubblico.getCartaObiettivoPubblico(1));
         carteObiettivoPubblico.add(FactoryCartaObiettivoPubblico.getCartaObiettivoPubblico(2));
-        carteObiettivoPubblico.add(FactoryCartaObiettivoPubblico.getCartaObiettivoPubblico(3));
+        carteObiettivoPubblico.add(FactoryCartaObiettivoPubblico.getCartaObiettivoPubblico(3));*/
 
 
         carteUtensile.put("TPennello per Eglomise", "chi usa questa carta vince il gioco");
@@ -1013,7 +1023,7 @@ public class View extends UnicastRemoteObject implements GameObserver, Remote {
 
         Timer t = new Timer();
 
-        t.schedule(new TimerTask() {
+        /* t.schedule(new TimerTask() {
             @Override
             public void run() {
                 try {
@@ -1024,6 +1034,8 @@ public class View extends UnicastRemoteObject implements GameObserver, Remote {
                 }
             }
         }, 5000);
+
+        da levare*/
 
         //=====
 

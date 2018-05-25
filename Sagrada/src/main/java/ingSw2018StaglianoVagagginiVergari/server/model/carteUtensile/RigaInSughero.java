@@ -32,8 +32,7 @@ public class RigaInSughero implements CartaUtensile {
 
     @Override
     public void usaEffettoCarta(Partita PartitaCorrente) {
-
-
+        costo=true;
         PartitaCorrente.getCurrentPlayer().getPlancia().Tool9(PartitaCorrente.getDadoSelezionato());  //versione in cui il metodo è dentro a Plancia
 
 
@@ -55,5 +54,10 @@ public class RigaInSughero implements CartaUtensile {
     @Override
     public String getDescrizione() {
         return descrizione;
+    }
+
+    @Override
+    public String getNome() {
+        return Nome;
     }
 }

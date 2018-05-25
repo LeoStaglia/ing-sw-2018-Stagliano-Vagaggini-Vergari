@@ -38,7 +38,7 @@ public class DiluentePerPastaSalda implements CartaUtensile {
 
     @Override
     public void usaEffettoCarta(Partita PartitaCorrente)  {
-
+        costo=true;
         Dado DadoInMano;
 
         //todo passed from the view
@@ -87,5 +87,10 @@ public class DiluentePerPastaSalda implements CartaUtensile {
     @Override
     public String getDescrizione() {
         return descrizione;
+    }
+
+    @Override
+    public String getNome() {
+        return Nome;
     }
 }

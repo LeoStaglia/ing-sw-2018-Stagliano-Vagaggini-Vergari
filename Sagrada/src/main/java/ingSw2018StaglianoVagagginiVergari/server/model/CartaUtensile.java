@@ -6,4 +6,5 @@ public interface CartaUtensile {
     public int getCosto();
     public int getId();
     public String getDescrizione();
+    public String getNome();
 }

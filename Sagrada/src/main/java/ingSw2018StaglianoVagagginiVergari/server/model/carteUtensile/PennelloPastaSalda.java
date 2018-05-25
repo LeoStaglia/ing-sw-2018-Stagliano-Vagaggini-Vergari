@@ -18,9 +18,22 @@ public class PennelloPastaSalda implements CartaUtensile {
     private int xCell;
     private int yCell;
 
+//----------------------------all this part is required for Singleton Pattern----------------------------------
+
+    private static PennelloPerEglomise instance = new PennelloPerEglomise();
+    public static PennelloPerEglomise getInstance(){
+        return instance;
+    }
+
+
+    //----------------------------
+
+
+
 
     @Override
     public void usaEffettoCarta(Partita p) {
+        costo=true;
         Boolean[][] mossePermesse;
         p.getDadoSelezionato().lanciaDado();
         boolean piazzabile = false;
@@ -72,5 +85,10 @@ public class PennelloPastaSalda implements CartaUtensile {
     @Override
     public String getDescrizione() {
         return descrizione;
+    }
+
+    @Override
+    public String getNome() {
+        return Nome;
     }
 }

@@ -4,7 +4,7 @@ import ingSw2018StaglianoVagagginiVergari.server.model.CartaUtensile;
 import ingSw2018StaglianoVagagginiVergari.server.model.Partita;
 
 public class Martelletto implements CartaUtensile {
-    boolean costo ; ;
+    boolean costo ;
     String Nome = "Martelletto";
     int Id = 7;
     String descrizione="Tira nuovamente\n" +
@@ -58,5 +58,10 @@ public class Martelletto implements CartaUtensile {
     @Override
     public String getDescrizione() {
         return descrizione;
+    }
+
+    @Override
+    public String getNome() {
+        return Nome;
     }
 }

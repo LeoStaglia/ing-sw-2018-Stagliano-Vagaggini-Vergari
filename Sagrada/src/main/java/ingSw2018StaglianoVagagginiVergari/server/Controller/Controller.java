@@ -108,10 +108,13 @@ public class Controller extends UnicastRemoteObject implements RemoteController 
 
 
     }
-    public synchronized void piazzaDado(GameObserver view, int i,int j) throws MossaIllegaleException{
-        partita.getCurrentPlayer().getPlancia().piazzaDado(i,j,partita.getDadoSelezionato());
-    }
+    public synchronized void piazzaDado(GameObserver view, int i,int j) throws MossaIllegaleException {
 
+        partita.getCurrentPlayer().getPlancia().calcolaMosse(partita.getDadoSelezionato(), false, false);
+        partita.getCurrentPlayer().getPlancia().piazzaDado(i, j, partita.getDadoSelezionato());
+
+
+    }
 
     public synchronized void scegliCartaUtensile(GameObserver view,int k) {
         if (partita.getListaCartaUtensile().get(k).getCosto()<= partita.getCurrentPlayer().getSegnalini()) {

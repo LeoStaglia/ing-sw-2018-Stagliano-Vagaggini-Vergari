@@ -33,6 +33,7 @@ public class AlesatoreRame implements CartaUtensile {
 
     @Override
     public void usaEffettoCarta(Partita p) {
+        costo=true;
         p.getCurrentPlayer().getPlancia().calcolaMosse(p.getDadoSelezionato(), false, true);
     }
 
@@ -53,6 +54,11 @@ public class AlesatoreRame implements CartaUtensile {
     @Override
     public String getDescrizione() {
         return descrizione;
+    }
+
+    @Override
+    public String getNome() {
+        return Nome;
     }
 }
 

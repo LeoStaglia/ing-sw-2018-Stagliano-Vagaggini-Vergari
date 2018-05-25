@@ -3,7 +3,7 @@ import java.util.*;
 
 public class TracciatoDelRound {
 
-    private int roundAttuale;
+    private int roundAttuale=1;
 
     // rimanenzeRiserva out are the dice that remained in the Draft Pool after the end of the round except for one
     private HashSet<Dado> rimanenzeRiservaOut = new HashSet<Dado>();
