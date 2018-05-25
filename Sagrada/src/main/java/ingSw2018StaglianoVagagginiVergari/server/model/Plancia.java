@@ -772,13 +772,9 @@ public class Plancia implements Serializable {
         for (int i =0; i<4; i++){
             for (int j=0; j<5; j++){
                 if (grigliaGioco[i][j]!=null){
-                    StringBuilder stringCell = new StringBuilder();
-                    stringCell.append(grigliaGioco[i][j].getNumero());
-                    stringCell.append(grigliaGioco[i][j].getColore().toLowerCase());
-                    result[i][j] = stringCell.toString();
-
+                    result[i][j] = grigliaGioco[i][j].toString();
                 }else{
-                    result[i][j]=cartaSchema.getRestrizione(i,j).getDescrizione();
+                    result[i][j]=cartaSchema.getRestrizione(i,j).getDescrizione().toLowerCase();
                 }
             }
         }

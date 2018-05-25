@@ -42,4 +42,12 @@ public class Dado implements Serializable{
     public void decrementa(){
         if(this.numero!=1)  this.numero=this.numero-1;
     }
+
+    @Override
+    public String toString() {
+        StringBuilder result = new StringBuilder();
+        result.append(this.getNumero());
+        result.append(this.getColore().toLowerCase());
+        return result.toString();
+    }
 }
