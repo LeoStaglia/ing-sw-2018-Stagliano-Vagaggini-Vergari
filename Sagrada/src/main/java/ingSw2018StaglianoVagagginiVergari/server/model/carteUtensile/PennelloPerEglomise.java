@@ -8,6 +8,11 @@ public class PennelloPerEglomise implements CartaUtensile {
     private boolean costo ;
     private String Nome = "Pennello Per Eglomise";
     private int id = 2;
+    String descrizione="Muovi un qualsiasi dado nella tua\n" +
+            "vetrata ignorando le restrizioni\n" +
+            "di colore\n\n" +
+            "N.B. Devi rispettare tutte le altre\n" +
+            "restrizioni di piazzamento";
     // Utente Utilizzatore;   quando avremo dichiarato Utente, decommentare
 
 
@@ -46,5 +51,10 @@ public class PennelloPerEglomise implements CartaUtensile {
     @Override
     public int getId() {
         return id;
+    }
+
+    @Override
+    public String getDescrizione() {
+        return descrizione;
     }
 }

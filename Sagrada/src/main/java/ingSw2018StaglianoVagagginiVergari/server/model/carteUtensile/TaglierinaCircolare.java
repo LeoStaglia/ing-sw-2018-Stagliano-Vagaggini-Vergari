@@ -8,6 +8,9 @@ public class TaglierinaCircolare implements CartaUtensile {
     boolean costo ;
     String Nome = "TaglierinaCircolare";
     int Id = 5;
+    String descrizione="Dopo aver scelto un dado,\n" +
+            "scambia quel dado con un dado\n" +
+            "sul Tracciato dei Round";
     int i;    // i is the number of the round covered by the die
     // Utente Utilizzatore;   quando avremo dichiarato Utente, decommentare
 
@@ -55,5 +58,10 @@ public class TaglierinaCircolare implements CartaUtensile {
 
     public int getId() {
         return Id;
+    }
+
+    @Override
+    public String getDescrizione() {
+        return descrizione;
     }
 }

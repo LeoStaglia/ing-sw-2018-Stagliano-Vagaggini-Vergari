@@ -11,6 +11,9 @@ public class Lathekin implements CartaUtensile {
     private boolean costo ;
     private String Nome = "Lathekin";
     private int id = 4;
+    String descrizione="Muovi esattamente due dadi,\n" +
+            "rispettando tutte le restrizioni di\n" +
+            "piazzamento";
     private int xDie;
     private int yDie;
     private int xCell;
@@ -81,5 +84,10 @@ public class Lathekin implements CartaUtensile {
 
     public void setyCell(int yCell) {
         this.yCell = yCell;
+    }
+
+    @Override
+    public String getDescrizione() {
+        return descrizione;
     }
 }

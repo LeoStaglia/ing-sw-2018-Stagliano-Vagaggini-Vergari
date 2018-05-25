@@ -10,6 +10,10 @@ public class PennelloPastaSalda implements CartaUtensile {
 
     private boolean costo;
     private int id = 6;
+    String descrizione="Dopo aver scelto un dado, tira\n" +
+            "nuovamente quel dado\n\n" +
+            "Se non puoi piazzarlo, riponilo\n" +
+            "nella Riserva";
     private String Nome = "Pennello Per Pasta Salda";
     private int xCell;
     private int yCell;
@@ -63,5 +67,10 @@ public class PennelloPastaSalda implements CartaUtensile {
 
     public void setyCell(int yCell) {
         this.yCell = yCell;
+    }
+
+    @Override
+    public String getDescrizione() {
+        return descrizione;
     }
 }

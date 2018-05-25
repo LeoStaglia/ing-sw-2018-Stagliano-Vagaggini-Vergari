@@ -5,4 +5,5 @@ public interface CartaUtensile {
     public void usaEffettoCarta(Partita p);
     public int getCosto();
     public int getId();
+    public String getDescrizione();
 }

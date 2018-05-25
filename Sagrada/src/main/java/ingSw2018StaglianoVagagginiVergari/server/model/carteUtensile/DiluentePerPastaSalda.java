@@ -11,6 +11,11 @@ public class DiluentePerPastaSalda implements CartaUtensile {
     private boolean costo ;
     private String Nome = "DiluentePerPastaSalda";
     private int id = 11;
+    String descrizione="Dopo aver scelto un dado, riponilo nel Sacchetto,\n" +
+            "poi pescane uno dal Sacchetto\n\n"+
+            "N.B. Scegli il valore del nuovo dado e\n" +
+            " piazzalo, rispettando tutte le restrizioni di\n" +
+            "piazzamento";
 
 
 
@@ -79,5 +84,8 @@ public class DiluentePerPastaSalda implements CartaUtensile {
         return id;
     }
 
-
+    @Override
+    public String getDescrizione() {
+        return descrizione;
+    }
 }

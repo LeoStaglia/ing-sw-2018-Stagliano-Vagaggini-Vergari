@@ -7,6 +7,10 @@ public class TenagliaARotelle implements CartaUtensile {
     boolean costo ; ;
     String Nome = "TenagliaARotelle";
     int Id = 8;
+    String descrizione="Dopo il tuo primo turno scegli\n" +
+            "immediatamente un altro dado\n\n" +
+            "N.B. Salta il tuo secondo turno in\n" +
+            "questo round";
     // Utente Utilizzatore;   quando avremo dichiarato Utente, decommentare
 
 
@@ -50,5 +54,10 @@ public class TenagliaARotelle implements CartaUtensile {
 
     public int getId() {
         return Id;
+    }
+
+    @Override
+    public String getDescrizione() {
+        return descrizione;
     }
 }

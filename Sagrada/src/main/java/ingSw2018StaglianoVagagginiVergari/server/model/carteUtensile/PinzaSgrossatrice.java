@@ -8,6 +8,10 @@ public class PinzaSgrossatrice implements CartaUtensile {
     String Nome = "PinzaSgrossatrice";
     int Id = 1;
     int scelta;
+    String descrizione="Dopo aver scelto un dado,\n" +
+            "aumenta o diminuisci il valore\n" +
+            "del dado scelto di 1\n\n" +
+            "N.B. Non puoi cambiare un 6 in 1 o un 1 in 6";
     // Utente Utilizzatore;   quando avremo dichiarato Utente, decommentare
 
 
@@ -52,5 +56,10 @@ public class PinzaSgrossatrice implements CartaUtensile {
 
     public int getId() {
         return Id;
+    }
+
+    @Override
+    public String getDescrizione() {
+        return descrizione;
     }
 }

@@ -10,6 +10,10 @@ public class TamponeDiamantato implements CartaUtensile {
     private boolean costo ;
     private String Nome = "TamponeDiamantato";
     private int id = 10;
+    String descrizione="Dopo aver scelto un dado, giralo\n" +
+            "sulla faccia opposta\n\n" +
+            "N.B. 6 diventa 1, 5 diventa 2, 4\n" +
+            " diventa 3 ecc.";
 
 
 
@@ -82,5 +86,10 @@ public class TamponeDiamantato implements CartaUtensile {
     @Override
     public int getId() {
         return id;
+    }
+
+    @Override
+    public String getDescrizione() {
+        return descrizione;
     }
 }

@@ -10,6 +10,11 @@ public class TaglierinaManuale implements CartaUtensile {
     boolean costo ;
     String Nome = "TaglierinaManuale";
     int Id = 12;
+    String descrizione="Muovi fino a due dadi dello\n" +
+            " stesso colore di un solo dado sul\n Tracciato dei Round\n\n" +
+            "Devi rispettare tutte le restrizioni\n" +
+            " di piazzamento";
+
     int r; // indice del dado sul tracciato del round selezionato da cui prendere il colore.
     int i; // coordinata i dado su plancia
     int j; // coordinata j dado su plancia
@@ -88,6 +93,11 @@ public class TaglierinaManuale implements CartaUtensile {
 
     public int getId() {
         return Id;
+    }
+
+    @Override
+    public String getDescrizione() {
+        return descrizione;
     }
 }
 

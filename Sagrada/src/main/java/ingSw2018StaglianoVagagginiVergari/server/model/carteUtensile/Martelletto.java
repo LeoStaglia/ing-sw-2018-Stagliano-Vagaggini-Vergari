@@ -7,6 +7,11 @@ public class Martelletto implements CartaUtensile {
     boolean costo ; ;
     String Nome = "Martelletto";
     int Id = 7;
+    String descrizione="Tira nuovamente\n" +
+            "tutti i dadi della Riserva\n\n" +
+            "N.B. Questa carta può essera usata\n" +
+            "solo durante il tuo secondo turno,\n" +
+            "prima di scegliere il secondo dado";
     // Utente Utilizzatore;   quando avremo dichiarato Utente, decommentare
 
 
@@ -48,5 +53,10 @@ public class Martelletto implements CartaUtensile {
 
     public int getId() {
         return Id;
+    }
+
+    @Override
+    public String getDescrizione() {
+        return descrizione;
     }
 }

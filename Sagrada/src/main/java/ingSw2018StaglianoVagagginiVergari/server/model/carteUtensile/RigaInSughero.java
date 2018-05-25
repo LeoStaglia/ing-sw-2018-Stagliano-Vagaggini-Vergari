@@ -9,6 +9,11 @@ public class RigaInSughero implements CartaUtensile {
     private boolean costo ;
     private String Nome = "RigaInSughero";
     private int id = 9;
+    String descrizione="Dopo aver scelto un dado,\n" +
+            "piazzalo in una casella che non\n" +
+            "sia adiacente a un altro dado\n\n" +
+            "Devi rispettare tutte le restrizioni\n" +
+            "di piazzamento";
 
 
 
@@ -45,5 +50,10 @@ public class RigaInSughero implements CartaUtensile {
     @Override
     public int getId() {
         return id;
+    }
+
+    @Override
+    public String getDescrizione() {
+        return descrizione;
     }
 }
