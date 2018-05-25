@@ -12,6 +12,7 @@ public class Utente implements Serializable{
     private Plancia plancia;
     private int segnalini;
     private String id;
+    private String username;
     private static HashSet<String> idSet = new HashSet<>();
 
     public String getId() {
@@ -86,4 +87,11 @@ public class Utente implements Serializable{
 
     }
 
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
 }
