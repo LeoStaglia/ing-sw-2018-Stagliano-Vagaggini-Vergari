@@ -32,7 +32,8 @@ public class View extends UnicastRemoteObject implements GameObserver, Remote {
 
 
 
-    private boolean simulazione = true; //TODO questo attributo permette di switchare velocemante tra una partita già impostata ed una che richiede parametri dal model
+    private boolean simulazione = false; //TODO questo attributo permette di switchare velocemante tra una partita già impostata ed una che richiede parametri dal model
+
 
 
 
@@ -166,8 +167,6 @@ public class View extends UnicastRemoteObject implements GameObserver, Remote {
             //==============================
 
 
-            if(simulazione)
-                setGame(); //TODO RIMUOVERE    serve solo per avere una partita già settata con la grafica funzionante
 
 
 
@@ -368,7 +367,6 @@ public class View extends UnicastRemoteObject implements GameObserver, Remote {
         this.schemaRetro2 = schemaRetro2;
         this.obiettivoPrivato = obiettivoPrivato;
         updateView = true;
-        System.out.println("NOTIFICA");
     }
 
     public synchronized void setStatus(ViewStatus status) {
