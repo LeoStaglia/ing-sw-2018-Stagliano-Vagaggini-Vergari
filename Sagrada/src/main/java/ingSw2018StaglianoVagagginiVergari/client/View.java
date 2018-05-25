@@ -834,6 +834,80 @@ public class View extends UnicastRemoteObject implements GameObserver, Remote {
 
     }
 
+    //faccio altri metodi updateView in base alla situazione
+
+    public void updateViewPlanciaGiocatoreCorrente(  String[][] plancia, String id) throws RemoteException{
+
+        //sovrascrivo la plancia
+
+        planceGiocatori.put(id, plancia);
+
+        this.updateView = true;
+
+    }
+
+    public void updateViewTurno(int turno) throws RemoteException{
+
+        this.turno = turno;
+
+        this.updateView = true;
+
+
+
+
+    }
+
+    public void updateViewRound(int round) throws RemoteException{
+
+        this.round = round;
+
+        this.updateView = true;
+
+
+
+    }
+
+    public void updateViewGiocatoreCorrente(String giocatoreCorrente) throws RemoteException{
+
+        this.giocatoreCorrente = giocatoreCorrente;
+
+        this.updateView = true;
+
+    }
+
+    public void updateViewPlanceGiocatori(HashMap< String,String[][]> planceGiocatori) throws RemoteException{
+
+        this.planceGiocatori = planceGiocatori;
+
+        this.updateView = true;
+
+
+    }
+
+    public void updateViewCarteUtensile(HashMap<String,String> listaCartaUtensile) throws RemoteException{
+
+        this.carteUtensile = listaCartaUtensile;
+
+        this.updateView = true;
+
+    }
+
+    public void updateViewDadiRiserva(ArrayList<String > dadiRiserva) throws RemoteException{
+
+        this.dadiRiserva = dadiRiserva;
+
+        this.updateView = true;
+
+    }
+
+    public void updateViewDadoSelezionato(String dadoSelezionato) throws RemoteException{
+
+        this.dadoSelezionato = dadoSelezionato;
+
+        this.updateView = true;
+
+    }
+
 
 
     //=========================

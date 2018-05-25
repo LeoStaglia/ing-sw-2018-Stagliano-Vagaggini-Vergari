@@ -10,4 +10,20 @@ public interface GameObserver extends Remote {
     public void notifyScheme(boolean carta1, boolean fronteScelto) throws RemoteException;
     public void updateView(HashMap< String,String[][]> planceGiocatori , HashMap<String,String> listaCartaUtensile, String giocatoreCorrente, int turno, int round, ArrayList<String > dadiRiserva, String dadoSelezionato) throws RemoteException;
 
+    public void updateViewPlanciaGiocatoreCorrente(  String[][] plancia, String id) throws RemoteException;
+
+    public void updateViewTurno(int turno) throws RemoteException;
+
+    public void updateViewRound(int round) throws RemoteException;
+
+    public void updateViewGiocatoreCorrente(String giocatoreCorrente) throws RemoteException;
+
+    public void updateViewPlanceGiocatori(HashMap< String,String[][]> planceGiocatori) throws RemoteException;
+
+    public void updateViewCarteUtensile(HashMap<String,String> listaCartaUtensile) throws RemoteException;
+
+    public void updateViewDadiRiserva(ArrayList<String > dadiRiserva) throws RemoteException;
+
+    public void updateViewDadoSelezionato(String dadoSelezionato) throws RemoteException;
+
     }
