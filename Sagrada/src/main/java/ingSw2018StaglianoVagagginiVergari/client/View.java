@@ -507,10 +507,11 @@ public class View extends UnicastRemoteObject implements GameObserver, Remote {
 
             Map.Entry en1 = (Map.Entry) it1.next();
 
-            if (en1.getKey().equals(tuoId))
+            if (en1.getKey().equals(tuoId)) {//<<--
                 idGiocatori[0] = en1.getKey();
 
-            matriciDaStampare[0] = (String[][]) en1.getValue();
+                matriciDaStampare[0] = (String[][]) en1.getValue();
+            } //<<---
         }
 
 
