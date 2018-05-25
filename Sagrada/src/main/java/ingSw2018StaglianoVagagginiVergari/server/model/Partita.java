@@ -387,6 +387,14 @@ public class Partita {
         // TODO aggiungere calcolo SinglePlayer
     }
 
+    public boolean contaSchemi(){
+        int n=0;
+        for (Utente u:listaGiocatori) {
+            if(u.getPlancia().getCartaSchema()==null) return false;
+        }
+        return true;
+    }
+
 
     // various getter
 
