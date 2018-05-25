@@ -182,6 +182,8 @@ public class View extends UnicastRemoteObject implements GameObserver, Remote {
 
                 printTavoloDiGioco();
 
+                updateView = false;
+
 
 
                 if (id.equalsIgnoreCase(giocatoreCorrente) && passaturno == false) {
@@ -981,6 +983,11 @@ public class View extends UnicastRemoteObject implements GameObserver, Remote {
     }   //TODO RIMUOVERE non serve nel vero programma
     public void timer1(){
 
+        String[][] PlanciaDiProva = {{"2rosso", "2rosso", "2rosso", "2rosso", "2rosso"}, {"n", "n", "n", "n", "n"}, {"n", "n", "n", "n", "n"}, {"n", "n", "n", "n", "n"}};
+
+
+
+
         //=====timer per simulare il delay dato dal server. verrà chiamato un metodo che permetterà di rendere true "updateView"
 
         Timer t = new Timer();
@@ -989,7 +996,8 @@ public class View extends UnicastRemoteObject implements GameObserver, Remote {
             @Override
             public void run() {
                 try {
-                    updateView(planceGiocatori,carteUtensile,giocatoreCorrente,turno,round,dadiRiserva,dadoSelezionato);
+                    //updateView(planceGiocatori,carteUtensile,giocatoreCorrente,turno,round,dadiRiserva,dadoSelezionato);
+                    updateViewPlanciaGiocatoreCorrente(PlanciaDiProva, giocatoreCorrente);
                 }
                 catch (RemoteException e){
 
@@ -997,9 +1005,6 @@ public class View extends UnicastRemoteObject implements GameObserver, Remote {
 
             }
         }, 2000);
-
-
-        //=====
 
     }   //TODO RIMUOVERE non serve nel vero programma
     public void timer2(){
