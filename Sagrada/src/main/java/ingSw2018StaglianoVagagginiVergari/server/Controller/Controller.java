@@ -175,7 +175,7 @@ public class Controller extends UnicastRemoteObject implements RemoteController 
     }
 
 
-    public synchronized void usaCartaUtensile(GameObserver view,ArrayList<Integer> parametri)throws RemoteException{
+    public synchronized void usaCartaUtensile(GameObserver view,ArrayList<Integer> parametri) throws RemoteException{
         switch (status) {
             case CartaU1:
                 for (CartaUtensile u : partita.getListaCartaUtensile()) {
@@ -262,6 +262,7 @@ public class Controller extends UnicastRemoteObject implements RemoteController 
                 for (CartaUtensile u : partita.getListaCartaUtensile()) {
                     if (u.getId() == 10) {
                         TamponeDiamantato carta= (TamponeDiamantato) u;
+                        carta.setScelta(parametri.get(0));
                         u.usaEffettoCarta(partita);
                     }
                 }
@@ -270,6 +271,11 @@ public class Controller extends UnicastRemoteObject implements RemoteController 
                 for (CartaUtensile u : partita.getListaCartaUtensile()) {
                     if (u.getId() == 11) {
                         DiluentePerPastaSalda carta= (DiluentePerPastaSalda) u;
+                        carta.setScelta(parametri.get(0));
+                        carta.setNumeroScelto(parametri.get(1));
+                        carta.setX(parametri.get(2));
+                        carta.setY(parametri.get(3));
+
                         u.usaEffettoCarta(partita);
                     }
                 }

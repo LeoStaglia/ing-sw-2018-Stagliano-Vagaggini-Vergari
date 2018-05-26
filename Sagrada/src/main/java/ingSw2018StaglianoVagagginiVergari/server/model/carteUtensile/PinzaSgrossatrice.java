@@ -5,7 +5,7 @@ import ingSw2018StaglianoVagagginiVergari.server.model.Partita;
 
 public class PinzaSgrossatrice implements CartaUtensile {
     boolean costo ;
-    String Nome = "PinzaSgrossatrice";
+    String Nome = "Pinza Sgrossatrice";
     int Id = 1;
     int scelta;
     String descrizione="Dopo aver scelto un dado,\n" +

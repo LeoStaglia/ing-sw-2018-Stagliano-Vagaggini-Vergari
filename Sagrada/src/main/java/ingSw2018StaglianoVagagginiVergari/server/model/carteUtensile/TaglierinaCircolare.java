@@ -6,7 +6,7 @@ import ingSw2018StaglianoVagagginiVergari.server.model.Partita;
 
 public class TaglierinaCircolare implements CartaUtensile {
     boolean costo ;
-    String Nome = "TaglierinaCircolare";
+    String Nome = "Taglierina Circolare";
     int Id = 5;
     String descrizione="Dopo aver scelto un dado,\n" +
             "scambia quel dado con un dado\n" +

@@ -5,7 +5,7 @@ import ingSw2018StaglianoVagagginiVergari.server.model.Partita;
 
 public class TenagliaARotelle implements CartaUtensile {
     boolean costo ; ;
-    String Nome = "TenagliaARotelle";
+    String Nome = "Tenaglia A Rotelle";
     int Id = 8;
     String descrizione="Dopo il tuo primo turno scegli\n" +
             "immediatamente un altro dado\n\n" +

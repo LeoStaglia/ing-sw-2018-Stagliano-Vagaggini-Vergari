@@ -11,8 +11,12 @@ import java.rmi.RemoteException;
 public class DiluentePerPastaSalda implements CartaUtensile {
 
     private boolean costo ;
-    private String Nome = "DiluentePerPastaSalda";
+    private String Nome = "Diluente Per PastaSalda";
     private int id = 11;
+    int scelta;
+    int numeroScelto;
+    int x;
+    int y;
     String descrizione="Dopo aver scelto un dado, riponilo nel Sacchetto,\n" +
             "poi pescane uno dal Sacchetto\n\n"+
             "N.B. Scegli il valore del nuovo dado e\n" +
@@ -39,17 +43,11 @@ public class DiluentePerPastaSalda implements CartaUtensile {
 
 
     @Override
-    public void usaEffettoCarta(Partita PartitaCorrente)throws RemoteException{
+    public void usaEffettoCarta(Partita PartitaCorrente)  {
         costo=true;
         Dado DadoInMano;
 
         //todo passed from the view
-        int scelta=0;
-        int numeroScelto=0;
-        int x=0;
-        int y=0;
-
-
         DadoInMano = PartitaCorrente.getDadofromRiserva(scelta);
 
         PartitaCorrente.reInserisciDadoInSacchetto(DadoInMano);
@@ -95,4 +93,21 @@ public class DiluentePerPastaSalda implements CartaUtensile {
     public String getNome() {
         return Nome;
     }
+
+    public void setScelta(int scelta) {
+        this.scelta = scelta;
+    }
+
+    public void setNumeroScelto(int numeroScelto) {
+        this.numeroScelto = numeroScelto;
+    }
+
+    public void setX(int x) {
+        this.x = x;
+    }
+
+    public void setY(int y) {
+        this.y = y;
+    }
+
 }

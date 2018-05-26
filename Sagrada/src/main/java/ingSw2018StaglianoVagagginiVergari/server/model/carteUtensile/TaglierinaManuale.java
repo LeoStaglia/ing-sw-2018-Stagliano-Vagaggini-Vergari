@@ -10,7 +10,7 @@ import java.rmi.RemoteException;
 public class TaglierinaManuale implements CartaUtensile {
 
     boolean costo ;
-    String Nome = "TaglierinaManuale";
+    String Nome = "Taglierina Manuale";
     int Id = 12;
     String descrizione="Muovi fino a due dadi dello\n" +
             " stesso colore di un solo dado sul\n Tracciato dei Round\n\n" +

@@ -7,7 +7,7 @@ import ingSw2018StaglianoVagagginiVergari.server.model.Partita;
 public class RigaInSughero implements CartaUtensile {
 
     private boolean costo ;
-    private String Nome = "RigaInSughero";
+    private String Nome = "Riga In Sughero";
     private int id = 9;
     String descrizione="Dopo aver scelto un dado,\n" +
             "piazzalo in una casella che non\n" +

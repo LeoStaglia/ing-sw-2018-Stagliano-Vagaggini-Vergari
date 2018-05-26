@@ -283,42 +283,74 @@ public class View extends UnicastRemoteObject implements GameObserver, Remote {
 
 
 
-                        if(simulazione)
-                            scorriCartaUtensile(cmd);  //TODO RIMUOVERE serve solo per avere la simulazione di una partita
+
+                        scorriCartaUtensile(cmd);  //TODO RIMUOVERE serve solo per avere la simulazione di una partita
 
 
 
                         //====================  QUI VERRANNO FATTE RICHIESTE DIVERSE IN BASE ALLA CARTA UTENSILE
 
-                        System.out.println(" -- ... CARTA UTENSILE ... --");
 
+                            System.out.println(" -- ... CARTA UTENSILE ... --");
+
+                        System.out.println("CARTAINUSO"+cartaInUso);
 
                         if (cartaInUso.equalsIgnoreCase("Pinza Sgrossatrice")) {
+                            System.out.print("Inserisci il numero della carta della quale vuoi la descrizione:");
+                            parametri.set(0,inputCommand.nextInt());
+                            controller.usaCartaUtensile(this,parametri);
 
                         } else if (cartaInUso.equalsIgnoreCase("Pennello Per Eglomise")) {
+                            controller.usaCartaUtensile(this,parametri);
 
                             System.out.println("controller.usaCartaUtensile(GameObserver view,ArrayList<Integer> parametri)");//TODO COMANDI devo chiamare i comandi del controller
 
                         } else if (cartaInUso.equalsIgnoreCase("Alesatore per lamina di rame")) {
+                            controller.usaCartaUtensile(this,parametri);
 
                         } else if (cartaInUso.equalsIgnoreCase("Lathekin")) {
+                            parametri.set(0,inputCommand.nextInt());
+                            parametri.set(1,inputCommand.nextInt());
+                            parametri.set(2,inputCommand.nextInt());
+                            parametri.set(3,inputCommand.nextInt());
+                            controller.usaCartaUtensile(this,parametri);
 
                         } else if (cartaInUso.equalsIgnoreCase("Taglierina Circolare")) {
+                            parametri.set(0,inputCommand.nextInt());
+                            controller.usaCartaUtensile(this,parametri);
 
                         } else if (cartaInUso.equalsIgnoreCase("Pennello Per Pasta Salda")) {
+                            parametri.set(0,inputCommand.nextInt());
+                            parametri.set(1,inputCommand.nextInt());
+                            controller.usaCartaUtensile(this,parametri);
 
                         } else if (cartaInUso.equalsIgnoreCase("Martelletto")) {
+                            controller.usaCartaUtensile(this,parametri);
 
                         } else if (cartaInUso.equalsIgnoreCase("Tenaglia A Rotelle")) {
+                            controller.usaCartaUtensile(this,parametri);
 
                         } else if (cartaInUso.equalsIgnoreCase("Riga In Sughero")) {
+                            controller.usaCartaUtensile(this,parametri);
 
                         } else if (cartaInUso.equalsIgnoreCase("Tampone Diamantato")) {
+                            parametri.set(0,inputCommand.nextInt());
+                            controller.usaCartaUtensile(this,parametri);
 
                         } else if (cartaInUso.equalsIgnoreCase("Diluente Per Pasta Salda")) {
+                            parametri.set(0,inputCommand.nextInt());
+                            parametri.set(1,inputCommand.nextInt());
+                            parametri.set(2,inputCommand.nextInt());
+                            parametri.set(3,inputCommand.nextInt());
 
+                            controller.usaCartaUtensile(this,parametri);
                         } else if (cartaInUso.equalsIgnoreCase("Taglierina Manuale")) {
-
+                            parametri.set(0,inputCommand.nextInt());
+                            parametri.set(1,inputCommand.nextInt());
+                            parametri.set(2,inputCommand.nextInt());
+                            parametri.set(3,inputCommand.nextInt());
+                            parametri.set(4,inputCommand.nextInt());
+                            controller.usaCartaUtensile(this,parametri);
                         }
 
                         //====================
@@ -1219,7 +1251,7 @@ public class View extends UnicastRemoteObject implements GameObserver, Remote {
     }   //TODO RIMUOVERE non serve nel vero programma
     public void scorriCartaUtensile(int cmd){
         //=== da rimuovere, solo per prova... per testare le carte utensile
-
+        int indiceScorrimento=0;
         Iterator it = carteUtensile.entrySet().iterator();
         boolean trovato = false;
 
@@ -1227,11 +1259,12 @@ public class View extends UnicastRemoteObject implements GameObserver, Remote {
 
             Map.Entry en = (Map.Entry) it.next();
 
-            if (en.getKey().equals(cmd)) {
+            if (indiceScorrimento==cmd) {
 
-                cartaInUso = ((String) en.getValue()).substring(1, ((String) en.getValue()).length());
+                cartaInUso = ((String) en.getKey()).substring(1, ((String) en.getKey()).length());
                 trovato = true;
             }
+            indiceScorrimento++;
 
         }
 
