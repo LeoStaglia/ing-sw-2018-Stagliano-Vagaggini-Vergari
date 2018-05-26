@@ -1008,7 +1008,7 @@ public class View extends UnicastRemoteObject implements GameObserver, Remote {
             public void run() {
                 try {
                     //updateView(planceGiocatori,carteUtensile,giocatoreCorrente,turno,round,dadiRiserva,dadoSelezionato);
-                    updateViewPlanciaGiocatoreCorrente(PlanciaDiProva, giocatoreCorrente);
+                    updateViewPlanciaGiocatoreCorrente(PlanciaDiProva);
                 }
                 catch (RemoteException e){
 
