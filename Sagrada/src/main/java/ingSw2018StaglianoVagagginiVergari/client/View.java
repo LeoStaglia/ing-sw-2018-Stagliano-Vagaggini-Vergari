@@ -849,11 +849,11 @@ public class View extends UnicastRemoteObject implements GameObserver, Remote {
 
     //faccio altri metodi updateView in base alla situazione
 
-    public void updateViewPlanciaGiocatoreCorrente(  String[][] plancia, String id) throws RemoteException{
+    public void updateViewPlanciaGiocatoreCorrente(  String[][] plancia) throws RemoteException{
 
-        //sovrascrivo la plancia
+        //non ho bisogno che mi venga passato il giocatore corrente, in quanto è già salvato nella View
 
-        planceGiocatori.put(id, plancia);
+        planceGiocatori.put(giocatoreCorrente, plancia);
 
         this.updateView = true;
 
