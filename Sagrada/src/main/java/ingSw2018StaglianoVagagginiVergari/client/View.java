@@ -135,14 +135,18 @@ public class View extends UnicastRemoteObject implements GameObserver, Remote {
             }
             updateView = false;
             if (getStatus() == ViewStatus.SelezioneSchema) {
-                System.out.println("CARTA 1: Fronte");
-                stampaSchema(true, true);
-                System.out.println("CARTA 1: Retro");
-                stampaSchema(true, false);
-                System.out.println("CARTA 2: Fronte");
-                stampaSchema(false, true);
-                System.out.println("CARTA 2: Retro");
-                stampaSchema(false, false);
+
+                //qui avviene la stampa delle 4 carte schema, una delle quali verrà scelta dall'utente
+
+                // prototipo della funzione:  private void stampaSchema(boolean carta1, boolean fronte);
+
+
+                System.out.println();
+                printCarteSchema(schemaFronte1,schemaRetro1,schemaFronte2,schemaRetro2, 4 ,5);
+                System.out.println();
+
+
+
                 cmd = 0;
                 while (cmd != 1 && cmd != 2) {
                     System.out.println("(1) per scegliere la prima carta (2) per scegliere la seconda carta");
@@ -167,8 +171,7 @@ public class View extends UnicastRemoteObject implements GameObserver, Remote {
 
                 }
                 updateView = false;
-                System.out.println("Lo schema che hai scelto è il seguente:");
-                stampaSchema(carta1, fronteScelto);
+
 
             }
 
@@ -741,7 +744,134 @@ public class View extends UnicastRemoteObject implements GameObserver, Remote {
 
     }
 
+    public void printCarteSchema(String[][] schemaFronte1, String[][] schemaRetro1,String[][] schemaFronte2,String[][] schemaRetro2, int a, int b){
 
+        //dichiarazione di tutti i valori che permettono la stampa
+
+        String ANSI_RESET = "\u001B[0m";
+        String ANSI_BLACK = "\u001B[30m";
+        String ANSI_RED = "\u001B[31m";
+        String ANSI_GREEN = "\u001B[32m";
+        String ANSI_YELLOW = "\u001B[33m";
+        String ANSI_BLUE = "\u001B[34m";
+        String ANSI_PURPLE = "\u001B[35m";
+        String ANSI_CYAN = "\u001B[36m";
+        String ANSI_WHITE = "\u001B[37m";
+
+        String ANSI_BLACK_BACKGROUND = "\u001B[40m";
+        String ANSI_RED_BACKGROUND = "\u001B[41m";
+        String ANSI_GREEN_BACKGROUND = "\u001B[42m";
+        String ANSI_YELLOW_BACKGROUND = "\u001B[43m";
+        String ANSI_BLUE_BACKGROUND = "\u001B[44m";
+        String ANSI_PURPLE_BACKGROUND = "\u001B[45m";
+        String ANSI_CYAN_BACKGROUND = "\u001B[46m";
+        String ANSI_WHITE_BACKGROUND = "\u001B[47m";
+
+
+        String[][][] matriciDaStampare = new String[4+1][a][b];  //numero di plance +1
+        Object[] idGiocatori = new Object[4+1];  //numero di plance +1
+
+
+        matriciDaStampare[0] = schemaFronte1;
+        matriciDaStampare[1] = schemaRetro1;
+        matriciDaStampare[2] = schemaFronte2;
+        matriciDaStampare[3] = schemaRetro2;
+
+        idGiocatori[0] = "schemaFronte1";
+        idGiocatori[1] = "schemaRetro1";
+        idGiocatori[2] = "schemaFronte2";
+        idGiocatori[3] = "schemaRetro2";
+
+
+
+
+        for (int righe = 0; righe < a; righe++) {
+
+            if (righe != 0)
+                System.out.println("|");
+
+            for (int carta = 0; carta < 4; carta++) {
+
+                System.out.print("|");
+
+
+                if (righe == 0)
+                    System.out.print(idGiocatori[carta] + "    ");
+                else {
+                    for (int x = 0; x < idGiocatori[carta].toString().length() + 4; x++)
+                        System.out.print(" ");
+                }
+
+
+
+                for (int col = 0; col < b; col++) {
+
+                    //===================== QUESTO è IL CORPO DELLA STAMPA
+
+
+                    //questa prima parte è la stampa della cella in cui non è stato posizionato il dado
+
+                    if (matriciDaStampare[carta][righe][col].equalsIgnoreCase(Constraint.ROSSO.getDescrizione()))
+                        System.out.print(ANSI_RED + "R" + ANSI_RESET);
+
+                    else if (matriciDaStampare[carta][righe][col].equalsIgnoreCase(Constraint.GIALLO.getDescrizione()))
+                        System.out.print(ANSI_YELLOW + "G" + ANSI_RESET);
+
+                    else if (matriciDaStampare[carta][righe][col].equalsIgnoreCase(Constraint.VERDE.getDescrizione()))
+                        System.out.print(ANSI_GREEN + "V" + ANSI_RESET);
+
+                    else if (matriciDaStampare[carta][righe][col].equalsIgnoreCase(Constraint.BLU.getDescrizione()))
+                        System.out.print(ANSI_BLUE + "B" + ANSI_RESET);
+
+                    else if (matriciDaStampare[carta][righe][col].equalsIgnoreCase(Constraint.VIOLA.getDescrizione()))
+                        System.out.print(ANSI_PURPLE + "V" + ANSI_RESET);
+
+                    else if (matriciDaStampare[carta][righe][col].equalsIgnoreCase(Constraint.UNO.getDescrizione()))
+                        System.out.print(1);
+
+                    else if (matriciDaStampare[carta][righe][col].equalsIgnoreCase(Constraint.DUE.getDescrizione()))
+                        System.out.print(2);
+
+                    else if (matriciDaStampare[carta][righe][col].equalsIgnoreCase(Constraint.TRE.getDescrizione()))
+                        System.out.print(3);
+
+                    else if (matriciDaStampare[carta][righe][col].equalsIgnoreCase(Constraint.QUATTRO.getDescrizione()))
+                        System.out.print(4);
+
+                    else if (matriciDaStampare[carta][righe][col].equalsIgnoreCase(Constraint.CINQUE.getDescrizione()))
+                        System.out.print(5);
+
+                    else if (matriciDaStampare[carta][righe][col].equalsIgnoreCase(Constraint.SEI.getDescrizione()))
+                        System.out.print(6);
+
+                    else if (matriciDaStampare[carta][righe][col].equalsIgnoreCase(Constraint.NONE.getDescrizione()))
+                        System.out.print("N");
+
+
+
+
+                    System.out.print(" ");
+
+
+                    //=====================FINE DEL CORPO DELLA STAMPA
+
+                }
+                System.out.print("    ");
+            }
+
+        }
+
+        System.out.print("|\n");
+
+
+
+
+
+
+
+
+
+    }
 
     public void printCartaObiettivoPrivato(HashMap<String,String > ob) {
 
