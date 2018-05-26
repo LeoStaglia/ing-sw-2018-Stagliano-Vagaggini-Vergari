@@ -92,7 +92,7 @@ public class Controller extends UnicastRemoteObject implements RemoteController 
     Set<Integer> azioniGiocatore= new HashSet<Integer>();
 
     public void inizializzaAzioniGiocatore(){
-        for(int i=0;i<3;i++){
+        for(int i=1;i<=3;i++){
             azioniGiocatore.add(i);
         }
     }
@@ -100,9 +100,12 @@ public class Controller extends UnicastRemoteObject implements RemoteController 
     public synchronized void svolgimentoPartita(GameObserver view,ArrayList<Integer> parametri) throws MossaIllegaleException {
         if (azioniGiocatore.contains(parametri.get(0))) {
             int n=parametri.get(0);
-            if (n == 0) this.piazzaDado(view,parametri.get(1),parametri.get(2));
-            if (n == 1) this.scegliCartaUtensile(view,parametri.get(1));
-            if (n == 2) this.passaTurno(view);
+            if (n == 1) {
+                partita.setDadoSelezionato(partita.getRiserva().get(parametri.get(1)));
+                this.piazzaDado(view,parametri.get(2),parametri.get(3));
+            }
+            if (n == 2) this.scegliCartaUtensile(view,parametri.get(1));
+            if (n == 3) this.passaTurno(view);
             azioniGiocatore.remove(parametri.get(0));
         }
 
