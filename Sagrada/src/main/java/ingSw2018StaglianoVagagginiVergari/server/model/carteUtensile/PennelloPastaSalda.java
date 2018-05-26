@@ -5,6 +5,8 @@ import Eccezioni.MossaIllegaleException;
 import ingSw2018StaglianoVagagginiVergari.server.model.CartaUtensile;
 import ingSw2018StaglianoVagagginiVergari.server.model.Partita;
 
+import java.rmi.RemoteException;
+
 public class PennelloPastaSalda implements CartaUtensile {
 
 
@@ -32,7 +34,7 @@ public class PennelloPastaSalda implements CartaUtensile {
 
 
     @Override
-    public void usaEffettoCarta(Partita p) {
+    public void usaEffettoCarta(Partita p) throws RemoteException {
         costo=true;
         Boolean[][] mossePermesse;
         p.getDadoSelezionato().lanciaDado();
