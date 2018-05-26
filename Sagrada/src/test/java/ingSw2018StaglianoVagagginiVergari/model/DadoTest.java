@@ -25,4 +25,5 @@ class DadoTest {
         Dado d=new Dado("Rosso");
         assertTrue(d.getNumero()>=1 && d.getNumero()<=6);
     }
+
 }

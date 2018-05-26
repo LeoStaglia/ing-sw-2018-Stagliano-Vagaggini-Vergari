@@ -198,7 +198,7 @@ public class View extends UnicastRemoteObject implements GameObserver, Remote {
 
                 updateView = false;
 
-
+                passaturno=false;
 
                 if (id.equalsIgnoreCase(giocatoreCorrente) && passaturno == false) { //TODO RIVEDERE non serve il parametro passaturno
 
@@ -235,8 +235,6 @@ public class View extends UnicastRemoteObject implements GameObserver, Remote {
                         System.out.println("inserisci il numero del dado che vuoi scegliere");//dovrei  verificare che la scelta sia corretta
                         cmd = inputCommand.nextInt(); //dentro a cmd è contenuto il dado selezionato
 
-                        System.out.println("controller.dadoselezionato(cmd);"); // TODO COMANDI questa chiamata è scorretta, gli passo la chiave quando il controller non sa di cosa si tratta
-
                         numeroDadoSelezionato = cmd;  // dato che la selezione del dado avviene in un istante diverso da quello dell'effettivo utilizzo, devo tenere traccia dellla posizione del dado selezionato all'interno della riserva;
 
 
@@ -245,36 +243,23 @@ public class View extends UnicastRemoteObject implements GameObserver, Remote {
                             dadoSelezionato = dadiRiserva.get(cmd); //TODO RIMUOVERE solo per prova... lo inserisco solo per far vedere che effettivamente l'aggiornamento funziona
 
 
-
-                        flagSceltaDado = 1;
-
-
-                    } else if (cmd == 1 && flagSceltaDado == 1) {
-
-
                         System.out.println("inserisci le coordinate in cui vuoi posizionare il dado: ");
 
-                        System.out.print("X ( 1 <= x <= 5):");
+                        System.out.print("i ( 0 <= x <= 3):");
 
-                        while (!(cmd > 0 || cmd < 6)) {          //DA RIFARE IL CONTROLLO
-                            cmd = inputCommand.nextInt();
-                        }
+                        int i = inputCommand.nextInt();
 
-                        int x = inputCommand.nextInt();
+                        System.out.print("j ( 0 <= x <= 4):");
 
-                        System.out.print("Y ( 1 < x < 4):");
-
-                        int y = inputCommand.nextInt();
-
-                        System.out.println("controller.posizionaDado(x,y);");
+                        int j = inputCommand.nextInt();
 
 
                         //chiamo il metodo del controller che mi permette di passare i parametri per la mossa scelta.
                         try {
                             parametri.add(0,1); // ho scelto di posizionare il dado
                             parametri.add(1,numeroDadoSelezionato); // passo la posizione del dado selezionato all'interno della riserva
-                            parametri.add(2,x);
-                            parametri.add(3,y);
+                            parametri.add(2,i);
+                            parametri.add(3,j);
                             controller.svolgimentoPartita(this,parametri);  //TODO RIVEDERE il fatto che debba essere passata anche la vista deve essere ripensato
                             parametri = new ArrayList<Integer>(); // TODO RIVEDERE non è detto che sia necessario new dato che viene fatto solo per precauzione. potrebbe essere sufficiente lasciarlo nelle condizioni attuali senza reinizializzare, in modo da sapere quale è l'ultima chiamata che è stata fatta al model.
 
@@ -1043,7 +1028,7 @@ public class View extends UnicastRemoteObject implements GameObserver, Remote {
 
     //faccio altri metodi updateView in base alla situazione
 
-    public void updateViewPlanciaGiocatoreCorrente(  String[][] plancia) throws RemoteException{
+    public void updateViewPlanciaGiocatoreCorrente(String[][] plancia) throws RemoteException{
 
         //non ho bisogno che mi venga passato il giocatore corrente, in quanto è già salvato nella View
 
@@ -1191,7 +1176,7 @@ public class View extends UnicastRemoteObject implements GameObserver, Remote {
 
         //=====timer per simulare il delay dato dal server. verrà chiamato un metodo che permetterà di rendere true "updateView"
 
-        Timer t = new Timer();
+        /*Timer t = new Timer();
 
         t.schedule(new TimerTask() {
             @Override
@@ -1206,6 +1191,7 @@ public class View extends UnicastRemoteObject implements GameObserver, Remote {
 
             }
         }, 2000);
+        */
 
     }   //TODO RIMUOVERE non serve nel vero programma
     public void timer2(){

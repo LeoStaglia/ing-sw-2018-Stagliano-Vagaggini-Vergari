@@ -8,6 +8,9 @@ import ingSw2018StaglianoVagagginiVergari.server.model.carteSchema.ViaLux;
 import ingSw2018StaglianoVagagginiVergari.server.model.carteSchema.Virtus;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
+import java.rmi.RemoteException;
+
 import  static org.mockito.Mockito.*;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -40,7 +43,7 @@ class PlanciaTest {
     }
 
     @Test
-    void piazzaDado() throws MossaIllegaleException {
+    void piazzaDado() throws MossaIllegaleException,RemoteException {
         try {
             p.calcolaMosse(mockedDie1, false, false);
             p.piazzaDado(0,0, mockedDie1);
@@ -55,7 +58,7 @@ class PlanciaTest {
     }
 
     @Test
-    void rimuoviDado() throws MossaIllegaleException{
+    void rimuoviDado() throws MossaIllegaleException,RemoteException{
         p.calcolaMosse(mockedDie1, false, false);
         p.piazzaDado(0,0, mockedDie1);
         assertNotNull(p.leggiPlancia(0,0));
@@ -64,7 +67,7 @@ class PlanciaTest {
     }
 
     @Test
-    void leggiPlancia() throws MossaIllegaleException{
+    void leggiPlancia() throws MossaIllegaleException, RemoteException{
         p.calcolaMosse(mockedDie1, false, false);
         p.piazzaDado(0,0, mockedDie1);
         assertEquals(p.leggiPlancia(0,0), mockedDie1);
@@ -75,7 +78,7 @@ class PlanciaTest {
     }
 
     @Test
-    void calcolaMosse() throws MossaIllegaleException{
+    void calcolaMosse() throws RemoteException,MossaIllegaleException{
         Dado d0 = mock(Dado.class);
         when(d0.getNumero()).thenReturn(2);
         when(d0.getColore()).thenReturn("Giallo");

@@ -5,6 +5,8 @@ import ingSw2018StaglianoVagagginiVergari.server.model.*;
 import ingSw2018StaglianoVagagginiVergari.server.model.carteSchema.FactorySchema;
 import org.junit.jupiter.api.Test;
 
+import java.rmi.RemoteException;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 class RigaInSugheroTest {
@@ -24,7 +26,7 @@ class RigaInSugheroTest {
 
 
     @Test
-    void usaEffettoCarta() throws MossaIllegaleException {
+    void usaEffettoCarta() throws MossaIllegaleException, RemoteException {
 
 
 

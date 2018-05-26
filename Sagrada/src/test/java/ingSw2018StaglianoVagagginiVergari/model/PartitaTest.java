@@ -6,6 +6,7 @@ import ingSw2018StaglianoVagagginiVergari.server.model.Utente;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
+import java.rmi.RemoteException;
 import java.util.ArrayList;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -15,7 +16,7 @@ import static org.mockito.Mockito.*;
 class PartitaTest {
 
     @Test
-    void setOrdineRoundTool8Start() {
+    void setOrdineRoundTool8Start() throws RemoteException {
         Partita p=new Partita();
         ArrayList<Utente> test=new ArrayList<Utente>();
 
@@ -66,7 +67,7 @@ class PartitaTest {
     }
 
     @Test
-    void setOrdineRoundTool8End() {
+    void setOrdineRoundTool8End() throws RemoteException {
         Partita p=new Partita();
         ArrayList<Utente> test=new ArrayList<Utente>();
 
@@ -210,7 +211,7 @@ class PartitaTest {
     }
 
     @Test
-    void getCurrentPlayer() {
+    void getCurrentPlayer() throws RemoteException {
         Partita p=new Partita();
         int n=7;
 

@@ -7,6 +7,7 @@ import ingSw2018StaglianoVagagginiVergari.common.GameObserver;
 import ingSw2018StaglianoVagagginiVergari.common.RemoteController;
 import ingSw2018StaglianoVagagginiVergari.server.model.CartaUtensile;
 import ingSw2018StaglianoVagagginiVergari.server.model.Partita;
+import ingSw2018StaglianoVagagginiVergari.server.model.Utente;
 import ingSw2018StaglianoVagagginiVergari.server.model.carteUtensile.*;
 
 import java.rmi.Remote;
@@ -85,6 +86,7 @@ public class Controller extends UnicastRemoteObject implements RemoteController 
     public void scegliSchema(GameObserver view, String idUser,boolean carta1, boolean fronte) throws RemoteException{
         partita.sceltaSchema(view, idUser,carta1, fronte);
         if(partita.contaSchemi())  setStatus(ControllerStatus.SvolgimentoPartita);
+        inizializzaAzioniGiocatore();
     }
 
 
@@ -98,26 +100,33 @@ public class Controller extends UnicastRemoteObject implements RemoteController 
     }
 
     public synchronized void svolgimentoPartita(GameObserver view,ArrayList<Integer> parametri) throws MossaIllegaleException, RemoteException {
+        for (Utente u: partita.getOrdineRound()) {
+            System.out.println(u.getId());
+        }
+
+        System.out.println("Gioc corr"+partita.getCurrentPlayer());
+
         if (azioniGiocatore.contains(parametri.get(0))) {
             int n=parametri.get(0);
+            azioniGiocatore.remove(parametri.get(0));
             if (n == 1) {
-                partita.setDadoSelezionato(partita.getRiserva().get(parametri.get(1)));
-                this.piazzaDado(view,parametri.get(2),parametri.get(3));
+                partita.setDadoSelezionato(parametri.get(1));
+                partita.piazzamentoDado(parametri.get(2), parametri.get(3), false, false);
             }
             if (n == 2) this.scegliCartaUtensile(view,parametri.get(1));
             if (n == 3) this.passaTurno(view);
-            azioniGiocatore.remove(parametri.get(0));
+
         }
 
 
     }
-    public synchronized void piazzaDado(GameObserver view, int i,int j) throws MossaIllegaleException {
+    /*public synchronized void piazzaDado(GameObserver view, int i,int j) throws MossaIllegaleException {
 
         partita.getCurrentPlayer().getPlancia().calcolaMosse(partita.getDadoSelezionato(), false, false);
         partita.getCurrentPlayer().getPlancia().piazzaDado(i, j, partita.getDadoSelezionato());
 
 
-    }
+    }*/
 
     public synchronized void scegliCartaUtensile(GameObserver view,int k) {
         if (partita.getListaCartaUtensile().get(k).getCosto()<= partita.getCurrentPlayer().getSegnalini()) {
@@ -166,7 +175,7 @@ public class Controller extends UnicastRemoteObject implements RemoteController 
     }
 
 
-    public synchronized void usaCartaUtensile(GameObserver view,ArrayList<Integer> parametri){
+    public synchronized void usaCartaUtensile(GameObserver view,ArrayList<Integer> parametri)throws RemoteException{
         switch (status) {
             case CartaU1:
                 for (CartaUtensile u : partita.getListaCartaUtensile()) {
@@ -292,18 +301,20 @@ public class Controller extends UnicastRemoteObject implements RemoteController 
 
 
 
-    public synchronized void passaTurno(GameObserver view) {
+    public synchronized void passaTurno(GameObserver view) throws RemoteException {
         inizializzaAzioniGiocatore();
-        if (partita.getTurno() < 10) partita.incrementaTurno();
-        else {
+
+        if(partita.getTurno()==2*partita.getListaGiocatori().size()){
             if (partita.getTracciatoDelRound().getRoundAttuale() < 10) {
-                partita.reInizializzaTurno();
-                partita.setOrdineRound();
                 partita.nextRound();
             } else { setStatus(ControllerStatus.CalcoloPunteggio);
                 partita.calcolaPunteggioFinale();                                               }
 
         }
+        else partita.incrementaTurno();
+
+        System.out.println("FFF"+partita.getCurrentPlayer());
+
 
     }
 

@@ -2,9 +2,13 @@ package ingSw2018StaglianoVagagginiVergari.server.model;
 
 
 import Eccezioni.MossaIllegaleException;
+import ingSw2018StaglianoVagagginiVergari.common.GameObserver;
 import ingSw2018StaglianoVagagginiVergari.server.model.carteSchema.Schema;
 
 import java.io.Serializable;
+import java.rmi.Remote;
+import java.rmi.RemoteException;
+import java.util.ArrayList;
 
 public class Plancia implements Serializable {
     private String colore;
@@ -29,7 +33,7 @@ public class Plancia implements Serializable {
     public void piazzaDado(int i, int j, Dado d) throws MossaIllegaleException {
 
         if (piazzamentiPermessi[i][j]) {
-            grigliaGioco[i][j] = d;         //alternative implementations: assign the actual object or create a copy of the object
+            grigliaGioco[i][j] = d; //alternative implementations: assign the actual object or create a copy of the object
 
         } else {
             throw new MossaIllegaleException();
@@ -50,6 +54,8 @@ public class Plancia implements Serializable {
 
         return cartaSchema;
     }
+
+
 
     /*helper method for calcolaMosse(), that verifies for each non-null position of the game grid if its specific near cell are available, excluding the elaboration of
     the first move on the grid.

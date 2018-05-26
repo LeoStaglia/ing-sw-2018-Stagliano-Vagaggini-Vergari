@@ -32,6 +32,7 @@ public class TamponeDiamantato implements CartaUtensile {
 
     @Override
     public void usaEffettoCarta(Partita PartitaCorrente) {
+        /*TODO implementare
         costo=true;
         Dado DadoinMano;
 
@@ -71,7 +72,7 @@ public class TamponeDiamantato implements CartaUtensile {
 
 
         PartitaCorrente.setDadoSelezionato(DadoinMano);
-
+        */
 
     }
 

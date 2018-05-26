@@ -1,5 +1,6 @@
 package ingSw2018StaglianoVagagginiVergari.server.model;
 
+import Eccezioni.MossaIllegaleException;
 import ingSw2018StaglianoVagagginiVergari.common.GameObserver;
 import ingSw2018StaglianoVagagginiVergari.common.RemoteController;
 import ingSw2018StaglianoVagagginiVergari.server.model.carteSchema.CartaSchema;
@@ -142,9 +143,12 @@ public class Partita {
     }
 
 
-    public void incrementaTurno() {
+    public void incrementaTurno()throws RemoteException {
         this.turno = this.turno + 1;
-        this.setGiocatoreCorrente();  //TODO ricontrollare prima inizializzazione
+        this.setGiocatoreCorrente();
+
+        System.out.println("ESKEREE");
+        updateGenerale();
 
     }
 
@@ -266,11 +270,13 @@ public class Partita {
     }
 
     // increments the round
-    public void nextRound() {
+    public void nextRound() throws RemoteException {
         //TODO possibile inserimento metodo se nel round è stata utilizzata la carta 8
         setOrdineRound();
         tracciatoDelRound.nextRound();
         reInizializzaTurno();
+        setGiocatoreCorrente();
+        updateGenerale();
     }
 
     // method called by card tool 7;
@@ -302,6 +308,9 @@ public class Partita {
     // method to set the current die
     public void setDadoSelezionato(Dado dadoSelezionato) {
         this.dadoSelezionato = dadoSelezionato;
+    }
+    public void setDadoSelezionato(int posizione) {
+        this.dadoSelezionato = riserva.remove(posizione);
     }
 
     // populate the stack of Tool Cards(12)
@@ -395,6 +404,15 @@ public class Partita {
             if(u.getPlancia().getCartaSchema()==null) return false;
         }
         // preparazione updateView iniziale
+
+        updateGenerale();
+
+
+
+        return true;
+    }
+
+    public void updateGenerale() throws RemoteException{
         for (GameObserver view:gameObservers) {
             HashMap<String,String[][]> planceGiocatori=new HashMap<>();
             for (Utente u:listaGiocatori) {
@@ -432,10 +450,17 @@ public class Partita {
             view.updateView(planceGiocatori,listCartaUtensile,getCurrentPlayer().getId(),getTurno(),getTracciatoDelRound().getRoundAttuale(),dadiRiserva,"null",carteObiettivoPubblico,listCarteObiettivoPrivato);
         }
 
+    }
 
 
-
-        return true;
+    public void piazzamentoDado(int i,int j, boolean utensile1, boolean utensile2) throws RemoteException{
+        getCurrentPlayer().getPlancia().calcolaMosse(dadoSelezionato, utensile1, utensile2);
+        try{
+            getCurrentPlayer().getPlancia().piazzaDado(i, j, dadoSelezionato);
+            updateGenerale();
+        }catch(MossaIllegaleException e){
+            riserva.add(dadoSelezionato);
+        }
     }
 
 
@@ -491,10 +516,9 @@ public class Partita {
 
     }
 
-
-
-
-
+    public ArrayList<GameObserver> getGameObservers() {
+        return gameObservers;
+    }
     // end various getter
 
 }

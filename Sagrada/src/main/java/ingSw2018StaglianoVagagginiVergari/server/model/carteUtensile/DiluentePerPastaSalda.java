@@ -5,6 +5,8 @@ import ingSw2018StaglianoVagagginiVergari.server.model.CartaUtensile;
 import ingSw2018StaglianoVagagginiVergari.server.model.Dado;
 import ingSw2018StaglianoVagagginiVergari.server.model.Partita;
 
+import java.rmi.RemoteException;
+
 
 public class DiluentePerPastaSalda implements CartaUtensile {
 
@@ -37,7 +39,7 @@ public class DiluentePerPastaSalda implements CartaUtensile {
 
 
     @Override
-    public void usaEffettoCarta(Partita PartitaCorrente)  {
+    public void usaEffettoCarta(Partita PartitaCorrente)throws RemoteException{
         costo=true;
         Dado DadoInMano;
 

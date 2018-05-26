@@ -5,6 +5,8 @@ import ingSw2018StaglianoVagagginiVergari.server.model.CartaUtensile;
 import ingSw2018StaglianoVagagginiVergari.server.model.Dado;
 import ingSw2018StaglianoVagagginiVergari.server.model.Partita;
 
+import java.rmi.RemoteException;
+
 public class TaglierinaManuale implements CartaUtensile {
 
     boolean costo ;
@@ -64,7 +66,7 @@ public class TaglierinaManuale implements CartaUtensile {
         this.y = y;
     }
 
-    public void usaEffettoCarta(Partita p) {
+    public void usaEffettoCarta(Partita p) throws RemoteException{
         costo=true;
         String color=null;
         color=p.getTracciatoDelRound().getRimanenzeRiservaOn(r).getColore();

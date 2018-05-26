@@ -5,6 +5,9 @@ import ingSw2018StaglianoVagagginiVergari.server.model.CartaUtensile;
 import ingSw2018StaglianoVagagginiVergari.server.model.Dado;
 import ingSw2018StaglianoVagagginiVergari.server.model.Partita;
 
+import java.rmi.Remote;
+import java.rmi.RemoteException;
+
 
 public class Lathekin implements CartaUtensile {
 
@@ -38,7 +41,7 @@ public class Lathekin implements CartaUtensile {
 
 
     @Override
-    public void usaEffettoCarta(Partita p){
+    public void usaEffettoCarta(Partita p) throws RemoteException{
         costo=true;
         if (p.getCurrentPlayer().getPlancia().leggiPlancia(xDie, yDie)!=null){
             Dado d = p.getCurrentPlayer().getPlancia().leggiPlancia(xDie, yDie); // d è uguale a Dado selezionato
