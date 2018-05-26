@@ -1,6 +1,7 @@
 package ingSw2018StaglianoVagagginiVergari.client;
 
 import Eccezioni.FullGameException;
+import Eccezioni.MossaIllegaleException;
 import ingSw2018StaglianoVagagginiVergari.common.GameObserver;
 import ingSw2018StaglianoVagagginiVergari.common.RemoteController;
 import ingSw2018StaglianoVagagginiVergari.server.model.CartaObiettivoPubblico;
@@ -23,6 +24,8 @@ import java.util.*;
  *
  * TODO RIMUOVERE  cancellare le righe di codice per avere il corretto comportamento
  *
+ * TODO RIVEDERE scelte implementative da ripensare eventualmente
+ *
  *
  * */
 
@@ -34,7 +37,7 @@ public class View extends UnicastRemoteObject implements GameObserver, Remote {
 
     private boolean simulazione = false; //TODO questo attributo permette di switchare velocemante tra una partita già impostata ed una che richiede parametri dal model
 
-
+    private ArrayList<Integer> parametri = new ArrayList<Integer>();
 
 
 
@@ -71,6 +74,8 @@ public class View extends UnicastRemoteObject implements GameObserver, Remote {
     private ArrayList<String> dadiRiserva = new ArrayList<>();
 
     private String dadoSelezionato ;
+
+    private Integer numeroDadoSelezionato;
 
     private String cartaInUso;
 
@@ -192,7 +197,7 @@ public class View extends UnicastRemoteObject implements GameObserver, Remote {
 
 
 
-                if (id.equalsIgnoreCase(giocatoreCorrente) && passaturno == false) {
+                if (id.equalsIgnoreCase(giocatoreCorrente) && passaturno == false) { //TODO RIVEDERE non serve il parametro passaturno
 
                     System.out.println("\nSEI IL GIOCATORE CORRENTE!\n");
 
@@ -229,6 +234,9 @@ public class View extends UnicastRemoteObject implements GameObserver, Remote {
 
                         System.out.println("controller.dadoselezionato(cmd);"); // TODO COMANDI questa chiamata è scorretta, gli passo la chiave quando il controller non sa di cosa si tratta
 
+                        numeroDadoSelezionato = cmd;  // dato che la selezione del dado avviene in un istante diverso da quello dell'effettivo utilizzo, devo tenere traccia dellla posizione del dado selezionato all'interno della riserva;
+
+
 
                         if(simulazione)
                             dadoSelezionato = dadiRiserva.get(cmd); //TODO RIMUOVERE solo per prova... lo inserisco solo per far vedere che effettivamente l'aggiornamento funziona
@@ -257,6 +265,24 @@ public class View extends UnicastRemoteObject implements GameObserver, Remote {
 
                         System.out.println("controller.posizionaDado(x,y);");
 
+
+                        //chiamo il metodo del controller che mi permette di passare i parametri per la mossa scelta.
+                        try {
+                            parametri.add(0,1); // ho scelto di posizionare il dado
+                            parametri.add(1,numeroDadoSelezionato); // passo la posizione del dado selezionato all'interno della riserva
+                            parametri.add(2,x);
+                            parametri.add(3,y);
+                            controller.svolgimentoPartita(this,parametri);  //TODO RIVEDERE il fatto che debba essere passata anche la vista deve essere ripensato
+                            parametri = new ArrayList<Integer>(); // TODO RIVEDERE non è detto che sia necessario new dato che viene fatto solo per precauzione. potrebbe essere sufficiente lasciarlo nelle condizioni attuali senza reinizializzare, in modo da sapere quale è l'ultima chiamata che è stata fatta al model.
+
+                        }catch(MossaIllegaleException e){
+                            System.out.print("mossa non consentita");  //TODO RIVEDERE da rivedere se funziona
+                        }
+
+
+
+
+
                         flagSceltaDado = 2;
 
                     } else if (cmd == 2 && flagSceltaCartaUtensile == 0) {
@@ -265,6 +291,8 @@ public class View extends UnicastRemoteObject implements GameObserver, Remote {
                         cmd = inputCommand.nextInt(); //dentro a cmd è contenuta la carta selezionata
 
                         System.out.println("controller.cartaselezionata(cmd);"); // TODO COMANDI questa chiamata è scorretta, gli passo la chiave quando il controller non sa di cosa si tratta
+
+
 
 
                         if(simulazione)
@@ -305,15 +333,51 @@ public class View extends UnicastRemoteObject implements GameObserver, Remote {
 
                         }
 
-
-
                         //====================
+
+
+
+                        //chiamo il metodo del controller che mi permette di passare i parametri per la mossa scelta.
+                        try {
+                            parametri.add(0,2); // ho scelto di selezionare la carta utensile
+                            parametri.add(1,cmd);   // questo è il numero della carta utensile che ha selezionato
+
+
+                            //TODO devono essere aggiunti i parametri necessari per le varie carte utensile
+
+
+                            controller.svolgimentoPartita(this,parametri);  //TODO RIVEDERE il fatto che debba essere passata anche la vista deve essere ripensato
+                            parametri = new ArrayList<Integer>(); // TODO RIVEDERE non è detto che sia necessario new dato che viene fatto solo per precauzione. potrebbe essere sufficiente lasciarlo nelle condizioni attuali senza reinizializzare, in modo da sapere quale è l'ultima chiamata che è stata fatta al model.
+
+                        }catch(MossaIllegaleException e){
+                            System.out.print("carta non consentita");  //TODO RIVEDERE da rivedere se funziona
+                        }
+
+
+
+
+
 
                         flagSceltaCartaUtensile = 1;
 
 
                     } else if (cmd == 3) {
                         passaturno = true;
+
+
+                        //chiamo il metodo del controller che mi permette di passare i parametri per la mossa scelta.
+                        try {
+                            parametri.add(0,3); // ho scelto di passare il turno
+
+                            controller.svolgimentoPartita(this,parametri);  //TODO RIVEDERE il fatto che debba essere passata anche la vista deve essere ripensato
+                            parametri = new ArrayList<Integer>(); // TODO RIVEDERE non è detto che sia necessario new dato che viene fatto solo per precauzione. potrebbe essere sufficiente lasciarlo nelle condizioni attuali senza reinizializzare, in modo da sapere quale è l'ultima chiamata che è stata fatta al model.
+
+                        }catch(MossaIllegaleException e){
+                            System.out.print("mossa non consentita");  //TODO RIVEDERE da rivedere se funziona
+                        }
+
+
+
                     } else if (cmd == 4) {
 
                         System.out.print("Inserisci il numero della carta della quale vuoi la descrizione:");
@@ -924,10 +988,6 @@ public class View extends UnicastRemoteObject implements GameObserver, Remote {
 
 
     //=========================
-
-
-
-
 
 
 

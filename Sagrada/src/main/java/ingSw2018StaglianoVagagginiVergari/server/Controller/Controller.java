@@ -97,7 +97,7 @@ public class Controller extends UnicastRemoteObject implements RemoteController 
         }
     }
 
-    public synchronized void svolgimentoPartita(GameObserver view,ArrayList<Integer> parametri) throws MossaIllegaleException {
+    public synchronized void svolgimentoPartita(GameObserver view,ArrayList<Integer> parametri) throws MossaIllegaleException, RemoteException {
         if (azioniGiocatore.contains(parametri.get(0))) {
             int n=parametri.get(0);
             if (n == 1) {
