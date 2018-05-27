@@ -1,13 +1,21 @@
 package ingSw2018StaglianoVagagginiVergari.server.model.carteUtensile;
 
+import Eccezioni.MossaIllegaleException;
 import ingSw2018StaglianoVagagginiVergari.server.model.CartaUtensile;
+import ingSw2018StaglianoVagagginiVergari.server.model.Dado;
 import ingSw2018StaglianoVagagginiVergari.server.model.Partita;
+
+import java.rmi.RemoteException;
 
 
 public class PennelloPerEglomise implements CartaUtensile {
     private boolean costo ;
     private String Nome = "Pennello Per Eglomise";
     private int id = 2;
+    private int xDie;
+    private int yDie;
+    private int xCell;
+    private int yCell;
     String descrizione="Muovi un qualsiasi dado nella tua\n" +
             "vetrata ignorando le restrizioni\n" +
             "di colore\n\n" +
@@ -32,9 +40,18 @@ public class PennelloPerEglomise implements CartaUtensile {
 
 
 
-    public void usaEffettoCarta(Partita p) {
+    public void usaEffettoCarta(Partita p) throws RemoteException {
         costo=true;
-        p.getCurrentPlayer().getPlancia().calcolaMosse(p.getDadoSelezionato(), true, false);
+        Dado d= p.getCurrentPlayer().getPlancia().leggiPlancia(xDie, yDie);
+        p.getCurrentPlayer().getPlancia().rimuoviDado(xDie, yDie);
+        p.getCurrentPlayer().getPlancia().calcolaMosse(d, true, false);
+        try{
+            p.getCurrentPlayer().getPlancia().piazzaDado(xCell, yCell, d);
+        }catch(MossaIllegaleException e){
+
+        }
+        p.updateGenerale();
+
 
     }
 
@@ -61,5 +78,21 @@ public class PennelloPerEglomise implements CartaUtensile {
     @Override
     public String getNome() {
         return Nome;
+    }
+
+    public void setxDie(int xDie) {
+        this.xDie = xDie;
+    }
+
+    public void setyDie(int yDie) {
+        this.yDie = yDie;
+    }
+
+    public void setxCell(int xCell) {
+        this.xCell = xCell;
+    }
+
+    public void setyCell(int yCell) {
+        this.yCell = yCell;
     }
 }

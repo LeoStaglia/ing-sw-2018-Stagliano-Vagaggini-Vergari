@@ -274,9 +274,26 @@ public class View extends UnicastRemoteObject implements GameObserver, Remote {
                         flagSceltaDado = 2;
 
                     } else if (cmd == 2 && flagSceltaCartaUtensile == 0) {
-
+                        updateView=false;
                         System.out.println("inserisci il numero della carta che vuoi scegliere");
                         cmd = inputCommand.nextInt(); //dentro a cmd è contenuta la carta selezionata
+                        //chiamo il metodo del controller che mi permette di passare i parametri per la mossa scelta.
+                        parametri=new ArrayList<>();
+                        try {
+                            parametri.add(0,2); // ho scelto di selezionare la carta utensile
+                            parametri.add(1,cmd);   // questo è il numero della carta utensile che ha selezionato
+
+
+                            //TODO devono essere aggiunti i parametri necessari per le varie carte utensile
+
+
+                            controller.svolgimentoPartita(this,parametri);  //TODO RIVEDERE il fatto che debba essere passata anche la vista deve essere ripensato
+                            parametri = new ArrayList<Integer>(); // TODO RIVEDERE non è detto che sia necessario new dato che viene fatto solo per precauzione. potrebbe essere sufficiente lasciarlo nelle condizioni attuali senza reinizializzare, in modo da sapere quale è l'ultima chiamata che è stata fatta al model.
+
+                        }catch(MossaIllegaleException e){
+                            System.out.print("carta non consentita");  //TODO RIVEDERE da rivedere se funziona
+                        }
+
 
                         System.out.println("controller.cartaselezionata(cmd);"); // TODO COMANDI questa chiamata è scorretta, gli passo la chiave quando il controller non sa di cosa si tratta
 
@@ -291,16 +308,25 @@ public class View extends UnicastRemoteObject implements GameObserver, Remote {
                         //====================  QUI VERRANNO FATTE RICHIESTE DIVERSE IN BASE ALLA CARTA UTENSILE
 
 
-                            System.out.println(" -- ... CARTA UTENSILE ... --");
-
-                        System.out.println("CARTAINUSO"+cartaInUso);
-
+                        System.out.println(" -- ... CARTA UTENSILE ... --");
+                        parametri= new ArrayList<>();
                         if (cartaInUso.equalsIgnoreCase("Pinza Sgrossatrice")) {
-                            System.out.print("Inserisci il numero della carta della quale vuoi la descrizione:");
-                            parametri.set(0,inputCommand.nextInt());
+                            System.out.println("Seleziona un dado dalla riserva, inserisci la posizione");
+                            parametri.add(0, inputCommand.nextInt());
+                            System.out.println("Inserisci 1 per incrementare, -1 per decrementare");
+                            parametri.add(1,inputCommand.nextInt());
                             controller.usaCartaUtensile(this,parametri);
 
                         } else if (cartaInUso.equalsIgnoreCase("Pennello Per Eglomise")) {
+                            parametri=new ArrayList<>();
+                            System.out.println("Inserisci la riga del dado che vuoi spostare:(0 <= x <= 3)");
+                            parametri.add(0,inputCommand.nextInt());
+                            System.out.println("Inserisci la colonna del dado che vuoi spostare:(0 <= y <= 4)");
+                            parametri.add(1,inputCommand.nextInt());
+                            System.out.println("Inserisci la riga in cui vuoi spostare il dado:(0 <= x <= 3)");
+                            parametri.add(2,inputCommand.nextInt());
+                            System.out.println("Inserisci la colonna in cui vuoi spostare il dado:(0 <= y <= 3)");
+                            parametri.add(3,inputCommand.nextInt());
                             controller.usaCartaUtensile(this,parametri);
 
                             System.out.println("controller.usaCartaUtensile(GameObserver view,ArrayList<Integer> parametri)");//TODO COMANDI devo chiamare i comandi del controller
@@ -355,35 +381,13 @@ public class View extends UnicastRemoteObject implements GameObserver, Remote {
 
                         //====================
 
-
-
-                        //chiamo il metodo del controller che mi permette di passare i parametri per la mossa scelta.
-                        try {
-                            parametri.add(0,2); // ho scelto di selezionare la carta utensile
-                            parametri.add(1,cmd);   // questo è il numero della carta utensile che ha selezionato
-
-
-                            //TODO devono essere aggiunti i parametri necessari per le varie carte utensile
-
-
-                            controller.svolgimentoPartita(this,parametri);  //TODO RIVEDERE il fatto che debba essere passata anche la vista deve essere ripensato
-                            parametri = new ArrayList<Integer>(); // TODO RIVEDERE non è detto che sia necessario new dato che viene fatto solo per precauzione. potrebbe essere sufficiente lasciarlo nelle condizioni attuali senza reinizializzare, in modo da sapere quale è l'ultima chiamata che è stata fatta al model.
-
-                        }catch(MossaIllegaleException e){
-                            System.out.print("carta non consentita");  //TODO RIVEDERE da rivedere se funziona
-                        }
-
-
-
-
-
-
                         flagSceltaCartaUtensile = 1;
 
 
                     } else if (cmd == 3) {
                         passaturno = true;
-
+                        flagSceltaCartaUtensile=0;
+                        flagSceltaDado=0;
 
                         //chiamo il metodo del controller che mi permette di passare i parametri per la mossa scelta.
                         try {

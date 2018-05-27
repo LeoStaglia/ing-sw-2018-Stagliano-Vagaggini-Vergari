@@ -3,6 +3,8 @@ package ingSw2018StaglianoVagagginiVergari.server.model.carteUtensile;
 import ingSw2018StaglianoVagagginiVergari.server.model.CartaUtensile;
 import ingSw2018StaglianoVagagginiVergari.server.model.Partita;
 
+import java.rmi.RemoteException;
+
 public class PinzaSgrossatrice implements CartaUtensile {
     boolean costo ;
     String Nome = "Pinza Sgrossatrice";
@@ -39,10 +41,12 @@ public class PinzaSgrossatrice implements CartaUtensile {
         this.scelta = scelta;
     }
 
-    public void usaEffettoCarta(Partita p) {  // viene passata solo la Partita, dato che si ha traccia dell'utente corrente
+    public void usaEffettoCarta(Partita p) throws RemoteException {  // viene passata solo la Partita, dato che si ha traccia dell'utente corrente
         costo=true;
         if(scelta==1) p.getDadoSelezionato().incrementa();
         if(scelta==-1) p.getDadoSelezionato().decrementa();
+        p.reInserisciDadoinRiserva(p.getDadoSelezionato());
+        p.updateGenerale();
 
 
     }
