@@ -11,7 +11,7 @@ import java.rmi.RemoteException;
 public class DiluentePerPastaSalda implements CartaUtensile {
 
     private boolean costo ;
-    private String Nome = "Diluente Per PastaSalda";
+    private String Nome = "Diluente Per Pasta Salda";
     private int id = 11;
     int scelta;
     int numeroScelto;

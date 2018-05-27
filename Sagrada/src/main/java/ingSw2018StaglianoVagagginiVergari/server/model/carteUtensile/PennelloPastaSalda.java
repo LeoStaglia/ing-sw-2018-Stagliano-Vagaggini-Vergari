@@ -19,6 +19,7 @@ public class PennelloPastaSalda implements CartaUtensile {
     private String Nome = "Pennello Per Pasta Salda";
     private int xCell;
     private int yCell;
+    private boolean fase1=false;
 
 //----------------------------all this part is required for Singleton Pattern----------------------------------
 
@@ -37,27 +38,21 @@ public class PennelloPastaSalda implements CartaUtensile {
     public void usaEffettoCarta(Partita p) throws RemoteException {
         costo=true;
         Boolean[][] mossePermesse;
-        p.getDadoSelezionato().lanciaDado();
-        boolean piazzabile = false;
+        boolean piazzabile=false;
+        if(fase1) {
+            p.getDadoSelezionato().lanciaDado();
 
-        mossePermesse = p.getCurrentPlayer().getPlancia().calcolaMosse(p.getDadoSelezionato(), false, false);
-        for (int i=0; !piazzabile && i<4; i++){
-            for (int j=0; j<5; j++){
-                if (mossePermesse[i][j]== true){
-                    piazzabile=true;
-                    break;
+
+            mossePermesse = p.getCurrentPlayer().getPlancia().calcolaMosse(p.getDadoSelezionato(), false, false);
+            for (int i = 0; !piazzabile && i < 4; i++) {
+                for (int j = 0; j < 5; j++) {
+                    if (mossePermesse[i][j]) {
+                        piazzabile = true;
+                        break;
+                    }
                 }
             }
-        }
 
-        if (!piazzabile){
-            p.reInserisciDadoinRiserva(p.getDadoSelezionato());
-        }else{
-            try{
-                p.getCurrentPlayer().getPlancia().piazzaDado(xCell, yCell, p.getDadoSelezionato());
-            }catch(MossaIllegaleException e){
-                //TODO notifica piazzamento impossibile alla View
-            }
         }
 
 
@@ -92,5 +87,9 @@ public class PennelloPastaSalda implements CartaUtensile {
     @Override
     public String getNome() {
         return Nome;
+    }
+
+    public boolean isFase1() {
+        return fase1;
     }
 }

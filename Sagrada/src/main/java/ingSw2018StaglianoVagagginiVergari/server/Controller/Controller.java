@@ -204,6 +204,10 @@ public class Controller extends UnicastRemoteObject implements RemoteController 
                 for (CartaUtensile u : partita.getListaCartaUtensile()) {
                     if (u.getId() == 3) {
                         AlesatoreRame carta= (AlesatoreRame) u;
+                        carta.setxDie(parametri.get(0));
+                        carta.setyDie(parametri.get(1));
+                        carta.setxCell(parametri.get(2));
+                        carta.setyCell(parametri.get(3));
                         u.usaEffettoCarta(partita);
                     }
                 }

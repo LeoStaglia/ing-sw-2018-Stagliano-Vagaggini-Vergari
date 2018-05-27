@@ -264,7 +264,7 @@ public class View extends UnicastRemoteObject implements GameObserver, Remote {
                             parametri.add(2,i);
                             parametri.add(3,j);
                             controller.svolgimentoPartita(this,parametri);  //TODO RIVEDERE il fatto che debba essere passata anche la vista deve essere ripensato
-                            parametri = new ArrayList<Integer>(); // TODO RIVEDERE non è detto che sia necessario new dato che viene fatto solo per precauzione. potrebbe essere sufficiente lasciarlo nelle condizioni attuali senza reinizializzare, in modo da sapere quale è l'ultima chiamata che è stata fatta al model.
+                            parametri.clear(); // TODO RIVEDERE non è detto che sia necessario new dato che viene fatto solo per precauzione. potrebbe essere sufficiente lasciarlo nelle condizioni attuali senza reinizializzare, in modo da sapere quale è l'ultima chiamata che è stata fatta al model.
 
                         }catch(MossaIllegaleException e){
                             System.out.print("mossa non consentita");  //TODO RIVEDERE da rivedere se funziona
@@ -291,7 +291,7 @@ public class View extends UnicastRemoteObject implements GameObserver, Remote {
 
 
                             controller.svolgimentoPartita(this,parametri);  //TODO RIVEDERE il fatto che debba essere passata anche la vista deve essere ripensato
-                            parametri = new ArrayList<Integer>(); // TODO RIVEDERE non è detto che sia necessario new dato che viene fatto solo per precauzione. potrebbe essere sufficiente lasciarlo nelle condizioni attuali senza reinizializzare, in modo da sapere quale è l'ultima chiamata che è stata fatta al model.
+                            parametri.clear(); // TODO RIVEDERE non è detto che sia necessario new dato che viene fatto solo per precauzione. potrebbe essere sufficiente lasciarlo nelle condizioni attuali senza reinizializzare, in modo da sapere quale è l'ultima chiamata che è stata fatta al model.
 
                         }catch(MossaIllegaleException e){
                             System.out.print("carta non consentita");  //TODO RIVEDERE da rivedere se funziona
@@ -312,7 +312,7 @@ public class View extends UnicastRemoteObject implements GameObserver, Remote {
 
 
                         System.out.println(" -- ... CARTA UTENSILE ... --");
-                        parametri= new ArrayList<>();
+                        parametri.clear();
                         if (cartaInUso.equalsIgnoreCase("Pinza Sgrossatrice")) {
                             System.out.println("Seleziona un dado dalla riserva, inserisci la posizione");
                             parametri.add(0, inputCommand.nextInt());
@@ -321,7 +321,7 @@ public class View extends UnicastRemoteObject implements GameObserver, Remote {
                             controller.usaCartaUtensile(this,parametri);
 
                         } else if (cartaInUso.equalsIgnoreCase("Pennello Per Eglomise")) {
-                            parametri=new ArrayList<>();
+                            parametri.clear();
                             System.out.println("Inserisci la riga del dado che vuoi spostare:(0 <= x <= 3)");
                             parametri.add(0,inputCommand.nextInt());
                             System.out.println("Inserisci la colonna del dado che vuoi spostare:(0 <= y <= 4)");
@@ -335,23 +335,31 @@ public class View extends UnicastRemoteObject implements GameObserver, Remote {
                             System.out.println("controller.usaCartaUtensile(GameObserver view,ArrayList<Integer> parametri)");//TODO COMANDI devo chiamare i comandi del controller
 
                         } else if (cartaInUso.equalsIgnoreCase("Alesatore per lamina di rame")) {
+                            parametri.clear();
+                            System.out.println("Inserisci la riga del dado che vuoi spostare:(0 <= x <= 3)");
+                            parametri.add(0,inputCommand.nextInt());
+                            System.out.println("Inserisci la colonna del dado che vuoi spostare:(0 <= y <= 4)");
+                            parametri.add(1,inputCommand.nextInt());
+                            System.out.println("Inserisci la riga in cui vuoi spostare il dado:(0 <= x <= 3)");
+                            parametri.add(2,inputCommand.nextInt());
+                            System.out.println("Inserisci la colonna in cui vuoi spostare il dado:(0 <= y <= 3)");
+                            parametri.add(3,inputCommand.nextInt());
                             controller.usaCartaUtensile(this,parametri);
 
                         } else if (cartaInUso.equalsIgnoreCase("Lathekin")) {
-                            parametri.set(0,inputCommand.nextInt());
-                            parametri.set(1,inputCommand.nextInt());
-                            parametri.set(2,inputCommand.nextInt());
-                            parametri.set(3,inputCommand.nextInt());
-                            controller.usaCartaUtensile(this,parametri);
+                            parametri.clear();
+
 
                         } else if (cartaInUso.equalsIgnoreCase("Taglierina Circolare")) {
                             parametri.set(0,inputCommand.nextInt());
                             controller.usaCartaUtensile(this,parametri);
 
                         } else if (cartaInUso.equalsIgnoreCase("Pennello Per Pasta Salda")) {
-                            parametri.set(0,inputCommand.nextInt());
-                            parametri.set(1,inputCommand.nextInt());
-                            controller.usaCartaUtensile(this,parametri);
+                            parametri.clear();
+                            System.out.println("Inserisci il numero del dado della riserva che vuoi lanciare nuovamente");
+                            parametri.add(0, inputCommand.nextInt());
+
+
 
                         } else if (cartaInUso.equalsIgnoreCase("Martelletto")) {
                             controller.usaCartaUtensile(this,parametri);
