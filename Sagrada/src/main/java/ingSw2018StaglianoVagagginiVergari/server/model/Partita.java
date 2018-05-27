@@ -458,8 +458,18 @@ public class Partita {
         try{
             getCurrentPlayer().getPlancia().piazzaDado(i, j, dadoSelezionato);
             updateGenerale();
+            System.out.println("dado posizionato");
         }catch(MossaIllegaleException e){
             riserva.add(dadoSelezionato);
+            //todo errorHandler - dopo che il metodo piazzadado viene chiamato una volta, non viene più chiamata l'eccezione???
+
+            for (GameObserver view:gameObservers){
+                view.printPiazzamentoScorretto(getCurrentPlayer().getId());
+            }
+
+
+
+
         }
     }
 

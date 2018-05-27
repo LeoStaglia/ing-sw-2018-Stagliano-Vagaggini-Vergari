@@ -37,6 +37,13 @@ public class View extends UnicastRemoteObject implements GameObserver, Remote {
 
     private boolean simulazione = false; //TODO questo attributo permette di switchare velocemante tra una partita già impostata ed una che richiede parametri dal model
 
+
+    private HashMap<String, Integer> punteggi;
+
+    private boolean mossaCorretta = false;
+
+
+
     private ArrayList<Integer> parametri = new ArrayList<Integer>();
 
     private int punteggio;
@@ -246,29 +253,40 @@ public class View extends UnicastRemoteObject implements GameObserver, Remote {
                             dadoSelezionato = dadiRiserva.get(cmd); //TODO RIMUOVERE solo per prova... lo inserisco solo per far vedere che effettivamente l'aggiornamento funziona
 
 
-                        System.out.println("inserisci le coordinate in cui vuoi posizionare il dado: ");
-
-                        System.out.print("i ( 0 <= x <= 3):");
-
-                        int i = inputCommand.nextInt();
-
-                        System.out.print("j ( 0 <= x <= 4):");
-
-                        int j = inputCommand.nextInt();
+                        mossaCorretta= false;
+                        while(mossaCorretta == false){
 
 
-                        //chiamo il metodo del controller che mi permette di passare i parametri per la mossa scelta.
-                        try {
-                            parametri.add(0,1); // ho scelto di posizionare il dado
-                            parametri.add(1,numeroDadoSelezionato); // passo la posizione del dado selezionato all'interno della riserva
-                            parametri.add(2,i);
-                            parametri.add(3,j);
-                            controller.svolgimentoPartita(this,parametri);  //TODO RIVEDERE il fatto che debba essere passata anche la vista deve essere ripensato
-                            parametri.clear(); // TODO RIVEDERE non è detto che sia necessario new dato che viene fatto solo per precauzione. potrebbe essere sufficiente lasciarlo nelle condizioni attuali senza reinizializzare, in modo da sapere quale è l'ultima chiamata che è stata fatta al model.
 
-                        }catch(MossaIllegaleException e){
-                            System.out.print("mossa non consentita");  //TODO RIVEDERE da rivedere se funziona
+                            System.out.println("inserisci le coordinate in cui vuoi posizionare il dado: ");
+
+                            System.out.print("i ( 0 <= x <= 3):");
+
+                            int i = inputCommand.nextInt();
+
+                            System.out.print("j ( 0 <= x <= 4):");
+
+                            int j = inputCommand.nextInt();
+
+
+                            //chiamo il metodo del controller che mi permette di passare i parametri per la mossa scelta.
+                            try {
+                                parametri.add(0,1); // ho scelto di posizionare il dado
+                                parametri.add(1,numeroDadoSelezionato); // passo la posizione del dado selezionato all'interno della riserva
+                                parametri.add(2,i);
+                                parametri.add(3,j);
+                                controller.svolgimentoPartita(this,parametri);  //TODO RIVEDERE il fatto che debba essere passata anche la vista deve essere ripensato
+                                System.out.println("\nverifico convalida mossa\n");
+                                parametri = new ArrayList<Integer>(); // TODO RIVEDERE non è detto che sia necessario new dato che viene fatto solo per precauzione. potrebbe essere sufficiente lasciarlo nelle condizioni attuali senza reinizializzare, in modo da sapere quale è l'ultima chiamata che è stata fatta al model.
+
+                            }catch(MossaIllegaleException e){
+                                System.out.print("mossa non consentita");  //TODO RIVEDERE da rivedere se funziona
+                            }
+
+
+
                         }
+
 
 
 
@@ -471,7 +489,7 @@ public class View extends UnicastRemoteObject implements GameObserver, Remote {
                 System.out.println("\n\n\n\n\n\n\n\n\n\n\n\n");
 
 
-                System.out.println("Il tuo punteggio è: "+punteggio);
+                printPunteggi(punteggi);
 
 
 
@@ -1071,6 +1089,45 @@ public class View extends UnicastRemoteObject implements GameObserver, Remote {
 
     }
 
+    public void printPunteggi(HashMap<String, Integer> punteggi){
+
+
+        //il punteggio del giocatore corrente
+
+        System.out.println("Il tuo punteggio è: "+ punteggi.get(giocatoreCorrente));
+
+        Iterator it1 = punteggi.entrySet().iterator();
+
+        int i = 0;
+        while (it1.hasNext()) {
+
+            Map.Entry e = (Map.Entry) it1.next();
+
+            //il punteggio degli altri giocatori
+            if( !( (String) e.getKey() ).equalsIgnoreCase(giocatoreCorrente) )
+                System.out.println("il punteggio di "+ (String) e.getKey() + "é " + (String) e.getValue());
+
+        }
+
+
+
+
+    }
+
+    public void printPiazzamentoScorretto(String giocatoreCorrente) throws RemoteException{
+
+
+
+        if(giocatoreCorrente.equalsIgnoreCase(this.id))
+            System.out.println("\n\nerrore: ");
+
+        mossaCorretta = false;
+
+
+
+
+    }
+
     public void updateView(HashMap< String,String[][]> planceGiocatori , HashMap<String,String> listaCartaUtensile, String giocatoreCorrente, int turno, int round, ArrayList<String > dadiRiserva, String dadoSelezionato,ArrayList<String> carteObiettivoPubblico,HashMap<String,String> carteObiettivoPrivato) throws RemoteException {
 
 
@@ -1088,6 +1145,8 @@ public class View extends UnicastRemoteObject implements GameObserver, Remote {
         this.carteObiettivoPrivato=carteObiettivoPrivato;
 
         this.updateView = true;
+        this.mossaCorretta = true;
+
 
 
     }
@@ -1101,6 +1160,8 @@ public class View extends UnicastRemoteObject implements GameObserver, Remote {
         planceGiocatori.put(giocatoreCorrente, plancia);
 
         this.updateView = true;
+        this.mossaCorretta = true;
+
 
     }
 
@@ -1109,6 +1170,8 @@ public class View extends UnicastRemoteObject implements GameObserver, Remote {
         this.turno = turno;
 
         this.updateView = true;
+        this.mossaCorretta = true;
+
 
 
 
@@ -1120,6 +1183,8 @@ public class View extends UnicastRemoteObject implements GameObserver, Remote {
         this.round = round;
 
         this.updateView = true;
+        this.mossaCorretta = true;
+
 
 
 
@@ -1130,6 +1195,8 @@ public class View extends UnicastRemoteObject implements GameObserver, Remote {
         this.giocatoreCorrente = giocatoreCorrente;
 
         this.updateView = true;
+        this.mossaCorretta = true;
+
 
     }
 
@@ -1138,6 +1205,8 @@ public class View extends UnicastRemoteObject implements GameObserver, Remote {
         this.planceGiocatori = planceGiocatori;
 
         this.updateView = true;
+        this.mossaCorretta = true;
+
 
 
     }
@@ -1147,6 +1216,8 @@ public class View extends UnicastRemoteObject implements GameObserver, Remote {
         this.carteUtensile = listaCartaUtensile;
 
         this.updateView = true;
+        this.mossaCorretta = true;
+
 
     }
 
@@ -1155,6 +1226,8 @@ public class View extends UnicastRemoteObject implements GameObserver, Remote {
         this.dadiRiserva = dadiRiserva;
 
         this.updateView = true;
+        this.mossaCorretta = true;
+
 
     }
 
@@ -1163,13 +1236,17 @@ public class View extends UnicastRemoteObject implements GameObserver, Remote {
         this.dadoSelezionato = dadoSelezionato;
 
         this.updateView = true;
+        this.mossaCorretta = true;
+
 
     }
 
-    public void updateviewPunteggio(int punteggio){
+    public void updateViewPunteggio(HashMap<String, Integer> punteggi) throws RemoteException {
 
-        this.punteggio = punteggio;
+        this.punteggi = punteggi;
         this.printPunteggio = true;
+        this.mossaCorretta = true;
+
 
     }
 

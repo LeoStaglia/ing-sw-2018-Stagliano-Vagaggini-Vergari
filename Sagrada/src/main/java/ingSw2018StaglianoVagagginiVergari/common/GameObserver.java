@@ -25,4 +25,8 @@ public interface GameObserver extends Remote {
 
     public void updateViewDadoSelezionato(String dadoSelezionato) throws RemoteException;
 
-    }
+    public void updateViewPunteggio(HashMap<String, Integer> punteggi) throws RemoteException;
+
+    public void printPiazzamentoScorretto(String giocatoreCorrente) throws RemoteException;
+
+}
