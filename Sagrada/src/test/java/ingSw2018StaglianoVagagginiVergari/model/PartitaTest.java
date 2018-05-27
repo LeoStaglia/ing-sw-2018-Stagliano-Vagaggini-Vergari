@@ -43,7 +43,10 @@ class PartitaTest {
         p.getListaGiocatori().add(mockedUtente2);
         p.getListaGiocatori().add(mockedUtente3);
         p.getListaGiocatori().add(mockedUtente4);
+
         p.inizializzaOrdineRound();
+        p.riempiRiserva();
+        p.setGiocatoreCorrente();
         p.nextRound();
         p.incrementaTurno();
         for (Utente u:p.getOrdineRound()) {
@@ -99,17 +102,27 @@ class PartitaTest {
         p.getListaGiocatori().add(mockedUtente4);
 
         p.inizializzaOrdineRound();
+        p.riempiRiserva();
+        p.setGiocatoreCorrente();
         p.nextRound();
         p.nextRound();
-        p.setOrdineRound();
-        p.setOrdineRound();
 
         p.incrementaTurno();
         p.incrementaTurno();
+
 
         p.setOrdineRoundTool8Start();
+        for (Utente u:p.getOrdineRound()) {
+            System.out.println(u);
+        }
+        System.out.println();
 
         p.setOrdineRoundTool8End();
+
+        for (Utente u:p.getOrdineRound()) {
+            System.out.println(u);
+        }
+        System.out.println();
 
         assertIterableEquals(p.getOrdineRound(),test);
 

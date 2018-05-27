@@ -6,7 +6,7 @@ public class TracciatoDelRound {
     private int roundAttuale=1;
 
     // rimanenzeRiserva out are the dice that remained in the Draft Pool after the end of the round except for one
-    private HashSet<Dado> rimanenzeRiservaOut = new HashSet<Dado>();
+    private ArrayList<Dado> rimanenzeRiservaOut = new ArrayList<>();
     // rimanenzeRiserva on are the dice that cover the Round Track
     private ArrayList<Dado> rimanenzeRiservaOn = new ArrayList<Dado>();
 
@@ -18,7 +18,7 @@ public class TracciatoDelRound {
         this.roundAttuale = roundAttuale + 1;
     }
 
-    public void addRimanenzeRiservaOut(HashSet<Dado> rimanenze) {
+    public void addRimanenzeRiservaOut(ArrayList<Dado> rimanenze) {
         this.rimanenzeRiservaOut.addAll(rimanenze);
     }
 
@@ -30,7 +30,7 @@ public class TracciatoDelRound {
         return this.rimanenzeRiservaOn.get(i - 1);
     }
 
-    public HashSet<Dado> getRimanenzeRiservaOut() {
+    public ArrayList<Dado> getRimanenzeRiservaOut() {
         return this.rimanenzeRiservaOut;
     }
 
@@ -52,8 +52,11 @@ public class TracciatoDelRound {
     }
 
     public void setRimanenzeRiservaOn(int i,Dado d) {
-        this.rimanenzeRiservaOn.set(i - 1,d);
+        this.rimanenzeRiservaOn.add(i - 1,d);
     }
 
+    public void setRimanenzeRiservaOut(Dado d) {
+        this.rimanenzeRiservaOut.add(d);
+    }
 }
 

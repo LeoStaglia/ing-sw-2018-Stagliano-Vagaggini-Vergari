@@ -5,6 +5,7 @@ import ingSw2018StaglianoVagagginiVergari.server.model.TracciatoDelRound;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -31,8 +32,8 @@ class TracciatoDelRoundTest {
     @Test
     void addRimanenzeRiservaOut() {
         TracciatoDelRound t=new TracciatoDelRound();
-        HashSet<Dado> rimanenzeRiservaOut=new HashSet<Dado>();
-        HashSet<Dado> rimanenze=new HashSet<Dado>();
+        ArrayList<Dado> rimanenzeRiservaOut=new ArrayList<Dado>();
+        ArrayList<Dado> rimanenze=new ArrayList<Dado>();
         rimanenzeRiservaOut=t.getRimanenzeRiservaOut();
 
         Dado d1= Mockito.mock(Dado.class);

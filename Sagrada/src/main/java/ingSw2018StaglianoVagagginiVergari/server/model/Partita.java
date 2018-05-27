@@ -146,8 +146,6 @@ public class Partita {
     public void incrementaTurno()throws RemoteException {
         this.turno = this.turno + 1;
         this.setGiocatoreCorrente();
-
-        System.out.println("ESKEREE");
         updateGenerale();
 
     }
@@ -273,6 +271,10 @@ public class Partita {
     public void nextRound() throws RemoteException {
         //TODO possibile inserimento metodo se nel round è stata utilizzata la carta 8
         setOrdineRound();
+        tracciatoDelRound.setRimanenzeRiservaOn(tracciatoDelRound.getRoundAttuale(),riserva.remove(0));
+        tracciatoDelRound.addRimanenzeRiservaOut(riserva);
+        riserva.clear();
+
         tracciatoDelRound.nextRound();
         reInizializzaTurno();
         setGiocatoreCorrente();
@@ -296,11 +298,9 @@ public class Partita {
 
     //method called after the use of the card tool 8 to restore the initial situation da testare
     public void setOrdineRoundTool8End() {
+        ordineRound.clear();
         this.inizializzaOrdineRound();
-        for (int j = 0; j < 2 * listaGiocatori.size(); j++) {
-            this.ordineRound.remove(0);
-        }
-        for (int i = 0; i < this.getTracciatoDelRound().getRoundAttuale(); i++) {
+        for (int i = 1; i < this.getTracciatoDelRound().getRoundAttuale(); i++) {
             this.setOrdineRound();
         }
     }
