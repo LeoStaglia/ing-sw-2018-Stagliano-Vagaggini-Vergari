@@ -183,7 +183,7 @@ public class Controller extends UnicastRemoteObject implements RemoteController 
                         partita.setDadoSelezionato(parametri.get(0));
                         PinzaSgrossatrice carta= (PinzaSgrossatrice)u;
                         carta.setScelta(parametri.get(1));
-                        u.usaEffettoCarta(partita);
+                        carta.usaEffettoCarta(partita);
                     }
                 }
 
@@ -196,7 +196,7 @@ public class Controller extends UnicastRemoteObject implements RemoteController 
                         carta.setyDie(parametri.get(1));
                         carta.setxCell(parametri.get(2));
                         carta.setyCell(parametri.get(3));
-                        u.usaEffettoCarta(partita);
+                        carta.usaEffettoCarta(partita);
                     }
                 }
                 break;
@@ -208,7 +208,7 @@ public class Controller extends UnicastRemoteObject implements RemoteController 
                         carta.setyDie(parametri.get(1));
                         carta.setxCell(parametri.get(2));
                         carta.setyCell(parametri.get(3));
-                        u.usaEffettoCarta(partita);
+                        carta.usaEffettoCarta(partita);
                     }
                 }
                 break;
@@ -220,7 +220,7 @@ public class Controller extends UnicastRemoteObject implements RemoteController 
                         carta.setyCell(parametri.get(1));
                         carta.setxDie(parametri.get(2));
                         carta.setyDie(parametri.get(3));
-                        u.usaEffettoCarta(partita);
+                        carta.usaEffettoCarta(partita);
                     }
                 }
                 break;
@@ -229,25 +229,48 @@ public class Controller extends UnicastRemoteObject implements RemoteController 
                     if (u.getId() == 5) {
                         TaglierinaCircolare carta= (TaglierinaCircolare) u;
                         carta.setI(parametri.get(0));
-                        u.usaEffettoCarta(partita);
+                        carta.usaEffettoCarta(partita);
                     }
                 }
                 break;
             case CartaU6:
-                for (CartaUtensile u : partita.getListaCartaUtensile()) {
-                    if (u.getId() == 6) {
-                        PennelloPastaSalda carta= (PennelloPastaSalda) u;
-                        carta.setxCell(parametri.get(0));
-                        carta.setyCell(parametri.get(1));
-                        u.usaEffettoCarta(partita);
+                // for (CartaUtensile u : partita.getListaCartaUtensile()) {
+                    if (partita.getListaCartaUtensile().get(0).getId() == 6) {
+                        if (azioniGiocatore.contains(1)) {
+                            PennelloPastaSalda carta = (PennelloPastaSalda) partita.getListaCartaUtensile().get(0);
+                            if (carta.isFase1()) {
+                                partita.setDadoSelezionato(parametri.get(0));
+                                try{
+                                    carta.usaEffettoCarta(partita);
+                                }catch(MossaIllegaleException e){
+
+                                }
+                                if (carta.isPiazzabile())
+                                    return;
+                            } else {
+                                if (azioniGiocatore.contains(1)) {
+                                    azioniGiocatore.remove(1);
+                                }
+                                carta.setxCell(parametri.get(0));
+                                carta.setyCell(parametri.get(1));
+                                try {
+                                    carta.usaEffettoCarta(partita);
+                                } catch (MossaIllegaleException e) {
+                                    azioniGiocatore.add(1);
+                                }
+
+                            }
+                        }else{
+                            partita.updateGenerale();
+                        }
                     }
-                }
+                // }
                 break;
             case CartaU7:
                 for (CartaUtensile u : partita.getListaCartaUtensile()) {
                     if (u.getId() == 7) {
                         Martelletto carta= (Martelletto) u;
-                        u.usaEffettoCarta(partita);
+                        carta.usaEffettoCarta(partita);
                     }
                 }
                 break;
@@ -255,7 +278,7 @@ public class Controller extends UnicastRemoteObject implements RemoteController 
                 for (CartaUtensile u : partita.getListaCartaUtensile()) {
                     if (u.getId() == 8) {
                         TenagliaARotelle carta= (TenagliaARotelle) u;
-                        u.usaEffettoCarta(partita);
+                        carta.usaEffettoCarta(partita);
                     }
                 }
                 break;
@@ -263,7 +286,7 @@ public class Controller extends UnicastRemoteObject implements RemoteController 
                 for (CartaUtensile u : partita.getListaCartaUtensile()) {
                     if (u.getId() == 9) {
                         RigaInSughero carta= (RigaInSughero) u;
-                        u.usaEffettoCarta(partita);
+                        carta.usaEffettoCarta(partita);
                     }
                 }
                 break;
@@ -272,7 +295,7 @@ public class Controller extends UnicastRemoteObject implements RemoteController 
                     if (u.getId() == 10) {
                         TamponeDiamantato carta= (TamponeDiamantato) u;
                         carta.setScelta(parametri.get(0));
-                        u.usaEffettoCarta(partita);
+                        carta.usaEffettoCarta(partita);
                     }
                 }
                 break;
@@ -285,7 +308,7 @@ public class Controller extends UnicastRemoteObject implements RemoteController 
                         carta.setX(parametri.get(2));
                         carta.setY(parametri.get(3));
 
-                        u.usaEffettoCarta(partita);
+                        carta.usaEffettoCarta(partita);
                     }
                 }
                 break;
@@ -299,7 +322,7 @@ public class Controller extends UnicastRemoteObject implements RemoteController 
                         carta.setX(parametri.get(3));
                         carta.setY(parametri.get(4));
 
-                        u.usaEffettoCarta(partita);
+                        carta.usaEffettoCarta(partita);
                     }
                 }
 

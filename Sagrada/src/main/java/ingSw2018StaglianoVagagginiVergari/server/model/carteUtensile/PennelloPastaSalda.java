@@ -2,6 +2,7 @@ package ingSw2018StaglianoVagagginiVergari.server.model.carteUtensile;
 
 
 import Eccezioni.MossaIllegaleException;
+import ingSw2018StaglianoVagagginiVergari.common.GameObserver;
 import ingSw2018StaglianoVagagginiVergari.server.model.CartaUtensile;
 import ingSw2018StaglianoVagagginiVergari.server.model.Partita;
 
@@ -19,12 +20,14 @@ public class PennelloPastaSalda implements CartaUtensile {
     private String Nome = "Pennello Per Pasta Salda";
     private int xCell;
     private int yCell;
-    private boolean fase1=false;
+    private boolean fase1=true;
+    private boolean piazzabile=false;
+
 
 //----------------------------all this part is required for Singleton Pattern----------------------------------
 
-    private static PennelloPerEglomise instance = new PennelloPerEglomise();
-    public static PennelloPerEglomise getInstance(){
+    private static PennelloPastaSalda instance = new PennelloPastaSalda();
+    public static PennelloPastaSalda getInstance(){
         return instance;
     }
 
@@ -35,10 +38,9 @@ public class PennelloPastaSalda implements CartaUtensile {
 
 
     @Override
-    public void usaEffettoCarta(Partita p) throws RemoteException {
+    public void usaEffettoCarta(Partita p) throws RemoteException, MossaIllegaleException{
         costo=true;
         Boolean[][] mossePermesse;
-        boolean piazzabile=false;
         if(fase1) {
             p.getDadoSelezionato().lanciaDado();
 
@@ -52,7 +54,27 @@ public class PennelloPastaSalda implements CartaUtensile {
                     }
                 }
             }
+            for (GameObserver view: p.getGameObservers()){
+                view.updateViewTool6Bool(piazzabile);
+                if (piazzabile){
+                    view.updateViewTool6Die(p.getDadoSelezionato().toString());
+                    fase1=false;
+                }
+            }
+            if (!piazzabile){
+                p.reInserisciDadoinRiserva(p.getDadoSelezionato());
+                p.updateGenerale();
+            }
+        }else{
+            try{
+                p.getCurrentPlayer().getPlancia().piazzaDado(xCell, yCell, p.getDadoSelezionato());
+                piazzabile=false;
+                p.updateGenerale();
+                fase1=true;
 
+            }catch(MossaIllegaleException e){
+                throw e;
+            }
         }
 
 
@@ -91,5 +113,9 @@ public class PennelloPastaSalda implements CartaUtensile {
 
     public boolean isFase1() {
         return fase1;
+    }
+
+    public boolean isPiazzabile() {
+        return piazzabile;
     }
 }

@@ -391,8 +391,10 @@ public class View extends UnicastRemoteObject implements GameObserver, Remote {
                                 parametri.add(1, inputCommand.nextInt());
                                 controller.usaCartaUtensile(this, parametri);
 
-                            }
+                            }else{
+                                updateView=true;
 
+                            }
 
                         } else if (cartaInUso.equalsIgnoreCase("Martelletto")) {
                             controller.usaCartaUtensile(this,parametri);
