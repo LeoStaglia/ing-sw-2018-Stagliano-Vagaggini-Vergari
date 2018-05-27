@@ -64,6 +64,8 @@ public class View extends UnicastRemoteObject implements GameObserver, Remote {
     //private boolean updateView;
     private boolean fronteScelto;
     private boolean carta1;
+    private boolean tool6piazzabile;
+    private String tool6Dado;
 
     //
     private boolean startGame=false;
@@ -307,10 +309,8 @@ public class View extends UnicastRemoteObject implements GameObserver, Remote {
 
                             //TODO devono essere aggiunti i parametri necessari per le varie carte utensile
 
-
                             controller.svolgimentoPartita(this,parametri);  //TODO RIVEDERE il fatto che debba essere passata anche la vista deve essere ripensato
                             parametri.clear(); // TODO RIVEDERE non è detto che sia necessario new dato che viene fatto solo per precauzione. potrebbe essere sufficiente lasciarlo nelle condizioni attuali senza reinizializzare, in modo da sapere quale è l'ultima chiamata che è stata fatta al model.
-
                         }catch(MossaIllegaleException e){
                             System.out.print("carta non consentita");  //TODO RIVEDERE da rivedere se funziona
                         }
@@ -376,7 +376,22 @@ public class View extends UnicastRemoteObject implements GameObserver, Remote {
                             parametri.clear();
                             System.out.println("Inserisci il numero del dado della riserva che vuoi lanciare nuovamente");
                             parametri.add(0, inputCommand.nextInt());
+                            controller.usaCartaUtensile(this, parametri);
+                            while(!updateView){
+                                System.out.print("");
+                            }
+                            updateView=false;
+                            if (tool6piazzabile){
+                                parametri.clear();
+                                printDado(tool6Dado);
+                                System.out.println("");
+                                System.out.println("Inserisci la riga in cui vuoi piazzare il dado lanciato (0<= x <= 3):");
+                                parametri.add(0, inputCommand.nextInt());
+                                System.out.println("Inserisci la colonna in cui vuoi piazzare il dado lanciato (0<= y <= 4):");
+                                parametri.add(1, inputCommand.nextInt());
+                                controller.usaCartaUtensile(this, parametri);
 
+                            }
 
 
                         } else if (cartaInUso.equalsIgnoreCase("Martelletto")) {
@@ -1250,7 +1265,17 @@ public class View extends UnicastRemoteObject implements GameObserver, Remote {
 
     }
 
+    @Override
+    public void updateViewTool6Bool(boolean piazzabile) throws RemoteException {
+        tool6piazzabile=piazzabile;
+        if(!piazzabile) updateView=true;
+    }
 
+    @Override
+    public void updateViewTool6Die(String Dado) throws RemoteException {
+        tool6Dado=Dado;
+        updateView=true;
+    }
 
     //=========================
 

@@ -29,4 +29,8 @@ public interface GameObserver extends Remote {
 
     public void printPiazzamentoScorretto(String giocatoreCorrente) throws RemoteException;
 
+    public void updateViewTool6Bool(boolean piazzabile) throws RemoteException;
+
+    public void updateViewTool6Die(String Dado) throws RemoteException;
+
 }
