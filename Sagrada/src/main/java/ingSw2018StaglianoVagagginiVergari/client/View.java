@@ -39,6 +39,9 @@ public class View extends UnicastRemoteObject implements GameObserver, Remote {
 
     private ArrayList<Integer> parametri = new ArrayList<Integer>();
 
+    private int punteggio;
+    private boolean printPunteggio = false;
+
 
 
     //private String id;
@@ -176,7 +179,7 @@ public class View extends UnicastRemoteObject implements GameObserver, Remote {
             }
 
 
-            //==============================
+
 
             while(!startGame){
                 System.out.print("");
@@ -441,8 +444,27 @@ public class View extends UnicastRemoteObject implements GameObserver, Remote {
 
 
             }
+            if (getStatus() == ViewStatus.CalcoloPunteggio){
 
-            //==============================
+                /**
+                 * Devo fare un metodo di notifica che può essere chiamato dal model che permetta di variare l'attributo della View "punteggio", per poi stamparlo
+                 * */
+
+
+                System.out.println("CALCOLO DEL PUNTEGGIO FINALE...");
+                while (!printPunteggio) {
+                    System.out.print("");
+                }
+
+                System.out.println("\n\n\n\n\n\n\n\n\n\n\n\n");
+
+
+                System.out.println("Il tuo punteggio è: "+punteggio);
+
+
+
+            }
+
 
 
         }
@@ -1129,6 +1151,13 @@ public class View extends UnicastRemoteObject implements GameObserver, Remote {
         this.dadoSelezionato = dadoSelezionato;
 
         this.updateView = true;
+
+    }
+
+    public void updateviewPunteggio(int punteggio){
+
+        this.punteggio = punteggio;
+        this.printPunteggio = true;
 
     }
 
