@@ -106,6 +106,9 @@ public class View extends UnicastRemoteObject implements GameObserver, Remote {
     private  int turno;
 
     private int round;
+
+    private ArrayList<String> tracciatoDelRound;
+
     //==================t
 
 
@@ -1066,6 +1069,8 @@ public class View extends UnicastRemoteObject implements GameObserver, Remote {
 
         printTurnoRound(turno, round);
 
+        printTracciatoDelRound(tracciatoDelRound);
+
         printPlanceGiocatori(planceGiocatori, 4, 5, giocatoreCorrente, id);
 
         printCarteObiettivoPubblico(carteObiettivoPubblico);
@@ -1141,7 +1146,26 @@ public class View extends UnicastRemoteObject implements GameObserver, Remote {
 
     }
 
-    public void updateView(HashMap< String,String[][]> planceGiocatori , LinkedHashMap<String,String> listaCartaUtensile, String giocatoreCorrente, int turno, int round, ArrayList<String > dadiRiserva, String dadoSelezionato,ArrayList<String> carteObiettivoPubblico,HashMap<String,String> carteObiettivoPrivato) throws RemoteException {
+    public void printTracciatoDelRound(ArrayList<String> tracciatoDelRound){
+
+        System.out.print("\nTracciato del Round: ");
+
+        for (int i=1; i<=tracciatoDelRound.size(); i++)
+            System.out.print(i+" ");
+
+        System.out.print("\n                     ");
+
+
+        for (String Dado : tracciatoDelRound){
+            printDado(Dado);
+            System.out.print(" ");
+        }
+        System.out.println();
+
+
+    }
+
+    public void updateView(HashMap< String,String[][]> planceGiocatori , LinkedHashMap<String,String> listaCartaUtensile, String giocatoreCorrente, int turno, int round, ArrayList<String > dadiRiserva, String dadoSelezionato,ArrayList<String> carteObiettivoPubblico,HashMap<String,String> carteObiettivoPrivato, ArrayList<String> tracciatoDelRound) throws RemoteException {
 
 
         //per la carta utensile    map <"TPennello Per Eglomise" "descrizione">
@@ -1156,6 +1180,7 @@ public class View extends UnicastRemoteObject implements GameObserver, Remote {
         this.dadoSelezionato = dadoSelezionato;
         this.carteObiettivoPubblico=carteObiettivoPubblico;
         this.carteObiettivoPrivato=carteObiettivoPrivato;
+        this.tracciatoDelRound = tracciatoDelRound;
 
         this.updateView = true;
         this.mossaCorretta = true;

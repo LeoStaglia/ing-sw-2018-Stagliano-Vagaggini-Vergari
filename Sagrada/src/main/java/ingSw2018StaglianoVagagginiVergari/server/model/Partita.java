@@ -456,8 +456,13 @@ public class Partita {
             for (Utente u:listaGiocatori) {
                 listCarteObiettivoPrivato.put(u.getId(),u.getObiettivoPrivato().get(0).getColore().getDescrizione());
             }
+            ArrayList<String> tracciato = new ArrayList<>();
 
-            view.updateView(planceGiocatori,listCartaUtensile,getCurrentPlayer().getId(),getTurno(),getTracciatoDelRound().getRoundAttuale(),dadiRiserva,"null",carteObiettivoPubblico,listCarteObiettivoPrivato);
+            for (Dado d: tracciatoDelRound.getRimanenzeRiservaOn()){
+                tracciato.add(d.toString());
+            }
+
+            view.updateView(planceGiocatori,listCartaUtensile,getCurrentPlayer().getId(),getTurno(),getTracciatoDelRound().getRoundAttuale(),dadiRiserva,"null",carteObiettivoPubblico,listCarteObiettivoPrivato, tracciato);
         }
 
     }

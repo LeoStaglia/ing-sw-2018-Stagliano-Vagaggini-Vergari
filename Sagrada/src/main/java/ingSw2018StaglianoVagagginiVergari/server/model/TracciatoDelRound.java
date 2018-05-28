@@ -30,6 +30,10 @@ public class TracciatoDelRound {
         return this.rimanenzeRiservaOn.get(i - 1);
     }
 
+    public ArrayList<Dado> getRimanenzeRiservaOn() {
+        return rimanenzeRiservaOn;
+    }
+
     public ArrayList<Dado> getRimanenzeRiservaOut() {
         return this.rimanenzeRiservaOut;
     }
