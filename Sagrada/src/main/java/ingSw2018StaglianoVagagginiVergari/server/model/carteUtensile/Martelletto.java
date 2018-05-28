@@ -2,6 +2,9 @@ package ingSw2018StaglianoVagagginiVergari.server.model.carteUtensile;
 
 import ingSw2018StaglianoVagagginiVergari.server.model.CartaUtensile;
 import ingSw2018StaglianoVagagginiVergari.server.model.Partita;
+import ingSw2018StaglianoVagagginiVergari.server.model.Utente;
+
+import java.rmi.RemoteException;
 
 public class Martelletto implements CartaUtensile {
     boolean costo ;
@@ -37,9 +40,19 @@ public class Martelletto implements CartaUtensile {
 
 
 
-    public void usaEffettoCarta(Partita p) {
+    public void usaEffettoCarta(Partita p) throws RemoteException {
         costo=true;
+        int conta=0;
+        for(int i=p.getTurno()-1;i<p.getOrdineRound().size();i++){
+            if(p.getOrdineRound().get(i)==p.getCurrentPlayer()) conta++;
+        }
+
+        if(conta==1 && p.getAzioniGiocatore().contains(1))
        p.rilanciaDadiInRiserva();
+       p.updateGenerale();
+
+       //TODO eccezione in caso si sia al primo turno? o la carta non ha effetto?
+
 
     }
 

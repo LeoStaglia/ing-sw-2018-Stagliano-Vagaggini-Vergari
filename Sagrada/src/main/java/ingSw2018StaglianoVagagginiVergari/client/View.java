@@ -406,22 +406,23 @@ public class View extends UnicastRemoteObject implements GameObserver, Remote {
                             controller.usaCartaUtensile(this,parametri);
 
                         } else if (cartaInUso.equalsIgnoreCase("Tampone Diamantato")) {
-                            parametri.set(0,inputCommand.nextInt());
+                            System.out.println("inserisci posizione dado riserva che vuoi girare(il dado sarà reinserito in coda alla riserva)");
+                            parametri.add(0,inputCommand.nextInt());
                             controller.usaCartaUtensile(this,parametri);
 
                         } else if (cartaInUso.equalsIgnoreCase("Diluente Per Pasta Salda")) {
-                            parametri.set(0,inputCommand.nextInt());
-                            parametri.set(1,inputCommand.nextInt());
-                            parametri.set(2,inputCommand.nextInt());
-                            parametri.set(3,inputCommand.nextInt());
+                            parametri.add(0,inputCommand.nextInt());
+                            parametri.add(1,inputCommand.nextInt());
+                            parametri.add(2,inputCommand.nextInt());
+                            parametri.add(3,inputCommand.nextInt());
 
                             controller.usaCartaUtensile(this,parametri);
                         } else if (cartaInUso.equalsIgnoreCase("Taglierina Manuale")) {
-                            parametri.set(0,inputCommand.nextInt());
-                            parametri.set(1,inputCommand.nextInt());
-                            parametri.set(2,inputCommand.nextInt());
-                            parametri.set(3,inputCommand.nextInt());
-                            parametri.set(4,inputCommand.nextInt());
+                            parametri.add(0,inputCommand.nextInt());
+                            parametri.add(1,inputCommand.nextInt());
+                            parametri.add(2,inputCommand.nextInt());
+                            parametri.add(3,inputCommand.nextInt());
+                            parametri.add(4,inputCommand.nextInt());
                             controller.usaCartaUtensile(this,parametri);
                         }
 

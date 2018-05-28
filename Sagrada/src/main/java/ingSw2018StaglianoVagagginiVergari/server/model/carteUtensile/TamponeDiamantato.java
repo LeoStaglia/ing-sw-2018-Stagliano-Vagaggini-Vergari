@@ -5,6 +5,8 @@ import ingSw2018StaglianoVagagginiVergari.server.model.CartaUtensile;
 import ingSw2018StaglianoVagagginiVergari.server.model.Dado;
 import ingSw2018StaglianoVagagginiVergari.server.model.Partita;
 
+import java.rmi.RemoteException;
+
 public class TamponeDiamantato implements CartaUtensile {
 
     private boolean costo;
@@ -28,11 +30,9 @@ public class TamponeDiamantato implements CartaUtensile {
     //----------------------------
 
     @Override
-    public void usaEffettoCarta(Partita PartitaCorrente) {
+    public void usaEffettoCarta(Partita PartitaCorrente) throws RemoteException {
         costo = true;
         Dado DadoinMano;
-
-        //todo deve essere dato dall'utente
 
 
         //è un numero a caso, ma questo valore deve essere dato dall'utente in quanto si tratta di una scelta
@@ -63,6 +63,8 @@ public class TamponeDiamantato implements CartaUtensile {
 
 
         PartitaCorrente.setDadoSelezionato(DadoinMano);
+        PartitaCorrente.reInserisciDadoinRiserva(DadoinMano);
+        PartitaCorrente.updateGenerale();
 
 
     }

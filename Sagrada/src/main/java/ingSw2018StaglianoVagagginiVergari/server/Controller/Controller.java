@@ -263,12 +263,12 @@ public class Controller extends UnicastRemoteObject implements RemoteController 
                 // }
                 break;
             case CartaU7:
-                for (CartaUtensile u : partita.getListaCartaUtensile()) {
-                    if (u.getId() == 7) {
-                        Martelletto carta= (Martelletto) u;
+                // for (CartaUtensile u : partita.getListaCartaUtensile()) {
+                    if (partita.getListaCartaUtensile().get(0).getId() == 7) {
+                        Martelletto carta= (Martelletto) partita.getListaCartaUtensile().get(0);
                         carta.usaEffettoCarta(partita);
                     }
-                }
+                //}
                 break;
             case CartaU8:
                 for (CartaUtensile u : partita.getListaCartaUtensile()) {
@@ -287,13 +287,13 @@ public class Controller extends UnicastRemoteObject implements RemoteController 
                 }
                 break;
             case CartaU10:
-                for (CartaUtensile u : partita.getListaCartaUtensile()) {
-                    if (u.getId() == 10) {
-                        TamponeDiamantato carta= (TamponeDiamantato) u;
+               // for (CartaUtensile u : partita.getListaCartaUtensile()) {
+                    if (partita.getListaCartaUtensile().get(0).getId() == 10) {
+                        TamponeDiamantato carta= (TamponeDiamantato) partita.getListaCartaUtensile().get(0);
                         carta.setScelta(parametri.get(0));
                         carta.usaEffettoCarta(partita);
                     }
-                }
+                //}
                 break;
             case CartaU11:
                 for (CartaUtensile u : partita.getListaCartaUtensile()) {
@@ -336,7 +336,7 @@ public class Controller extends UnicastRemoteObject implements RemoteController 
 
 
     public synchronized void passaTurno(GameObserver view) throws RemoteException {
-        partita.getAzioniGiocatore();
+        partita.inizializzaAzioniGiocatore();
 
         if(partita.getTurno()==2*partita.getListaGiocatori().size()){
             if (partita.getTracciatoDelRound().getRoundAttuale() < 10) {

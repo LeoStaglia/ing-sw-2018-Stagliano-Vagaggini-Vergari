@@ -36,7 +36,7 @@ public class Partita {
     private ArrayList<Schema> listaCarteSchema= new ArrayList<>();
     private Random random = new Random();
 
-    Set<Integer> azioniGiocatore= new HashSet<Integer>();
+    HashSet<Integer> azioniGiocatore= new HashSet<Integer>();
 
     //  private String idPartita;   it is needed only in case of multiple games
 
@@ -71,7 +71,7 @@ public class Partita {
         }
     }
 
-    public Set<Integer> getAzioniGiocatore() {
+    public HashSet<Integer> getAzioniGiocatore() {
         return azioniGiocatore;
     }
 
@@ -207,7 +207,8 @@ public class Partita {
 
     // choose a die from the pool of dice given its position
     public Dado getDadofromRiserva(int i) {
-        return riserva.remove(i - 1);
+        // modificato in i piuttosto che i-1
+        return riserva.remove(i);
 
     }
 
@@ -327,9 +328,9 @@ public class Partita {
             mazzoCarteUtensile.add(i);
         }*/
 
-        mazzoCarteUtensile.add(6);
-        mazzoCarteUtensile.add(6);
-        mazzoCarteUtensile.add(6);
+        mazzoCarteUtensile.add(10);
+        mazzoCarteUtensile.add(10);
+        mazzoCarteUtensile.add(10);
 
 
     }
