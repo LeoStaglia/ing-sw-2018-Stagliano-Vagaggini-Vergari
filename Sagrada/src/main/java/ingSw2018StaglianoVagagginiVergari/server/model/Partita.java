@@ -8,10 +8,7 @@ import ingSw2018StaglianoVagagginiVergari.server.model.carteSchema.FactorySchema
 import ingSw2018StaglianoVagagginiVergari.server.model.carteSchema.Schema;
 
 import java.rmi.RemoteException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
 public class Partita {
 
@@ -38,6 +35,8 @@ public class Partita {
     private ArrayList<Constraint> listaObiettiviPrivati = new ArrayList<>();
     private ArrayList<Schema> listaCarteSchema= new ArrayList<>();
     private Random random = new Random();
+
+    Set<Integer> azioniGiocatore= new HashSet<Integer>();
 
     //  private String idPartita;   it is needed only in case of multiple games
 
@@ -66,6 +65,15 @@ public class Partita {
         gameObservers.remove(view);
     }
 
+    public void inizializzaAzioniGiocatore(){
+        for(int i=1;i<=3;i++){
+            azioniGiocatore.add(i);
+        }
+    }
+
+    public Set<Integer> getAzioniGiocatore() {
+        return azioniGiocatore;
+    }
 
     public void preparaPartita() throws RemoteException {
 
