@@ -324,14 +324,9 @@ public class Partita {
 
     // populate the stack of Tool Cards(12)
     private void inizializzaMazzoCarteUtensile() {
-        /*for (int i = 1; i <= 12; i++) {
+        for (int i = 1; i <= 12; i++) {
             mazzoCarteUtensile.add(i);
-        }*/
-
-        mazzoCarteUtensile.add(10);
-        mazzoCarteUtensile.add(10);
-        mazzoCarteUtensile.add(10);
-
+        }
 
     }
 
@@ -434,7 +429,7 @@ public class Partita {
                 planceGiocatori.put(u.getId(),u.getPlancia().rappresentazionePlancia());
             }
 
-            HashMap<String,String> listCartaUtensile=new HashMap<>();
+            LinkedHashMap<String,String> listCartaUtensile=new LinkedHashMap<>();
 
 
             for (CartaUtensile c: listaCartaUtensile) {

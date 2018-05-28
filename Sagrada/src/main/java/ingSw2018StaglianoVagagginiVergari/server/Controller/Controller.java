@@ -287,13 +287,13 @@ public class Controller extends UnicastRemoteObject implements RemoteController 
                 }
                 break;
             case CartaU10:
-               // for (CartaUtensile u : partita.getListaCartaUtensile()) {
-                    if (partita.getListaCartaUtensile().get(0).getId() == 10) {
-                        TamponeDiamantato carta= (TamponeDiamantato) partita.getListaCartaUtensile().get(0);
+               for (CartaUtensile u : partita.getListaCartaUtensile()) {
+                    if (u.getId()== 10) {
+                        TamponeDiamantato carta= (TamponeDiamantato)u;
                         carta.setScelta(parametri.get(0));
                         carta.usaEffettoCarta(partita);
                     }
-                //}
+                }
                 break;
             case CartaU11:
                 for (CartaUtensile u : partita.getListaCartaUtensile()) {

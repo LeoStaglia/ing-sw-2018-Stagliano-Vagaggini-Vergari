@@ -81,7 +81,7 @@ public class View extends UnicastRemoteObject implements GameObserver, Remote {
 
     private ArrayList<String> carteObiettivoPubblico = new ArrayList<>();
 
-    private HashMap<String, String> carteUtensile = new HashMap<String, String>();
+    private LinkedHashMap<String, String> carteUtensile = new LinkedHashMap<>();
 
     private ArrayList<String> dadiRiserva = new ArrayList<>();
 
@@ -259,7 +259,6 @@ public class View extends UnicastRemoteObject implements GameObserver, Remote {
                         while(mossaCorretta == false){
 
 
-
                             System.out.println("inserisci le coordinate in cui vuoi posizionare il dado: ");
 
                             System.out.print("i ( 0 <= x <= 3):");
@@ -406,6 +405,7 @@ public class View extends UnicastRemoteObject implements GameObserver, Remote {
                             controller.usaCartaUtensile(this,parametri);
 
                         } else if (cartaInUso.equalsIgnoreCase("Tampone Diamantato")) {
+                            parametri.clear();
                             System.out.println("inserisci posizione dado riserva che vuoi girare(il dado sarà reinserito in coda alla riserva)");
                             parametri.add(0,inputCommand.nextInt());
                             controller.usaCartaUtensile(this,parametri);
@@ -968,16 +968,14 @@ public class View extends UnicastRemoteObject implements GameObserver, Remote {
 
     }
 
-    public void printCarteUtensile(HashMap<String, String> listaCartaUtensile) {
+    public void printCarteUtensile(LinkedHashMap<String, String> listaCartaUtensile) {
 
         System.out.print("\nCarte Utensile:   ");
 
-        Iterator it = listaCartaUtensile.entrySet().iterator();
 
         int i = 0;
-        while (it.hasNext()) {
+        for (Map.Entry<String, String> en: listaCartaUtensile.entrySet()){
 
-            Map.Entry en = (Map.Entry) it.next();
 
             String SegnaliniAndNome = (String) en.getKey();
 
@@ -1087,14 +1085,11 @@ public class View extends UnicastRemoteObject implements GameObserver, Remote {
 
     }
 
-    public void printDescrizioneCartaUtensile(HashMap<String, String> listaCartaUtensile, int scelta) {
+    public void printDescrizioneCartaUtensile(LinkedHashMap<String, String> listaCartaUtensile, int scelta) {
 
-        Iterator it1 = listaCartaUtensile.entrySet().iterator();
 
         int i = 0;
-        while (it1.hasNext()) {
-
-            Map.Entry e = (Map.Entry) it1.next();
+        for(Map.Entry<String, String> e: listaCartaUtensile.entrySet()){
 
             if (scelta == i)
                 System.out.println("Descrizione:  " + (String) e.getValue());
@@ -1146,7 +1141,7 @@ public class View extends UnicastRemoteObject implements GameObserver, Remote {
 
     }
 
-    public void updateView(HashMap< String,String[][]> planceGiocatori , HashMap<String,String> listaCartaUtensile, String giocatoreCorrente, int turno, int round, ArrayList<String > dadiRiserva, String dadoSelezionato,ArrayList<String> carteObiettivoPubblico,HashMap<String,String> carteObiettivoPrivato) throws RemoteException {
+    public void updateView(HashMap< String,String[][]> planceGiocatori , LinkedHashMap<String,String> listaCartaUtensile, String giocatoreCorrente, int turno, int round, ArrayList<String > dadiRiserva, String dadoSelezionato,ArrayList<String> carteObiettivoPubblico,HashMap<String,String> carteObiettivoPrivato) throws RemoteException {
 
 
         //per la carta utensile    map <"TPennello Per Eglomise" "descrizione">
@@ -1229,7 +1224,7 @@ public class View extends UnicastRemoteObject implements GameObserver, Remote {
 
     }
 
-    public void updateViewCarteUtensile(HashMap<String,String> listaCartaUtensile) throws RemoteException{
+    public void updateViewCarteUtensile(LinkedHashMap<String,String> listaCartaUtensile) throws RemoteException{
 
         this.carteUtensile = listaCartaUtensile;
 
@@ -1398,17 +1393,13 @@ public class View extends UnicastRemoteObject implements GameObserver, Remote {
     public void scorriCartaUtensile(int cmd){
         //=== da rimuovere, solo per prova... per testare le carte utensile
         int indiceScorrimento=0;
-        Iterator it = carteUtensile.entrySet().iterator();
         boolean trovato = false;
 
-        while (it.hasNext() && trovato == false) {
-
-            Map.Entry en = (Map.Entry) it.next();
+        for(Map.Entry<String, String> en: carteUtensile.entrySet()){
 
             if (indiceScorrimento==cmd) {
 
                 cartaInUso = ((String) en.getKey()).substring(1, ((String) en.getKey()).length());
-                trovato = true;
             }
             indiceScorrimento++;
 
