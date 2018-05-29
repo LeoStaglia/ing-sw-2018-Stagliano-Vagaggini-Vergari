@@ -12,7 +12,6 @@ public class Utente implements Serializable{
     private Plancia plancia;
     private int segnalini;
     private String id;
-    private String username;
     private static HashSet<String> idSet = new HashSet<>();
 
     public String getId() {
@@ -21,11 +20,6 @@ public class Utente implements Serializable{
 
     //multiplayer constructor
     public Utente(Plancia plancia, Constraint coloreObiettivoPrivato){
-        for (String id: idSet){
-           this.id =id;
-           idSet.remove(id);
-           break;
-        }
         this.plancia=plancia;
         obiettivoPrivato= new ArrayList<>();
         obiettivoPrivato.add(new CartaObiettivoPrivato(coloreObiettivoPrivato));
@@ -74,7 +68,7 @@ public class Utente implements Serializable{
         this.segnalini=difficolta;
     }
 
-    public static void inizializzaIdSet(){
+    /*public static void inizializzaIdSet(){
         String alfabeto = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
         Random ran = new Random();
         while(idSet.size()<=4){
@@ -85,13 +79,10 @@ public class Utente implements Serializable{
             idSet.add(builder.toString());
         }
 
-    }
+    }*/
 
-    public String getUsername() {
-        return username;
-    }
 
-    public void setUsername(String username) {
-        this.username = username;
+    public void setId(String username) {
+        this.id = username;
     }
 }

@@ -65,6 +65,7 @@ public class View extends UnicastRemoteObject implements GameObserver, Remote {
     private boolean fronteScelto;
     private boolean carta1;
     private boolean tool6piazzabile;
+    private boolean usernameOK=false;
     private String tool6Dado;
 
     //
@@ -125,6 +126,7 @@ public class View extends UnicastRemoteObject implements GameObserver, Remote {
 
     public void run() throws IOException, InterruptedException {
         int cmd = 0;
+        String username=null;
         boolean carta1 = false;
         while (cmd != 1 && cmd != 2) {
             System.out.println("(1) Per partecipare alla partita (2) per uscire");
@@ -133,17 +135,26 @@ public class View extends UnicastRemoteObject implements GameObserver, Remote {
         if (cmd == 2) {
             System.exit(0);
         } else if (cmd == 1) {
-            try {
-                controller.partecipaPartita(this);
-            } catch (FullGameException e) {
-                System.out.println(e.getMessage());
-                System.exit(0);
+            while(!usernameOK) {
+                System.out.println("Inserisci uno username da usare in partita: ");
+
+                username = command.next();
+                try {
+                    controller.partecipaPartita(this, username);
+                    while(!updateView){
+                        System.out.println("");
+                    }
+                    updateView=false;
+                } catch (FullGameException e) {
+                    System.out.println(e.getMessage());
+                    System.exit(0);
+                }
             }
             System.out.println("Preparazione partita... Attendi. (0) per uscire");
             while (status == ViewStatus.Preparazione) {
                 if (System.in.available() > 0) {
                     if (command.nextInt() == 0) {
-                        controller.abbandonaPartita(this);
+                        controller.abbandonaPartita(this, username);
                         System.exit(0);
                     }
                 }
@@ -520,7 +531,7 @@ public class View extends UnicastRemoteObject implements GameObserver, Remote {
 
                 System.out.println("CALCOLO DEL PUNTEGGIO FINALE...");
 
-                System.out.println("\n\n\n\n\n\n\n\n\n\n\n\n");
+                System.out.println("\n\n\n\n");
 
 
                 printPunteggi(punteggi);
@@ -1330,6 +1341,11 @@ public class View extends UnicastRemoteObject implements GameObserver, Remote {
     @Override
     public void updateViewTool6Die(String Dado) throws RemoteException {
         tool6Dado=Dado;
+        updateView=true;
+    }
+    @Override
+    public void updateUsername(boolean usernameOK){
+        this.usernameOK=usernameOK;
         updateView=true;
     }
 

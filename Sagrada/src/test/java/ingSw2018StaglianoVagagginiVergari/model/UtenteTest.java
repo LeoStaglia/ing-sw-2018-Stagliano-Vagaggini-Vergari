@@ -29,7 +29,7 @@ class UtenteTest {
     @Test
     void inizializzaIdSetTest() {
         Plancia p = mock(Plancia.class);
-        Utente.inizializzaIdSet();
+        //Utente.inizializzaIdSet();
         Utente u1 = new Utente(p, Constraint.BLU);
         Utente u2 = new Utente(p, Constraint.ROSSO);
         Utente u3 = new Utente(p, Constraint.GIALLO);

@@ -12,7 +12,7 @@ import java.util.*;
 
 public class Partita {
 
-    private ArrayList<GameObserver> gameObservers;
+    private HashMap<String, GameObserver> gameObservers;
     private Dado dadoSelezionato = null;
     private ArrayList<String> setOfColors = new ArrayList<String>();
     private ArrayList<Dado> riserva = new ArrayList<Dado>();
@@ -48,23 +48,29 @@ public class Partita {
     public Partita(){
         riempiSetofColors();
         riempiSacchetto();
-        Utente.inizializzaIdSet();
+        //Utente.inizializzaIdSet();
         inizializzaCarteSchema();
         inizializzaMazzoCarteUtensile();
         inizializzaMazzoCarteObiettivoPubblico();
         inizializzaPlance();
         inizializzaObiettiviPrivati();
-        gameObservers= new ArrayList<>();
+        gameObservers= new HashMap<>();
     }
 
-    public void addObserver(GameObserver view){
-        gameObservers.add(view);
+    public void addObserver(GameObserver view, String username) throws RemoteException{
+        if (!(gameObservers.containsKey(username))) {
+            gameObservers.put(username, view);
+            view.updateUsername(true);
+        }else{
+            //TODO gestisci update
+            view.updateUsername(false);
+        }
     }
     public int numberOfObserver(){
         return gameObservers.size();
     }
-    public void removeObserver(GameObserver view){
-        gameObservers.remove(view);
+    public void removeObserver(GameObserver view, String username){
+        gameObservers.remove(username, view);
     }
 
     public void inizializzaAzioniGiocatore(){
@@ -80,8 +86,10 @@ public class Partita {
     public void preparaPartita() throws RemoteException {
 
 
-        for (GameObserver view: gameObservers){
+        for (String username: gameObservers.keySet()){
+            GameObserver view = gameObservers.get(username);
             Utente u = new Utente(this.getPlanciaFromList(), this.getPrivatoFromList());
+            u.setId(username);
             listaGiocatori.add(u);
             scelteSchemi.put(u, new Coppia<Schema, Schema>(getSchemaFromList(), getSchemaFromList()));
             view.notifyUser(u.getId(),scelteSchemi.get(u).getFirst().stringRepresentation(true),scelteSchemi.get(u).getFirst().stringRepresentation(false),scelteSchemi.get(u).getSecond().stringRepresentation(true), scelteSchemi.get(u).getSecond().stringRepresentation(false), u.getObiettivoPrivato().get(0).toString());
@@ -415,7 +423,8 @@ public class Partita {
         }
         vincitore=calcolaVincitore(listaPunteggiUtente,listaPunteggiUtenteObiettivoPrivato);
 
-        for (GameObserver view: gameObservers){
+        for (String username: gameObservers.keySet()){
+            GameObserver view = gameObservers.get(username);
             view.updateViewPunteggio(listaPunteggiUtente,vincitore);
         }
         // TODO aggiungere calcolo SinglePlayer
@@ -470,7 +479,8 @@ public class Partita {
     }
 
     public void updateGenerale() throws RemoteException{
-        for (GameObserver view:gameObservers) {
+        for (String username:gameObservers.keySet()) {
+            GameObserver view = gameObservers.get(username);
             HashMap<String,String[][]> planceGiocatori=new HashMap<>();
             for (Utente u:listaGiocatori) {
                 planceGiocatori.put(u.getId(),u.getPlancia().rappresentazionePlancia());
@@ -527,7 +537,8 @@ public class Partita {
             riserva.add(dadoSelezionato);
             //todo errorHandler - dopo che il metodo piazzadado viene chiamato una volta, non viene più chiamata l'eccezione???
 
-            for (GameObserver view:gameObservers){
+            for (String username:gameObservers.keySet()){
+                GameObserver view = gameObservers.get(username);
                 view.printPiazzamentoScorretto(getCurrentPlayer().getId());
             }
 
@@ -590,7 +601,7 @@ public class Partita {
 
     }
 
-    public ArrayList<GameObserver> getGameObservers() {
+    public HashMap<String, GameObserver> getGameObservers() {
         return gameObservers;
     }
     // end various getter

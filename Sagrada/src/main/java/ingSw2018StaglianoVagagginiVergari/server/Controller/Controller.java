@@ -34,13 +34,13 @@ public class Controller extends UnicastRemoteObject implements RemoteController 
         status = ControllerStatus.AggiuntaObserver;
     }
 
-    public synchronized void partecipaPartita(GameObserver view) throws InterruptedException, RemoteException, FullGameException{
+    public synchronized void partecipaPartita(GameObserver view, String username) throws InterruptedException, RemoteException, FullGameException{
         if (status==ControllerStatus.AggiuntaObserver) {
             if (partita.numberOfObserver() == 4) {
                 throw new FullGameException("The game is full");
             }
 
-            partita.addObserver(view);
+            partita.addObserver(view, username);
 
             if (partita.numberOfObserver() == 2) {
                     t = new Timer();
@@ -72,9 +72,9 @@ public class Controller extends UnicastRemoteObject implements RemoteController 
             throw new FullGameException("La partita è già in corso.");
         }
     }
-    public synchronized void abbandonaPartita(GameObserver view){
+    public synchronized void abbandonaPartita(GameObserver view, String username){
         if (getStatus()==ControllerStatus.AggiuntaObserver) {
-            partita.removeObserver(view);
+            partita.removeObserver(view, username);
             if (partita.numberOfObserver() < 2 && timerSetted) {
                 t.cancel();
                 timerSetted=false;

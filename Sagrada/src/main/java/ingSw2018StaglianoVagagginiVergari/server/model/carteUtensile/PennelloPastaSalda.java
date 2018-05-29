@@ -54,7 +54,8 @@ public class PennelloPastaSalda implements CartaUtensile {
                     }
                 }
             }
-            for (GameObserver view: p.getGameObservers()){
+            for (String username: p.getGameObservers().keySet()){
+                GameObserver view = p.getGameObservers().get(username);
                 view.updateViewTool6Bool(piazzabile);
                 if (piazzabile){
                     view.updateViewTool6Die(p.getDadoSelezionato().toString());
