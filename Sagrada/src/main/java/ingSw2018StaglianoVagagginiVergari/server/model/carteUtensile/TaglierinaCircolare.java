@@ -4,6 +4,8 @@ import ingSw2018StaglianoVagagginiVergari.server.model.CartaUtensile;
 import ingSw2018StaglianoVagagginiVergari.server.model.Dado;
 import ingSw2018StaglianoVagagginiVergari.server.model.Partita;
 
+import java.rmi.RemoteException;
+
 public class TaglierinaCircolare implements CartaUtensile {
     boolean costo ;
     String Nome = "Taglierina Circolare";
@@ -35,12 +37,11 @@ public class TaglierinaCircolare implements CartaUtensile {
     //----------------------------
 
 
-    public void usaEffettoCarta(Partita p) {
+    public void usaEffettoCarta(Partita p) throws RemoteException {
         costo=true;
-        Dado d1;
-        d1=p.getDadoSelezionato();
-         p.setDadoSelezionato(p.getTracciatoDelRound().getRimanenzeRiservaOn(i));
-         p.getTracciatoDelRound().setRimanenzeRiservaOn(i,d1);
+        p.reInserisciDadoinRiserva(p.getTracciatoDelRound().removeRimanenzeRiservaOn(i));
+        p.getTracciatoDelRound().setRimanenzeRiservaOn(i,p.getDadoSelezionato());
+        p.updateGenerale();
 
 
     }

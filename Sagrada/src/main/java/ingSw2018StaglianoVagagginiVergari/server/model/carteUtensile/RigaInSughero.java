@@ -1,8 +1,11 @@
 package ingSw2018StaglianoVagagginiVergari.server.model.carteUtensile;
 
 
+import Eccezioni.MossaIllegaleException;
 import ingSw2018StaglianoVagagginiVergari.server.model.CartaUtensile;
 import ingSw2018StaglianoVagagginiVergari.server.model.Partita;
+
+import java.rmi.RemoteException;
 
 public class RigaInSughero implements CartaUtensile {
 
@@ -14,7 +17,8 @@ public class RigaInSughero implements CartaUtensile {
             "sia adiacente a un altro dado\n\n" +
             "Devi rispettare tutte le restrizioni\n" +
             "di piazzamento";
-
+    private int xCell;
+    private int yCell;
 
 
 
@@ -31,10 +35,12 @@ public class RigaInSughero implements CartaUtensile {
     //----------------------------
 
     @Override
-    public void usaEffettoCarta(Partita PartitaCorrente) {
+    public void usaEffettoCarta(Partita PartitaCorrente) throws RemoteException {
         costo=true;
         PartitaCorrente.getCurrentPlayer().getPlancia().Tool9(PartitaCorrente.getDadoSelezionato());  //versione in cui il metodo è dentro a Plancia
-
+        try {PartitaCorrente.getCurrentPlayer().getPlancia().piazzaDado(xCell, yCell,PartitaCorrente.getDadoSelezionato());}
+        catch (MossaIllegaleException e){}
+        PartitaCorrente.updateGenerale();
 
     }
 
@@ -59,5 +65,13 @@ public class RigaInSughero implements CartaUtensile {
     @Override
     public String getNome() {
         return Nome;
+    }
+
+    public void setxCell(int xCell) {
+        this.xCell = xCell;
+    }
+
+    public void setyCell(int yCell) {
+        this.yCell = yCell;
     }
 }

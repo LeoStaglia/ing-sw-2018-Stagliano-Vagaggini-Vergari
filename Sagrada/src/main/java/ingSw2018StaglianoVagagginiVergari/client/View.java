@@ -371,7 +371,11 @@ public class View extends UnicastRemoteObject implements GameObserver, Remote {
 
 
                         } else if (cartaInUso.equalsIgnoreCase("Taglierina Circolare")) {
-                            parametri.set(0,inputCommand.nextInt());
+                            parametri.clear();
+                            System.out.println("inserisci il numero del dado della riserva che vuoi scambiare con uno sul Tracciato del Round");
+                            parametri.add(0,inputCommand.nextInt());
+                            System.out.println("inserisci il numero del dado del Tracciato del Round che vuoi scambiare con quello selezionato dalla riserva");
+                            parametri.add(1,inputCommand.nextInt());
                             controller.usaCartaUtensile(this,parametri);
 
                         } else if (cartaInUso.equalsIgnoreCase("Pennello Per Pasta Salda")) {
@@ -402,9 +406,17 @@ public class View extends UnicastRemoteObject implements GameObserver, Remote {
                             controller.usaCartaUtensile(this,parametri);
 
                         } else if (cartaInUso.equalsIgnoreCase("Tenaglia A Rotelle")) {
+                            parametri.clear();
                             controller.usaCartaUtensile(this,parametri);
 
                         } else if (cartaInUso.equalsIgnoreCase("Riga In Sughero")) {
+                            parametri.clear();
+                            System.out.println("inserisci posizione dado in riserva da posizionare");
+                            parametri.add(0,inputCommand.nextInt());
+                            System.out.println("inserisci riga dove vuoi piazzare 0<=x<=3");
+                            parametri.add(1,inputCommand.nextInt());
+                            System.out.println("inserisci colonna dove vuoi piazzare 0<=y<=4");
+                            parametri.add(2,inputCommand.nextInt());
                             controller.usaCartaUtensile(this,parametri);
 
                         } else if (cartaInUso.equalsIgnoreCase("Tampone Diamantato")) {
