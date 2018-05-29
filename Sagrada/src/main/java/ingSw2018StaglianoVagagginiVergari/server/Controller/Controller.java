@@ -230,10 +230,10 @@ public class Controller extends UnicastRemoteObject implements RemoteController 
                 }
                 break;
             case CartaU6:
-                // for (CartaUtensile u : partita.getListaCartaUtensile()) {
-                    if (partita.getListaCartaUtensile().get(0).getId() == 6) {
+                 for (CartaUtensile u : partita.getListaCartaUtensile()) {
+                    if (u.getId() == 6) {
                         if (partita.getAzioniGiocatore().contains(1)) {
-                            PennelloPastaSalda carta = (PennelloPastaSalda) partita.getListaCartaUtensile().get(0);
+                            PennelloPastaSalda carta = (PennelloPastaSalda)u;
                             if (carta.isFase1()) {
                                 partita.setDadoSelezionato(parametri.get(0));
                                 try{
@@ -260,15 +260,15 @@ public class Controller extends UnicastRemoteObject implements RemoteController 
                             partita.updateGenerale();
                         }
                     }
-                // }
+                 }
                 break;
             case CartaU7:
-                // for (CartaUtensile u : partita.getListaCartaUtensile()) {
-                    if (partita.getListaCartaUtensile().get(0).getId() == 7) {
-                        Martelletto carta= (Martelletto) partita.getListaCartaUtensile().get(0);
-                        carta.usaEffettoCarta(partita);
-                    }
-                //}
+                 for (CartaUtensile u : partita.getListaCartaUtensile()) {
+                     if (u.getId()==7) {
+                         Martelletto carta = (Martelletto) partita.getListaCartaUtensile().get(0);
+                         carta.usaEffettoCarta(partita);
+                     }
+                 }
                 break;
             case CartaU8:
                 for (CartaUtensile u : partita.getListaCartaUtensile()) {

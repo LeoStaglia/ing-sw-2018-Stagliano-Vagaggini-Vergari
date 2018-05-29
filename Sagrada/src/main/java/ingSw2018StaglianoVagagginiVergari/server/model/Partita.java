@@ -429,7 +429,7 @@ public class Partita {
                 planceGiocatori.put(u.getId(),u.getPlancia().rappresentazionePlancia());
             }
 
-            LinkedHashMap<String,String> listCartaUtensile=new LinkedHashMap<>();
+            ArrayList<String> listCartaUtensile = new ArrayList<>();
 
 
             for (CartaUtensile c: listaCartaUtensile) {
@@ -437,7 +437,9 @@ public class Partita {
                 if(c.getCosto()==1) {builder.append("F");}
                 else{ builder.append("T");}
                 builder.append(c.getNome());
-                listCartaUtensile.put(builder.toString(),c.getDescrizione());
+                builder.append("*");
+                builder.append(c.getDescrizione());
+                listCartaUtensile.add(builder.toString());
             }
 
             ArrayList<String> dadiRiserva=new ArrayList<>();
