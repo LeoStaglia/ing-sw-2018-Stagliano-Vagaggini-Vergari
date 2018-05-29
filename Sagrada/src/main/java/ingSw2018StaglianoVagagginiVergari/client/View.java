@@ -111,6 +111,8 @@ public class View extends UnicastRemoteObject implements GameObserver, Remote {
 
     private HashSet<Integer> azioniGiocatore;
 
+    private String vincitore;
+
     //==================t
 
 
@@ -517,9 +519,6 @@ public class View extends UnicastRemoteObject implements GameObserver, Remote {
 
 
                 System.out.println("CALCOLO DEL PUNTEGGIO FINALE...");
-                while (!printPunteggio) {
-                    System.out.print("");
-                }
 
                 System.out.println("\n\n\n\n\n\n\n\n\n\n\n\n");
 
@@ -1123,7 +1122,7 @@ public class View extends UnicastRemoteObject implements GameObserver, Remote {
 
         //il punteggio del giocatore corrente
 
-        System.out.println("Il tuo punteggio è: "+ punteggi.get(giocatoreCorrente));
+        System.out.println("Il tuo punteggio è: "+ punteggi.get(id));
 
         Iterator it1 = punteggi.entrySet().iterator();
 
@@ -1133,10 +1132,14 @@ public class View extends UnicastRemoteObject implements GameObserver, Remote {
             Map.Entry e = (Map.Entry) it1.next();
 
             //il punteggio degli altri giocatori
-            if( !( (String) e.getKey() ).equalsIgnoreCase(giocatoreCorrente) )
-                System.out.println("il punteggio di "+ (String) e.getKey() + "é " + (String) e.getValue());
+            if( !( (String) e.getKey() ).equalsIgnoreCase(id) )
+                System.out.println("il punteggio di "+ (String) e.getKey() + "é " + e.getValue());
 
         }
+            if(id.equals(vincitore)){
+                System.out.println("HAI VINTO !!!!");
+            }
+            else System.out.println("HAI PERSO :(\nil vincitore è: "+vincitore);
 
 
 
@@ -1200,8 +1203,9 @@ public class View extends UnicastRemoteObject implements GameObserver, Remote {
         else flagSceltaCartaUtensile=1;
 
 
-        this.updateView = true;
         this.mossaCorretta = true;
+        this.updateView = true;
+
 
 
 
@@ -1215,8 +1219,9 @@ public class View extends UnicastRemoteObject implements GameObserver, Remote {
 
         planceGiocatori.put(giocatoreCorrente, plancia);
 
-        this.updateView = true;
         this.mossaCorretta = true;
+        this.updateView = true;
+
 
 
     }
@@ -1225,8 +1230,9 @@ public class View extends UnicastRemoteObject implements GameObserver, Remote {
 
         this.turno = turno;
 
-        this.updateView = true;
         this.mossaCorretta = true;
+        this.updateView = true;
+
 
 
 
@@ -1238,8 +1244,9 @@ public class View extends UnicastRemoteObject implements GameObserver, Remote {
 
         this.round = round;
 
-        this.updateView = true;
         this.mossaCorretta = true;
+        this.updateView = true;
+
 
 
 
@@ -1250,8 +1257,9 @@ public class View extends UnicastRemoteObject implements GameObserver, Remote {
 
         this.giocatoreCorrente = giocatoreCorrente;
 
-        this.updateView = true;
         this.mossaCorretta = true;
+        this.updateView = true;
+
 
 
     }
@@ -1260,8 +1268,9 @@ public class View extends UnicastRemoteObject implements GameObserver, Remote {
 
         this.planceGiocatori = planceGiocatori;
 
-        this.updateView = true;
         this.mossaCorretta = true;
+        this.updateView = true;
+
 
 
 
@@ -1271,8 +1280,9 @@ public class View extends UnicastRemoteObject implements GameObserver, Remote {
 
         this.carteUtensile = listaCartaUtensile;
 
-        this.updateView = true;
         this.mossaCorretta = true;
+        this.updateView = true;
+
 
 
     }
@@ -1281,8 +1291,9 @@ public class View extends UnicastRemoteObject implements GameObserver, Remote {
 
         this.dadiRiserva = dadiRiserva;
 
-        this.updateView = true;
         this.mossaCorretta = true;
+        this.updateView = true;
+
 
 
     }
@@ -1291,17 +1302,21 @@ public class View extends UnicastRemoteObject implements GameObserver, Remote {
 
         this.dadoSelezionato = dadoSelezionato;
 
-        this.updateView = true;
         this.mossaCorretta = true;
+        this.updateView = true;
+
 
 
     }
 
-    public void updateViewPunteggio(HashMap<String, Integer> punteggi) throws RemoteException {
+    public void updateViewPunteggio(HashMap<String, Integer> punteggi,String vincitore) throws RemoteException {
 
         this.punteggi = punteggi;
-        this.printPunteggio = true;
         this.mossaCorretta = true;
+        this.vincitore=vincitore;
+        setStatus(ViewStatus.CalcoloPunteggio);
+        this.updateView=true;
+
 
 
     }

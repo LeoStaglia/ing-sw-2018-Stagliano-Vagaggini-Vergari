@@ -25,7 +25,9 @@ public class Partita {
 
     private int turno=1;
     private TracciatoDelRound tracciatoDelRound = new TracciatoDelRound();
-    private HashMap<Utente,Integer> listaPunteggiUtente=new HashMap<Utente,Integer>();
+    private HashMap<String,Integer> listaPunteggiUtente=new HashMap<String,Integer>();
+    private HashMap<String,Integer> listaPunteggiUtenteObiettivoPrivato=new HashMap<String,Integer>();
+
     private HashMap<Utente, Coppia<Schema, Schema>> scelteSchemi= new HashMap<>();
     private ArrayList<Integer> mazzoCarteUtensile= new ArrayList<Integer>();
     private ArrayList<Integer> mazzoCarteObiettivoPubblico= new ArrayList<Integer>();
@@ -382,30 +384,75 @@ public class Partita {
 
 
 
-    public void calcolaPunteggioFinale(){
+    public void calcolaPunteggioFinale() throws RemoteException{
 
-
+        String vincitore;
         for (Utente u:listaGiocatori) {
             int punteggio=u.getSegnalini();
+            int punteggioObiettivoPrivato=0;
+
+            for (int i=0;i<4;i++) {
+                for(int j=0;j<5;j++){
+                    if(u.getPlancia().leggiPlancia(i,j)==null) punteggio=punteggio-1;
+                    else if(u.getPlancia().leggiPlancia(i,j).getColore().equalsIgnoreCase(u.getObiettivoPrivato().get(0).getColore().getDescrizione())){
+                        punteggio+=u.getPlancia().leggiPlancia(i,j).getNumero();
+                    }
+                }
+
+            }
+
+            punteggioObiettivoPrivato=punteggio-u.getSegnalini();
 
             for (CartaObiettivoPubblico c:listaCartaObiettivoPubblico) {
                 punteggio+=c.calcolaPunti(u.getPlancia());
 
             }
 
-            for (int i=0;i<4;i++) {
-                for(int j=0;j<5;j++){
-                    if(u.getPlancia().leggiPlancia(i,j).getColore().equalsIgnoreCase(u.getObiettivoPrivato().get(0).getColore().getDescrizione())){
-                        punteggio+=u.getPlancia().leggiPlancia(i,j).getNumero();
+            listaPunteggiUtenteObiettivoPrivato.put(u.getId(),punteggioObiettivoPrivato);
+            listaPunteggiUtente.put(u.getId(),punteggio);
+
+
+        }
+        vincitore=calcolaVincitore(listaPunteggiUtente,listaPunteggiUtenteObiettivoPrivato);
+
+        for (GameObserver view: gameObservers){
+            view.updateViewPunteggio(listaPunteggiUtente,vincitore);
+        }
+        // TODO aggiungere calcolo SinglePlayer
+    }
+
+    public String calcolaVincitore(HashMap<String,Integer> listaPunteggiUtente,HashMap<String,Integer> listaPunteggiUtenteObiettivoPrivato){
+        String vincitore=listaGiocatori.get(0).getId();
+        for(Utente u:listaGiocatori){
+            if(listaPunteggiUtente.get(u.getId())>listaPunteggiUtente.get(vincitore)) vincitore=u.getId();
+            else if(listaPunteggiUtente.get(u.getId())==listaPunteggiUtente.get(vincitore)){
+                if(listaPunteggiUtenteObiettivoPrivato.get(u.getId())>listaPunteggiUtenteObiettivoPrivato.get(vincitore)) vincitore=u.getId();
+                else if(listaPunteggiUtenteObiettivoPrivato.get(u.getId())==listaPunteggiUtenteObiettivoPrivato.get(vincitore)){
+                    Utente u1=null;
+                    for (Utente user:listaGiocatori) {
+                        if(vincitore.equals(user.getId())) u1=user;
+                        break;
+                    }
+                    if(u.getSegnalini()>u1.getSegnalini()) vincitore=u.getId();
+                    else if(u.getSegnalini()==u1.getSegnalini()){
+
+                        // con questa implementazione con ordine 1 2 3 4 vince 1 a parità di segnalini
+                        for (Utente utente:ordineRound) {
+                            if(utente.getId().equals(vincitore)){
+                                break;
+                            }
+                            if(utente.getId().equals(u.getId())){
+                                vincitore=u.getId();
+                                break;
+                            }
+                        }
                     }
                 }
 
             }
-            listaPunteggiUtente.put(u,punteggio);
+
         }
-
-
-        // TODO aggiungere calcolo SinglePlayer
+        return vincitore;
     }
 
     public boolean contaSchemi() throws RemoteException{
