@@ -109,6 +109,8 @@ public class View extends UnicastRemoteObject implements GameObserver, Remote {
 
     private ArrayList<String> tracciatoDelRound;
 
+    private HashSet<Integer> azioniGiocatore;
+
     //==================t
 
 
@@ -296,7 +298,7 @@ public class View extends UnicastRemoteObject implements GameObserver, Remote {
 
 
 
-                        flagSceltaDado = 2;
+                      //  flagSceltaDado = 2;
 
                     } else if (cmd == 2 && flagSceltaCartaUtensile == 0) {
                         updateView=false;
@@ -443,13 +445,13 @@ public class View extends UnicastRemoteObject implements GameObserver, Remote {
 
                         //====================
 
-                        flagSceltaCartaUtensile = 1;
+                        //flagSceltaCartaUtensile = 1;
 
 
                     } else if (cmd == 3) {
                         passaturno = true;
-                        flagSceltaCartaUtensile=0;
-                        flagSceltaDado=0;
+                        //flagSceltaCartaUtensile=0;
+                       // flagSceltaDado=0;
 
                         //chiamo il metodo del controller che mi permette di passare i parametri per la mossa scelta.
                         try {
@@ -1174,7 +1176,7 @@ public class View extends UnicastRemoteObject implements GameObserver, Remote {
 
     }
 
-    public void updateView(HashMap< String,String[][]> planceGiocatori , ArrayList<String> listaCartaUtensile, String giocatoreCorrente, int turno, int round, ArrayList<String > dadiRiserva, String dadoSelezionato,ArrayList<String> carteObiettivoPubblico,HashMap<String,String> carteObiettivoPrivato, ArrayList<String> tracciatoDelRound) throws RemoteException {
+    public void updateView(HashMap< String,String[][]> planceGiocatori , ArrayList<String> listaCartaUtensile, String giocatoreCorrente, int turno, int round, ArrayList<String > dadiRiserva, String dadoSelezionato,ArrayList<String> carteObiettivoPubblico,HashMap<String,String> carteObiettivoPrivato, ArrayList<String> tracciatoDelRound,HashSet<Integer> azioniGiocatore) throws RemoteException {
 
 
         //per la carta utensile    map <"TPennello Per Eglomise" "descrizione">
@@ -1190,6 +1192,13 @@ public class View extends UnicastRemoteObject implements GameObserver, Remote {
         this.carteObiettivoPubblico=carteObiettivoPubblico;
         this.carteObiettivoPrivato=carteObiettivoPrivato;
         this.tracciatoDelRound = tracciatoDelRound;
+
+        if(azioniGiocatore.contains(1)) flagSceltaDado=0;
+        else flagSceltaDado=2;
+
+        if(azioniGiocatore.contains(2)) flagSceltaCartaUtensile=0;
+        else flagSceltaCartaUtensile=1;
+
 
         this.updateView = true;
         this.mossaCorretta = true;
