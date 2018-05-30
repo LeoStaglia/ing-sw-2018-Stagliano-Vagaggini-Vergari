@@ -72,6 +72,7 @@ public class View extends UnicastRemoteObject implements GameObserver, Remote {
     private String tool6Dado;
     private boolean lathekinPhase2=false;
     private int numeroDadiTool12=0;
+    private int tRound=-1;
 
     //
     private boolean startGame=false;
@@ -476,7 +477,6 @@ public class View extends UnicastRemoteObject implements GameObserver, Remote {
                             controller.usaCartaUtensile(this,parametri);
                         } else if (cartaInUso.equalsIgnoreCase("Taglierina Manuale")) {
                             parametri.clear();
-                            int tRound=-1;
                             if (numeroDadiTool12==0) {
                                 if (tracciatoDelRound.size() != 0) {
                                     while (!(tRound < tracciatoDelRound.size()+1 && tRound >= 1)) {
@@ -492,17 +492,20 @@ public class View extends UnicastRemoteObject implements GameObserver, Remote {
                                     System.out.println("Inserisci il numero di dadi che vuoi spostare (compreso tra 1 e 2):");
                                     numeroDadiTool12 = command.nextInt();
                                 }
+                                parametri.add(1, numeroDadiTool12);
+                            }else{
+                                parametri.add(0, tRound);
+                                parametri.add(1, numeroDadiTool12);
                             }
-                                System.out.println("Inserisci la riga del dado che vuoi spostare:(0 <= x <= 3)");
-                                parametri.add(1, command.nextInt());
-                                System.out.println("Inserisci la colonna del dado che vuoi spostare:(0 <= y <= 4)");
-                                parametri.add(2, command.nextInt());
-                                System.out.println("Inserisci la riga in cui vuoi spostare il dado:(0 <= x <= 3)");
-                                parametri.add(3,inputCommand.nextInt());
-                                System.out.println("Inserisci la colonna in cui vuoi spostare il dado:(0 <= y <= 4)");
-                                parametri.add(4,inputCommand.nextInt());
-                                controller.usaCartaUtensile(this, parametri);
-
+                            System.out.println("Inserisci la riga del dado che vuoi spostare:(0 <= x <= 3)");
+                            parametri.add(2, command.nextInt());
+                            System.out.println("Inserisci la colonna del dado che vuoi spostare:(0 <= y <= 4)");
+                            parametri.add(3, command.nextInt());
+                            System.out.println("Inserisci la riga in cui vuoi spostare il dado:(0 <= x <= 3)");
+                            parametri.add(4,inputCommand.nextInt());
+                            System.out.println("Inserisci la colonna in cui vuoi spostare il dado:(0 <= y <= 4)");
+                            parametri.add(5,inputCommand.nextInt());
+                            controller.usaCartaUtensile(this, parametri);
 
                         }
 

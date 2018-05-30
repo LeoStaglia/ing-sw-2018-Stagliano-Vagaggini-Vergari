@@ -318,18 +318,19 @@ public class Controller extends UnicastRemoteObject implements RemoteController 
                 }
                 break;
             case CartaU12:
-                for (CartaUtensile u : partita.getListaCartaUtensile()) {
-                    if (u.getId()==12) {
-                        TaglierinaManuale carta=(TaglierinaManuale) u;
+                //for (CartaUtensile u : partita.getListaCartaUtensile()) {
+                    if (partita.getListaCartaUtensile().get(0).getId()==12) {
+                        TaglierinaManuale carta = (TaglierinaManuale) partita.getListaCartaUtensile().get(0);
                         carta.setR(parametri.get(0));
-                        carta.setI(parametri.get(1));
-                        carta.setJ(parametri.get(2));
-                        carta.setX(parametri.get(3));
-                        carta.setY(parametri.get(4));
+                        carta.setNumeroDadi(parametri.get(1));carta.setI(parametri.get(2));
+                        carta.setJ(parametri.get(3));
+                        carta.setX(parametri.get(4));
+                        carta.setY(parametri.get(5));
 
                         carta.usaEffettoCarta(partita);
+
                     }
-                }
+                //}
 
                 break;
 

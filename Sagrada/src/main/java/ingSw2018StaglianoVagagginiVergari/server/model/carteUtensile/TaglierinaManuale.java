@@ -83,6 +83,9 @@ public class TaglierinaManuale implements CartaUtensile {
                 p.getCurrentPlayer().getPlancia().calcolaMosse(d, false, false);
 
                 try {p.getCurrentPlayer().getPlancia().piazzaDado(x, y, d);
+                    if (numeroDadi==2){
+                        p.getAzioniGiocatore().add(2);
+                    }
                 }
                 catch (MossaIllegaleException e){
                     //TODO gestione Mossa Illegale
