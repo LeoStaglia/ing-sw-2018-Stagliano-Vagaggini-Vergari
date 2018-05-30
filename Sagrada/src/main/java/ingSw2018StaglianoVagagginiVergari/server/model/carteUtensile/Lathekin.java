@@ -21,10 +21,12 @@ public class Lathekin implements CartaUtensile {
     private int yDie;
     private int xCell;
     private int yCell;
+    private boolean secondPhase=false;
     // Utente Utilizzatore;   quando avremo dichiarato Utente, decommentare
 
 
-
+    /*scelta implementativa:i dadi vengono mossi uno per volta, quindi si potrà muovere il secondo dado solo dopo aver piazzato il primo
+    con le relative nuove restrizioni introdotte*/
 
 
 
@@ -49,9 +51,16 @@ public class Lathekin implements CartaUtensile {
             p.getCurrentPlayer().getPlancia().calcolaMosse(d, false, false);
             try{
                 p.getCurrentPlayer().getPlancia().piazzaDado(xCell, yCell, d);
+                if (!secondPhase){
+                    p.getAzioniGiocatore().add(2);
+                    secondPhase=true;
+                }else{
+                    secondPhase=false;
+                }
             }catch(MossaIllegaleException e){
                 //TODO notifica di piazzamento impossibile alla View
             }
+            p.updateGenerale();
         }else{
             //TODO notifica di errore delle coordinate del dado alla View
         }

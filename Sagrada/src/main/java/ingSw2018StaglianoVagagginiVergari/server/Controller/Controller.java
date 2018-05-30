@@ -3,6 +3,7 @@ package ingSw2018StaglianoVagagginiVergari.server.Controller;
 
 import Eccezioni.FullGameException;
 import Eccezioni.MossaIllegaleException;
+import com.sun.scenario.effect.impl.sw.sse.SSEBlend_SRC_OUTPeer;
 import ingSw2018StaglianoVagagginiVergari.common.GameObserver;
 import ingSw2018StaglianoVagagginiVergari.common.RemoteController;
 import ingSw2018StaglianoVagagginiVergari.server.model.CartaUtensile;
@@ -210,12 +211,12 @@ public class Controller extends UnicastRemoteObject implements RemoteController 
                 break;
             case CartaU4:
                 for (CartaUtensile u : partita.getListaCartaUtensile()) {
-                    if (u.getId() == 4) {
+                    if (u.getId()== 4) {
                         Lathekin carta= (Lathekin) u;
-                        carta.setxCell(parametri.get(0));
-                        carta.setyCell(parametri.get(1));
-                        carta.setxDie(parametri.get(2));
-                        carta.setyDie(parametri.get(3));
+                        carta.setxDie(parametri.get(0));
+                        carta.setyDie(parametri.get(1));
+                        carta.setxCell(parametri.get(2));
+                        carta.setyCell(parametri.get(3));
                         carta.usaEffettoCarta(partita);
                     }
                 }
@@ -313,9 +314,9 @@ public class Controller extends UnicastRemoteObject implements RemoteController 
                 }
                 break;
             case CartaU12:
-                for (CartaUtensile u : partita.getListaCartaUtensile()) {
-                    if (u.getId() == 12) {
-                        TaglierinaManuale carta=(TaglierinaManuale) u;
+                //for (CartaUtensile u : partita.getListaCartaUtensile()) {
+                    if (partita.getListaCartaUtensile().get(0).getId()==12) {
+                        TaglierinaManuale carta=(TaglierinaManuale) partita.getListaCartaUtensile().get(0);
                         carta.setR(parametri.get(0));
                         carta.setI(parametri.get(1));
                         carta.setJ(parametri.get(2));
@@ -324,7 +325,7 @@ public class Controller extends UnicastRemoteObject implements RemoteController 
 
                         carta.usaEffettoCarta(partita);
                     }
-                }
+                //}
 
                 break;
 

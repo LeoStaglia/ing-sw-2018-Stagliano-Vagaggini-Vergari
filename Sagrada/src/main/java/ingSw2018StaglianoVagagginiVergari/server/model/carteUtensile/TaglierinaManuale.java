@@ -17,11 +17,12 @@ public class TaglierinaManuale implements CartaUtensile {
             "Devi rispettare tutte le restrizioni\n" +
             " di piazzamento";
 
-    int r; // indice del dado sul tracciato del round selezionato da cui prendere il colore.
-    int i; // coordinata i dado su plancia
-    int j; // coordinata j dado su plancia
-    int x; // coordinata x nuovo piazzamento su plancia
-    int y; // coordinata y nuovo piazzamento su plancia
+    private int r; // indice del dado sul tracciato del round selezionato da cui prendere il colore.
+    private int i; // coordinata i dado su plancia
+    private int j; // coordinata j dado su plancia
+    private int x; // coordinata x nuovo piazzamento su plancia
+    private int y; // coordinata y nuovo piazzamento su plancia
+    private int numeroDadi;
 
     // Utente Utilizzatore;   quando avremo dichiarato Utente, decommentare
 
@@ -66,6 +67,10 @@ public class TaglierinaManuale implements CartaUtensile {
         this.y = y;
     }
 
+    public void setNumeroDadi(int numeroDadi) {
+        this.numeroDadi = numeroDadi;
+    }
+
     public void usaEffettoCarta(Partita p) throws RemoteException{
         costo=true;
         String color=null;
@@ -77,10 +82,12 @@ public class TaglierinaManuale implements CartaUtensile {
                 p.getCurrentPlayer().getPlancia().rimuoviDado(i, j);
                 p.getCurrentPlayer().getPlancia().calcolaMosse(d, false, false);
 
-                try {p.getCurrentPlayer().getPlancia().piazzaDado(x, y, d);}
+                try {p.getCurrentPlayer().getPlancia().piazzaDado(x, y, d);
+                }
                 catch (MossaIllegaleException e){
                     //TODO gestione Mossa Illegale
                 }
+                p.updateGenerale();
             }
 
             //TODO scelta utente se vuole proseguire o meno al secondo lancio da gestire nel controller

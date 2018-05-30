@@ -334,9 +334,12 @@ public class Partita {
 
     // populate the stack of Tool Cards(12)
     private void inizializzaMazzoCarteUtensile() {
-        for (int i = 1; i <= 12; i++) {
-            mazzoCarteUtensile.add(i);
-        }
+        //for (int i = 1; i <= 12; i++) {
+            //mazzoCarteUtensile.add(i);
+        //}
+        mazzoCarteUtensile.add(12);
+        mazzoCarteUtensile.add(12);
+        mazzoCarteUtensile.add(12);
 
     }
 
