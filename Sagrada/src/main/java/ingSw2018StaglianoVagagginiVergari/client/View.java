@@ -1257,7 +1257,7 @@ public class View extends UnicastRemoteObject implements GameObserver, Remote {
         this.carteObiettivoPrivato=carteObiettivoPrivato;
         this.tracciatoDelRound = tracciatoDelRound;
 
-        if(azioniGiocatore.contains(1)) flagSceltaDado=0;
+        if(azioniGiocatore.contains(1)|| azioniGiocatore.contains(4)) flagSceltaDado=0;
         else flagSceltaDado=2;
 
         if(azioniGiocatore.contains(2)) flagSceltaCartaUtensile=0;

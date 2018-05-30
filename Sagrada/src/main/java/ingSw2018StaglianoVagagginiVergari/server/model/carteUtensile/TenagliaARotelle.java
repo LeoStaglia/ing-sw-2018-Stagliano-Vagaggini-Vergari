@@ -3,6 +3,8 @@ package ingSw2018StaglianoVagagginiVergari.server.model.carteUtensile;
 import ingSw2018StaglianoVagagginiVergari.server.model.CartaUtensile;
 import ingSw2018StaglianoVagagginiVergari.server.model.Partita;
 
+import java.rmi.RemoteException;
+
 public class TenagliaARotelle implements CartaUtensile {
     boolean costo ; ;
     String Nome = "Tenaglia A Rotelle";
@@ -36,9 +38,11 @@ public class TenagliaARotelle implements CartaUtensile {
 
 
 
-    public void usaEffettoCarta(Partita p) {  // viene passata solo la Partita, dato che si ha traccia dell'utente corrente
+    public void usaEffettoCarta(Partita p) throws RemoteException{  // viene passata solo la Partita, dato che si ha traccia dell'utente corrente
         costo=true;
         p.setOrdineRoundTool8Start();
+        p.getAzioniGiocatore().add(4);
+        p.updateGenerale();
 
         // devo fare in modo di segnalare che questa carta è stata utilizzata al fine di richiamare SetOrdineRoundTool8End
           // oppure richiamo ogni volta setOrdineRoundTool8End()

@@ -103,10 +103,14 @@ public class Controller extends UnicastRemoteObject implements RemoteController 
 
         System.out.println("Gioc corr"+partita.getCurrentPlayer());
 
-        if (partita.getAzioniGiocatore().contains(parametri.get(0))) {
+        if (partita.getAzioniGiocatore().contains(parametri.get(0))|| partita.getAzioniGiocatore().contains(4)) {
             int n=parametri.get(0);
-            partita.getAzioniGiocatore().remove(parametri.get(0));
-            if (n == 1) {
+            if(partita.getAzioniGiocatore().contains(4)&&!(partita.getAzioniGiocatore().contains(1))){
+                partita.getAzioniGiocatore().remove(4);
+                n=4;
+            }
+            else partita.getAzioniGiocatore().remove(parametri.get(0));
+            if (n == 1 || n==4) {
                 partita.setDadoSelezionato(parametri.get(1));
                 partita.piazzamentoDado(parametri.get(2), parametri.get(3), false, false);
             }
@@ -273,12 +277,12 @@ public class Controller extends UnicastRemoteObject implements RemoteController 
                  }
                 break;
             case CartaU8:
-                for (CartaUtensile u : partita.getListaCartaUtensile()) {
+               for (CartaUtensile u : partita.getListaCartaUtensile()) {
                     if (u.getId() == 8) {
                         TenagliaARotelle carta= (TenagliaARotelle) u;
                         carta.usaEffettoCarta(partita);
                     }
-                }
+               }
                 break;
             case CartaU9:
                 for (CartaUtensile u : partita.getListaCartaUtensile()) {
@@ -314,9 +318,9 @@ public class Controller extends UnicastRemoteObject implements RemoteController 
                 }
                 break;
             case CartaU12:
-                //for (CartaUtensile u : partita.getListaCartaUtensile()) {
-                    if (partita.getListaCartaUtensile().get(0).getId()==12) {
-                        TaglierinaManuale carta=(TaglierinaManuale) partita.getListaCartaUtensile().get(0);
+                for (CartaUtensile u : partita.getListaCartaUtensile()) {
+                    if (u.getId()==12) {
+                        TaglierinaManuale carta=(TaglierinaManuale) u;
                         carta.setR(parametri.get(0));
                         carta.setI(parametri.get(1));
                         carta.setJ(parametri.get(2));
@@ -325,7 +329,7 @@ public class Controller extends UnicastRemoteObject implements RemoteController 
 
                         carta.usaEffettoCarta(partita);
                     }
-                //}
+                }
 
                 break;
 
@@ -342,8 +346,7 @@ public class Controller extends UnicastRemoteObject implements RemoteController 
 
     public synchronized void passaTurno(GameObserver view) throws RemoteException {
         partita.inizializzaAzioniGiocatore();
-
-        if(partita.getTurno()==2*partita.getListaGiocatori().size()){
+        if(partita.getTurno()==partita.getOrdineRound().size()){
             if (partita.getTracciatoDelRound().getRoundAttuale() < 10) {
                 partita.nextRound();
             } else { setStatus(ControllerStatus.CalcoloPunteggio);

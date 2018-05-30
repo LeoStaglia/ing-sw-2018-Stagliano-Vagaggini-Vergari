@@ -32,7 +32,6 @@ class PartitaTest {
 
         test.add(mockedUtente2);
         test.add(mockedUtente3);
-        test.add(mockedUtente3);
         test.add(mockedUtente4);
         test.add(mockedUtente1);
         test.add(mockedUtente1);

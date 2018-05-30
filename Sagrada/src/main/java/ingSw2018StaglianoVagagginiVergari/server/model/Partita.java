@@ -74,6 +74,7 @@ public class Partita {
     }
 
     public void inizializzaAzioniGiocatore(){
+        azioniGiocatore.clear();
         for(int i=1;i<=3;i++){
             azioniGiocatore.add(i);
         }
@@ -288,7 +289,7 @@ public class Partita {
 
     // increments the round
     public void nextRound() throws RemoteException {
-        //TODO possibile inserimento metodo se nel round è stata utilizzata la carta 8
+        if(ordineRound.size()<2*listaGiocatori.size()) setOrdineRoundTool8End(); //called if the tool 8 was used once or more in a round
         setOrdineRound();
         tracciatoDelRound.setRimanenzeRiservaOn(tracciatoDelRound.getRoundAttuale(),riserva.remove(0));
         tracciatoDelRound.addRimanenzeRiservaOut(riserva);
@@ -310,7 +311,7 @@ public class Partita {
     // method called by card tool 8
     public void setOrdineRoundTool8Start() {
         if (turno < 4) {
-            ordineRound.add(turno, getCurrentPlayer());
+            //ordineRound.add(turno, getCurrentPlayer());  //TODO rimuovere in quanto vecchia implementazione
             ordineRound.remove(ordineRound.size() - turno);
         }
     }
@@ -334,12 +335,9 @@ public class Partita {
 
     // populate the stack of Tool Cards(12)
     private void inizializzaMazzoCarteUtensile() {
-        //for (int i = 1; i <= 12; i++) {
-            //mazzoCarteUtensile.add(i);
-        //}
-        mazzoCarteUtensile.add(12);
-        mazzoCarteUtensile.add(12);
-        mazzoCarteUtensile.add(12);
+        for (int i = 1; i <= 12; i++) {
+            mazzoCarteUtensile.add(i);
+        }
 
     }
 
