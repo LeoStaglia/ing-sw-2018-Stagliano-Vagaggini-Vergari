@@ -8,7 +8,6 @@ import ingSw2018StaglianoVagagginiVergari.server.model.carteSchema.FactorySchema
 import ingSw2018StaglianoVagagginiVergari.server.model.carteSchema.Schema;
 
 import java.rmi.RemoteException;
-import java.rmi.server.UnicastRemoteObject;
 import java.util.*;
 
 public class Partita {
@@ -403,12 +402,11 @@ public class Partita {
 
     // populate the stack of Tool Cards(12)
     private void inizializzaMazzoCarteUtensile() {
-        //for (int i = 1; i <= 12; i++) {
-            mazzoCarteUtensile.add(2);
-        mazzoCarteUtensile.add(2);
-        mazzoCarteUtensile.add(2);
+        for (int i = 1; i <= 12; i++) {
+            mazzoCarteUtensile.add(i);
         }
-    //}
+    }
+
 
 
     // populate the stack of Public Objective Cards(10)
@@ -598,6 +596,13 @@ public class Partita {
             }
         }
 
+    }
+
+    public void updateTool11(String dado) throws RemoteException {
+        for (String username : getGameObservers().keySet()) {
+            GameObserver view = getGameObservers().get(username);
+            view.updateViewTool11(dado);
+        }
     }
 
 

@@ -1,6 +1,7 @@
 package ingSw2018StaglianoVagagginiVergari.server.model.carteUtensile;
 
 import Eccezioni.MossaIllegaleException;
+import ingSw2018StaglianoVagagginiVergari.common.GameObserver;
 import ingSw2018StaglianoVagagginiVergari.server.model.CartaUtensile;
 import ingSw2018StaglianoVagagginiVergari.server.model.Dado;
 import ingSw2018StaglianoVagagginiVergari.server.model.Partita;
@@ -17,6 +18,7 @@ public class DiluentePerPastaSalda implements CartaUtensile {
     int numeroScelto;
     int x;
     int y;
+    boolean secondPhase=false;
     String descrizione="Dopo aver scelto un dado, riponilo nel Sacchetto,\n" +
             "poi pescane uno dal Sacchetto\n\n"+
             "N.B. Scegli il valore del nuovo dado e\n" +
@@ -43,30 +45,35 @@ public class DiluentePerPastaSalda implements CartaUtensile {
 
 
     @Override
-    public void usaEffettoCarta(Partita PartitaCorrente)  {
-        costo=true;
-        Dado DadoInMano;
+    public void usaEffettoCarta(Partita PartitaCorrente) throws RemoteException {
+        if (!secondPhase){
+            PartitaCorrente.getAzioniGiocatore().add(2);
+            secondPhase=true;
+            PartitaCorrente.updateGenerale();
+            PartitaCorrente.updateTool11(PartitaCorrente.getDadoSelezionato().toString());
 
-        //todo passed from the view
-        DadoInMano = PartitaCorrente.getDadofromRiserva(scelta);
+        }else{
+            secondPhase=false;
+            PartitaCorrente.getCurrentPlayer().getPlancia().calcolaMosse(PartitaCorrente.getDadoSelezionato(),false,false);
+            try {
+                PartitaCorrente.getCurrentPlayer().getPlancia().piazzaDado(x,y,PartitaCorrente.getDadoSelezionato());
+                PartitaCorrente.getAzioniGiocatore().remove(1);
+            }
+            catch (MossaIllegaleException e){
+                //todo need to define the behaviour
+            }
+            costo=true;
+            PartitaCorrente.updateGenerale();
 
-        PartitaCorrente.reInserisciDadoInSacchetto(DadoInMano);
-
-        DadoInMano = PartitaCorrente.getDadoRandomFromSacchetto();
-
-        String Colore = DadoInMano.getColore();
-
-        DadoInMano = new Dado(Colore,numeroScelto);
-
-        PartitaCorrente.getCurrentPlayer().getPlancia().calcolaMosse(DadoInMano,false,false);
-
-
-        try {
-            PartitaCorrente.getCurrentPlayer().getPlancia().piazzaDado(x,y,DadoInMano);
         }
-        catch (MossaIllegaleException e){
-            //todo need to define the behaviour
-        }
+
+
+
+
+
+
+
+
 
 
     }
@@ -110,4 +117,7 @@ public class DiluentePerPastaSalda implements CartaUtensile {
         this.y = y;
     }
 
+    public boolean isSecondPhase() {
+        return secondPhase;
+    }
 }

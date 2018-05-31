@@ -50,4 +50,12 @@ public class Dado implements Serializable{
         result.append(this.getColore().toLowerCase());
         return result.toString();
     }
+
+    public void setNumero(int numero) {
+        this.numero = numero;
+    }
+
+    public void setColore(String colore) {
+        this.colore = colore;
+    }
 }

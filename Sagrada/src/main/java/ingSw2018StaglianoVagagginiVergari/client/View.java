@@ -12,11 +12,9 @@ import ingSw2018StaglianoVagagginiVergari.server.model.FactoryCartaObiettivoPubb
 import ingSw2018StaglianoVagagginiVergari.server.model.carteUtensile.TaglierinaManuale;
 
 import java.io.IOException;
-import java.rmi.NoSuchObjectException;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
-import java.sql.Time;
 import java.util.*;
 
 
@@ -39,7 +37,6 @@ import java.util.*;
 public class View extends UnicastRemoteObject implements GameObserver, Remote {
 
 
-
     private boolean simulazione = false; //TODO questo attributo permette di switchare velocemante tra una partita già impostata ed una che richiede parametri dal model
 
 
@@ -48,12 +45,10 @@ public class View extends UnicastRemoteObject implements GameObserver, Remote {
     private boolean mossaCorretta = false;
 
 
-
     private ArrayList<Integer> parametri = new ArrayList<Integer>();
 
     private int punteggio;
     private boolean printPunteggio = false;
-
 
 
     //private String id;
@@ -65,42 +60,45 @@ public class View extends UnicastRemoteObject implements GameObserver, Remote {
     private String[][] schemaFronte2;
     private String[][] schemaRetro2;
     private String obiettivoPrivato;
-    private HashMap<String,String> carteObiettivoPrivato=new HashMap<>();
+    private HashMap<String, String> carteObiettivoPrivato = new HashMap<>();
     //private boolean updateView;
     private boolean fronteScelto;
     private boolean carta1;
     private boolean tool6piazzabile;
-    private boolean usernameOK=false;
+    private boolean usernameOK = false;
     private String tool6Dado;
-    private boolean lathekinPhase2=false;
-    private int numeroDadiTool12=0;
-    private int tRound=-1;
+    private boolean lathekinPhase2 = false;
+    private boolean diluentePastaSaldaPhase2 = false;
+    private String tool11Dado;
+
+    private int numeroDadiTool12 = 0;
+    private int tRound = -1;
     private String token;
     private int login = 0;
 
     //
-    private boolean startGame=false;
+    private boolean startGame = false;
     //
 
     //==================
 
-    private ArrayList<String> carteUtensile= new ArrayList<>();
+    private ArrayList<String> carteUtensile = new ArrayList<>();
 
     private HashMap<String, String[][]> planceGiocatori = new HashMap<String, String[][]>();
 
     private String giocatoreCorrente;
 
-    private String id ;
+    private String id;
 
     private ArrayList<String> carteObiettivoPubblico = new ArrayList<>();
 
     private ArrayList<String> dadiRiserva = new ArrayList<>();
 
-    private String dadoSelezionato ;
+    private String dadoSelezionato;
 
     private Integer numeroDadoSelezionato;
 
-    private String cartaInUso="NESSUNA";
+    private String cartaInUso = "NESSUNA";
 
     private boolean updateView = false;
 
@@ -114,7 +112,7 @@ public class View extends UnicastRemoteObject implements GameObserver, Remote {
 
     private int flagSceltaCartaUtensile = 0;  // 0 -> non è stato usato l'effetto di nessuna carta  1 -> ho già usato l'effetto di una carta
 
-    private  int turno;
+    private int turno;
 
     private int round;
 
@@ -136,7 +134,7 @@ public class View extends UnicastRemoteObject implements GameObserver, Remote {
 
     public void run() throws IOException, InterruptedException {
         int cmd = 0;
-        String username=null;
+        String username = null;
         boolean carta1 = false;
         while (cmd != 1 && cmd != 2) {
             System.out.println("(1) Per giocare (2) per uscire");
@@ -251,23 +249,25 @@ public class View extends UnicastRemoteObject implements GameObserver, Remote {
 
             }
 
-            while(!startGame){
+            while (!startGame) {
                 System.out.print("");
             }
 
 
-
             while (getStatus() == ViewStatus.SvolgimentoPartita) {
-                if (lathekinPhase2){
-                    cartaInUso="Lathekin";
-                    cmd=2;
-                    flagSceltaCartaUtensile=0;
-                } else if (numeroDadiTool12>0) {
-                    cartaInUso="Taglierina Manuale";
-                    cmd=2;
-                    flagSceltaCartaUtensile=0;
+                if (lathekinPhase2) {
+                    cartaInUso = "Lathekin";
+                    cmd = 2;
+                    flagSceltaCartaUtensile = 0;
+                } else if (numeroDadiTool12 > 0) {
+                    cartaInUso = "Taglierina Manuale";
+                    cmd = 2;
+                    flagSceltaCartaUtensile = 0;
+                } else if (diluentePastaSaldaPhase2) {
+                    cartaInUso = "Diluente Per Pasta Salda";
+                    cmd = 2;
+                    flagSceltaCartaUtensile = 0;
                 }
-
 
 
                 //anzichè fare una pulizia dello schermo, scorro molto in giù   --- NB: dovrà essere sostituito con "clearscreen"
@@ -275,13 +275,12 @@ public class View extends UnicastRemoteObject implements GameObserver, Remote {
                 System.out.println("\n\n\n\n\n\n\n\n\n\n\n\n");
 
 
-
                 printTavoloDiGioco();
 
 
                 updateView = false;
 
-                passaturno=false;
+                passaturno = false;
 
 
                 if (id.equalsIgnoreCase(giocatoreCorrente) && passaturno == false) {//TODO RIVEDERE non serve il parametro passaturno
@@ -293,7 +292,7 @@ public class View extends UnicastRemoteObject implements GameObserver, Remote {
 
                         //stampe differite in base a quali comandi abbia già dato l'utente in input (se l'utente sceglie inizialmente di selezionare un dado, sarà settato il flagSceltaDado , cosi che si stampi una scelta di input diversa)
 
-                        if (!lathekinPhase2 && numeroDadiTool12 == 0) {
+                        if (!lathekinPhase2 && numeroDadiTool12 == 0 && !diluentePastaSaldaPhase2) {
                             if (flagSceltaDado == 0)
                                 System.out.println("(1) seleziona un dado dalla riserva");
                             else if (flagSceltaDado == 1)
@@ -309,353 +308,843 @@ public class View extends UnicastRemoteObject implements GameObserver, Remote {
                             System.out.println("(3) passa il turno\n(4) descrizione carta utensile\n\nSCEGLI:");
 
 
-                            cmd = inputCommand.nextInt();
+                            try {
+                                cmd = inputCommand.nextInt();
+                            } catch (InputMismatchException e) {
+                                cmd = -1;
+                                inputCommand.nextLine();// flush the buffer
+                            }
 
 
                             while (cmd != 1 && cmd != 2 && cmd != 3 && cmd != 4) {
-                                cmd = inputCommand.nextInt();
+                                System.out.println("SCELTA NON VALIDA! Reinserisci scelta:");
+                                try {
+                                    cmd = inputCommand.nextInt();
+                                } catch (InputMismatchException e) {
+                                    cmd = -1;
+                                    inputCommand.nextLine();//flush the buffer
+                                }
                             }
                         }
                     }
 
-                    if (cmd == 1 && flagSceltaDado == 0) {
-                        synchronized (this) {
-                            cmd = 0;
-                            System.out.println("inserisci il numero del dado che vuoi scegliere");//dovrei  verificare che la scelta sia corretta
-                            cmd = inputCommand.nextInt(); //dentro a cmd è contenuto il dado selezionato
+                        if (cmd == 1 && flagSceltaDado == 0) {
+                            synchronized (this) {
+                                cmd = -3;
 
-                            numeroDadoSelezionato = cmd;  // dato che la selezione del dado avviene in un istante diverso da quello dell'effettivo utilizzo, devo tenere traccia dellla posizione del dado selezionato all'interno della riserva;
+                                while (cmd < 0 || cmd >= dadiRiserva.size()) {
+                                    System.out.println("inserisci il numero del dado della riserva che vuoi scegliere");//dovrei  verificare che la scelta sia corretta
+                                    try {
+                                        cmd = inputCommand.nextInt(); //dentro a cmd è contenuto il dado selezionato
+                                        if (cmd < 0 || cmd >= dadiRiserva.size())
+                                            System.out.print("POSIZIONE NON VALIDA! ");
+                                    } catch (InputMismatchException e) {
+                                        cmd = -3;
+                                        inputCommand.nextLine(); // flush the buffer
+                                    }
 
-
-                            if (simulazione)
-                                dadoSelezionato = dadiRiserva.get(cmd); //TODO RIMUOVERE solo per prova... lo inserisco solo per far vedere che effettivamente l'aggiornamento funziona
-
-                        }
-                        mossaCorretta= false;
-                        synchronized (this) {
-                            while (mossaCorretta == false) {
-
-
-                                System.out.println("inserisci le coordinate in cui vuoi posizionare il dado: ");
-
-                                System.out.print("i ( 0 <= x <= 3):");
-
-                                int i = inputCommand.nextInt();
-
-                                System.out.print("j ( 0 <= x <= 4):");
-
-                                int j = inputCommand.nextInt();
+                                }
+                                numeroDadoSelezionato = cmd;  // dato che la selezione del dado avviene in un istante diverso da quello dell'effettivo utilizzo, devo tenere traccia dellla posizione del dado selezionato all'interno della riserva;
 
 
+                                if (simulazione)
+                                    dadoSelezionato = dadiRiserva.get(cmd); //TODO RIMUOVERE solo per prova... lo inserisco solo per far vedere che effettivamente l'aggiornamento funziona
+
+                            }
+                            mossaCorretta = false;
+                            synchronized (this) {
+                                while (mossaCorretta == false) {
+
+
+                                    System.out.println("inserisci le coordinate in cui vuoi posizionare il dado: ");
+
+                                    System.out.print("i ( 0 <= x <= 3):");
+                                    int i = -1;
+                                    try {
+                                        i = inputCommand.nextInt();
+                                    } catch (InputMismatchException e) {
+                                        i = -1;
+                                        inputCommand.nextLine(); // flush the buffer
+                                    }
+                                    while (i < 0 || i > 3) {
+                                        System.out.print("inserisci delle coordinate di riga valide i ( 0 <= x <= 3):");
+                                        try {
+                                            i = inputCommand.nextInt();
+                                        } catch (InputMismatchException e) {
+                                            i = -1;
+                                            inputCommand.nextLine(); // flush the buffer
+                                        }
+
+                                    }
+
+                                    System.out.print("j ( 0 <= y <= 4):");
+                                    int j = -1;
+                                    try {
+                                        j = inputCommand.nextInt();
+                                    } catch (InputMismatchException e) {
+                                        j = -1;
+                                        inputCommand.nextLine();
+                                    }
+                                    while (j < 0 || j > 4) {
+                                        System.out.print("inserisci delle coordinate di riga valide j ( 0 <= y <= 4):");
+                                        try {
+                                            j = inputCommand.nextInt();
+                                        } catch (InputMismatchException e) {
+                                            j = -1;
+                                            inputCommand.nextLine();
+                                        }
+                                    }
+
+
+                                    //chiamo il metodo del controller che mi permette di passare i parametri per la mossa scelta.
+                                    try {
+                                        parametri.add(0, 1); // ho scelto di posizionare il dado
+                                        parametri.add(1, numeroDadoSelezionato); // passo la posizione del dado selezionato all'interno della riserva
+                                        parametri.add(2, i);
+                                        parametri.add(3, j);
+                                        controller.svolgimentoPartita(this, parametri);  //TODO RIVEDERE il fatto che debba essere passata anche la vista deve essere ripensato
+                                        System.out.println("\nverifico convalida mossa\n");
+                                        parametri = new ArrayList<Integer>(); // TODO RIVEDERE non è detto che sia necessario new dato che viene fatto solo per precauzione. potrebbe essere sufficiente lasciarlo nelle condizioni attuali senza reinizializzare, in modo da sapere quale è l'ultima chiamata che è stata fatta al model.
+
+                                    } catch (MossaIllegaleException e) {
+                                        System.out.print("mossa non consentita");  //TODO RIVEDERE da rivedere se funziona
+                                    }
+
+
+                                }
+                            }
+
+
+                            //  flagSceltaDado = 2;
+
+                        } else if (cmd == 2 && flagSceltaCartaUtensile == 0) {
+                            synchronized (this) {
+                                if (!lathekinPhase2 && numeroDadiTool12 == 0 && !diluentePastaSaldaPhase2) {
+                                    cmd = -3;
+                                    while (cmd < 0 || cmd > 2) {
+                                        System.out.println("inserisci il numero della carta che vuoi scegliere");
+                                        try {
+                                            cmd = inputCommand.nextInt(); //dentro a cmd è contenuta la carta selezionata
+                                        } catch (InputMismatchException e) {
+                                            cmd = -3;
+                                            inputCommand.nextLine();
+                                        }
+
+                                    }
+                                }
                                 //chiamo il metodo del controller che mi permette di passare i parametri per la mossa scelta.
+                                parametri = new ArrayList<>();
                                 try {
-                                    parametri.add(0, 1); // ho scelto di posizionare il dado
-                                    parametri.add(1, numeroDadoSelezionato); // passo la posizione del dado selezionato all'interno della riserva
-                                    parametri.add(2, i);
-                                    parametri.add(3, j);
-                                    controller.svolgimentoPartita(this, parametri);  //TODO RIVEDERE il fatto che debba essere passata anche la vista deve essere ripensato
-                                    System.out.println("\nverifico convalida mossa\n");
-                                    parametri = new ArrayList<Integer>(); // TODO RIVEDERE non è detto che sia necessario new dato che viene fatto solo per precauzione. potrebbe essere sufficiente lasciarlo nelle condizioni attuali senza reinizializzare, in modo da sapere quale è l'ultima chiamata che è stata fatta al model.
-
-                                } catch (MossaIllegaleException e) {
-                                    System.out.print("mossa non consentita");  //TODO RIVEDERE da rivedere se funziona
-                                }
-
-
-                            }
-                        }
-
-
-
-
-
-
-                      //  flagSceltaDado = 2;
-
-                    } else if (cmd == 2 && flagSceltaCartaUtensile == 0) {
-                        synchronized (this) {
-                            if (!lathekinPhase2 && numeroDadiTool12 == 0) {
-                                System.out.println("inserisci il numero della carta che vuoi scegliere");
-                                cmd = inputCommand.nextInt(); //dentro a cmd è contenuta la carta selezionata
-                            }
-                            //chiamo il metodo del controller che mi permette di passare i parametri per la mossa scelta.
-                            parametri = new ArrayList<>();
-                            try {
-                                parametri.add(0, 2); // ho scelto di selezionare la carta utensile
-                                if (!lathekinPhase2) {
-                                    parametri.add(1, cmd);   // questo è il numero della carta utensile che ha selezionato
-                                } else if (numeroDadiTool12 > 0) {
-                                    parametri.add(1, cercaUtensile("Taglierina Manuale"));
-                                } else if (lathekinPhase2) {
-                                    parametri.add(1, cercaUtensile("Lathekin"));
-                                }
-                                controller.svolgimentoPartita(this, parametri);
-                                parametri.clear();
-                            } catch (MossaIllegaleException e) {
-                                System.out.print("carta non consentita");  //TODO RIVEDERE da rivedere se funziona
-                            }
-                        }
-
-
-                        if (!lathekinPhase2 || numeroDadiTool12 == 0) {
-                            scorriCartaUtensile(cmd);
-                        }
-
-
-                        //====================  QUI VERRANNO FATTE RICHIESTE DIVERSE IN BASE ALLA CARTA UTENSILE
-
-                        synchronized (this) {
-                            System.out.println(" -- ... CARTA UTENSILE ... --");
-                            parametri.clear();
-                            if (cartaInUso.equalsIgnoreCase("Pinza Sgrossatrice")) {
-                                System.out.println("Seleziona un dado dalla riserva, inserisci la posizione");
-                                parametri.add(0, inputCommand.nextInt());
-                                System.out.println("Inserisci 1 per incrementare, -1 per decrementare");
-                                parametri.add(1, inputCommand.nextInt());
-                                controller.usaCartaUtensile(this, parametri);
-
-                            } else if (cartaInUso.equalsIgnoreCase("Pennello Per Eglomise")) {
-                                parametri.clear();
-                                System.out.println("Inserisci la riga del dado che vuoi spostare:(0 <= x <= 3)");
-                                parametri.add(0, inputCommand.nextInt());
-                                System.out.println("Inserisci la colonna del dado che vuoi spostare:(0 <= y <= 4)");
-                                parametri.add(1, inputCommand.nextInt());
-                                System.out.println("Inserisci la riga in cui vuoi spostare il dado:(0 <= x <= 3)");
-                                parametri.add(2, inputCommand.nextInt());
-                                System.out.println("Inserisci la colonna in cui vuoi spostare il dado:(0 <= y <= 3)");
-                                parametri.add(3, inputCommand.nextInt());
-                                controller.usaCartaUtensile(this, parametri);
-
-                                System.out.println("controller.usaCartaUtensile(GameObserver view,ArrayList<Integer> parametri)");//TODO COMANDI devo chiamare i comandi del controller
-
-                            } else if (cartaInUso.equalsIgnoreCase("Alesatore per lamina di rame")) {
-                                parametri.clear();
-                                System.out.println("Inserisci la riga del dado che vuoi spostare:(0 <= x <= 3)");
-                                parametri.add(0, inputCommand.nextInt());
-                                System.out.println("Inserisci la colonna del dado che vuoi spostare:(0 <= y <= 4)");
-                                parametri.add(1, inputCommand.nextInt());
-                                System.out.println("Inserisci la riga in cui vuoi spostare il dado:(0 <= x <= 3)");
-                                parametri.add(2, inputCommand.nextInt());
-                                System.out.println("Inserisci la colonna in cui vuoi spostare il dado:(0 <= y <= 3)");
-                                parametri.add(3, inputCommand.nextInt());
-                                controller.usaCartaUtensile(this, parametri);
-
-                            } else if (cartaInUso.equalsIgnoreCase("Lathekin")) {
-                                parametri.clear();
-                                System.out.println("Inserisci la riga del dado che vuoi spostare:(0 <= x <= 3)");
-                                parametri.add(0, inputCommand.nextInt());
-                                System.out.println("Inserisci la colonna del dado che vuoi spostare:(0 <= y <= 4)");
-                                parametri.add(1, inputCommand.nextInt());
-                                System.out.println("Inserisci la riga in cui vuoi spostare il dado:(0 <= x <= 3)");
-                                parametri.add(2, inputCommand.nextInt());
-                                System.out.println("Inserisci la colonna in cui vuoi spostare il dado:(0 <= y <= 4)");
-                                parametri.add(3, inputCommand.nextInt());
-                                controller.usaCartaUtensile(this, parametri);
-                                System.out.println("SECONDA CHIAMATA CONTROLLER");
-
-
-                            } else if (cartaInUso.equalsIgnoreCase("Taglierina Circolare")) {
-                                parametri.clear();
-                                System.out.println("inserisci il numero del dado della riserva che vuoi scambiare con uno sul Tracciato del Round");
-                                parametri.add(0, inputCommand.nextInt());
-                                System.out.println("inserisci il numero del dado del Tracciato del Round che vuoi scambiare con quello selezionato dalla riserva");
-                                parametri.add(1, inputCommand.nextInt());
-                                controller.usaCartaUtensile(this, parametri);
-
-                            } else if (cartaInUso.equalsIgnoreCase("Pennello Per Pasta Salda")) {
-                                parametri.clear();
-                                System.out.println("Inserisci il numero del dado della riserva che vuoi lanciare nuovamente");
-                                parametri.add(0, inputCommand.nextInt());
-                                controller.usaCartaUtensile(this, parametri);
-                                while (!updateView) {
-                                    System.out.print("");
-                                }
-                                updateView = false;
-                                if (tool6piazzabile) {
+                                    parametri.add(0, 2); // ho scelto di selezionare la carta utensile
+                                    if (!lathekinPhase2) {
+                                        parametri.add(1, cmd);   // questo è il numero della carta utensile che ha selezionato
+                                    } else if (numeroDadiTool12 > 0) {
+                                        parametri.add(1, cercaUtensile("Taglierina Manuale"));
+                                    } else if (lathekinPhase2) {
+                                        parametri.add(1, cercaUtensile("Lathekin"));
+                                    } else if (!diluentePastaSaldaPhase2) {
+                                        parametri.add(1, cmd);
+                                    }
+                                    controller.svolgimentoPartita(this, parametri);
                                     parametri.clear();
-                                    printDado(tool6Dado);
-                                    System.out.println("");
-                                    System.out.println("Inserisci la riga in cui vuoi piazzare il dado lanciato (0<= x <= 3):");
-                                    parametri.add(0, inputCommand.nextInt());
-                                    System.out.println("Inserisci la colonna in cui vuoi piazzare il dado lanciato (0<= y <= 4):");
-                                    parametri.add(1, inputCommand.nextInt());
+                                } catch (MossaIllegaleException e) {
+                                    System.out.print("carta non consentita");  //TODO RIVEDERE da rivedere se funziona
+                                }
+                            }
+
+
+                            if (!lathekinPhase2 || numeroDadiTool12 == 0 || !diluentePastaSaldaPhase2) {
+                                scorriCartaUtensile(cmd);//TODO RIMUOVERE serve solo per avere la simulazione di una partita
+                            }
+
+
+                            //====================  QUI VERRANNO FATTE RICHIESTE DIVERSE IN BASE ALLA CARTA UTENSILE
+
+                            synchronized (this) {
+                                System.out.println(" -- ... CARTA UTENSILE ... --");
+                                parametri.clear();
+                                if (cartaInUso.equalsIgnoreCase("Pinza Sgrossatrice")) {
+
+                                    while (true) {
+                                        try {
+                                            int com = -3;
+                                            System.out.println("Seleziona un dado dalla riserva, inserisci la posizione");
+                                            while (com < 0 || com >= dadiRiserva.size()) {
+                                                com = inputCommand.nextInt();
+                                                if (com < 0 || com >= dadiRiserva.size()) {
+                                                    System.out.println(" posizione non valida reinserisci il numero del dado che vuoi scegliere");
+                                                }
+                                            }
+                                            parametri.add(0, com);
+                                            break;
+                                        } catch (InputMismatchException e) {
+                                            inputCommand.nextLine();
+                                        }
+                                    }
+
+                                    while (true) {
+                                        try {
+                                            int com = -3;
+                                            System.out.println("Inserisci 1 per incrementare, -1 per decrementare");
+                                            while (com != -1 && com != 1) {
+                                                com = inputCommand.nextInt();
+                                                if (com != -1 && com != 1) {
+                                                    System.out.println("OPERAZIONE ERRATA! inserire 1 per incrementare -1 per decrementare");
+                                                }
+                                            }
+                                            parametri.add(1, com);
+                                            break;
+                                        } catch (InputMismatchException e) {
+                                            inputCommand.nextLine();
+                                        }
+                                    }
+
                                     controller.usaCartaUtensile(this, parametri);
 
-                                } else {
-                                    updateView = true;
+                                } else if ((cartaInUso.equalsIgnoreCase("Pennello Per Eglomise")) || (cartaInUso.equalsIgnoreCase("Alesatore per lamina di rame")) || (cartaInUso.equalsIgnoreCase("Lathekin"))) {
+                                    parametri.clear();
+                                    while (true) {
+                                        try {
+                                            int com = -3;
+                                            System.out.println("Inserisci la riga del dado che vuoi spostare:(0 <= x <= 3)");
+                                            while (com < 0 || com > 3) {
+                                                com = inputCommand.nextInt();
+                                                if (com < 0 || com > 3) {
+                                                    System.out.println("INSERIMENTO RIGA ERRATO!\n" +
+                                                            "Inserisci la riga del dado che vuoi spostare:(0 <= x <= 3)");
+                                                }
+                                            }
+                                            parametri.add(0, com);
+                                            break;
 
-                                }
-
-                            } else if (cartaInUso.equalsIgnoreCase("Martelletto")) {
-                                controller.usaCartaUtensile(this, parametri);
-
-                            } else if (cartaInUso.equalsIgnoreCase("Tenaglia A Rotelle")) {
-                                parametri.clear();
-                                controller.usaCartaUtensile(this, parametri);
-
-                            } else if (cartaInUso.equalsIgnoreCase("Riga In Sughero")) {
-                                parametri.clear();
-                                System.out.println("inserisci posizione dado in riserva da posizionare");
-                                parametri.add(0, inputCommand.nextInt());
-                                System.out.println("inserisci riga dove vuoi piazzare 0<=x<=3");
-                                parametri.add(1, inputCommand.nextInt());
-                                System.out.println("inserisci colonna dove vuoi piazzare 0<=y<=4");
-                                parametri.add(2, inputCommand.nextInt());
-                                controller.usaCartaUtensile(this, parametri);
-
-                            } else if (cartaInUso.equalsIgnoreCase("Tampone Diamantato")) {
-                                parametri.clear();
-                                System.out.println("inserisci posizione dado riserva che vuoi girare(il dado sarà reinserito in coda alla riserva)");
-                                parametri.add(0, inputCommand.nextInt());
-                                controller.usaCartaUtensile(this, parametri);
-
-                            } else if (cartaInUso.equalsIgnoreCase("Diluente Per Pasta Salda")) {
-                                parametri.add(0, inputCommand.nextInt());
-                                parametri.add(1, inputCommand.nextInt());
-                                parametri.add(2, inputCommand.nextInt());
-                                parametri.add(3, inputCommand.nextInt());
-
-                                controller.usaCartaUtensile(this, parametri);
-                            } else if (cartaInUso.equalsIgnoreCase("Taglierina Manuale")) {
-                                parametri.clear();
-                                if (numeroDadiTool12 == 0) {
-                                    if (tracciatoDelRound.size() != 0) {
-                                        while (!(tRound < tracciatoDelRound.size() + 1 && tRound >= 1)) {
-                                            System.out.println("Inserisci il numero del dado del tracciato del round di cui vuoi prendere il colore");
-                                            tRound = command.nextInt();
+                                        } catch (InputMismatchException e) {
+                                            inputCommand.nextLine();
                                         }
-                                        parametri.add(0, tRound);
+                                    }
+                                    while (true) {
+                                        try {
+                                            int com = -3;
+                                            System.out.println("Inserisci la colonna del dado che vuoi spostare:(0 <= y <= 4)");
+                                            while (com < 0 || com > 4) {
+                                                com = inputCommand.nextInt();
+                                                if (com < 0 || com > 4) {
+                                                    System.out.println("INSERIMENTO COLONNA ERRATO!\n" +
+                                                            "Inserisci la colonna del dado che vuoi spostare:(0 <= y <= 4)");
+                                                }
+                                            }
+                                            parametri.add(1, com);
+                                            break;
+
+                                        } catch (InputMismatchException e) {
+                                            inputCommand.nextLine();
+                                        }
+                                    }
+
+                                    while (true) {
+                                        try {
+                                            int com = -3;
+                                            System.out.println("Inserisci la riga in cui vuoi spostare il dado:(0 <= x <= 3)");
+                                            while (com < 0 || com > 3) {
+                                                com = inputCommand.nextInt();
+                                                if (com < 0 || com > 3) {
+                                                    System.out.println("INSERIMENTO RIGA ERRATO!\n" +
+                                                            "Inserisci la riga in cui vuoi spostare il dado:(0 <= x <= 3)");
+                                                }
+                                            }
+                                            parametri.add(2, com);
+                                            break;
+
+                                        } catch (InputMismatchException e) {
+                                            inputCommand.nextLine();
+                                        }
+                                    }
+
+                                    while (true) {
+                                        try {
+                                            int com = -3;
+                                            System.out.println("Inserisci la colonna in cui vuoi spostare il dado:(0 <= y <= 4)");
+                                            while (com < 0 || com > 4) {
+                                                com = inputCommand.nextInt();
+                                                if (com < 0 || com > 4) {
+                                                    System.out.println("INSERIMENTO COLONNA ERRATO!\n" +
+                                                            "Inserisci la colonna in cui vuoi spostare il dado:(0 <= y <= 4)");
+                                                }
+                                            }
+                                            parametri.add(3, com);
+                                            break;
+
+                                        } catch (InputMismatchException e) {
+                                            inputCommand.nextLine();
+                                        }
+                                    }
+                                    controller.usaCartaUtensile(this, parametri);
+
+                                    System.out.println("controller.usaCartaUtensile(GameObserver view,ArrayList<Integer> parametri)");//TODO COMANDI devo chiamare i comandi del controller
+
+                        /* }else if (cartaInUso.equalsIgnoreCase("Alesatore per lamina di rame")) {
+                            parametri.clear();
+                            System.out.println("Inserisci la riga del dado che vuoi spostare:(0 <= x <= 3)");
+                            parametri.add(0,inputCommand.nextInt());
+                            System.out.println("Inserisci la colonna del dado che vuoi spostare:(0 <= y <= 4)");
+                            parametri.add(1,inputCommand.nextInt());
+                            System.out.println("Inserisci la riga in cui vuoi spostare il dado:(0 <= x <= 3)");
+                            parametri.add(2,inputCommand.nextInt());
+                            System.out.println("Inserisci la colonna in cui vuoi spostare il dado:(0 <= y <= 3)");
+                            parametri.add(3,inputCommand.nextInt());
+                            controller.usaCartaUtensile(this,parametri);
+                            */
+
+                        /*}else if (cartaInUso.equalsIgnoreCase("Lathekin")) {
+                            parametri.clear();
+                            System.out.println("Inserisci la riga del dado che vuoi spostare:(0 <= x <= 3)");
+                            parametri.add(0,inputCommand.nextInt());
+                            System.out.println("Inserisci la colonna del dado che vuoi spostare:(0 <= y <= 4)");
+                            parametri.add(1,inputCommand.nextInt());
+                            System.out.println("Inserisci la riga in cui vuoi spostare il dado:(0 <= x <= 3)");
+                            parametri.add(2,inputCommand.nextInt());
+                            System.out.println("Inserisci la colonna in cui vuoi spostare il dado:(0 <= y <= 4)");
+                            parametri.add(3,inputCommand.nextInt());
+                            controller.usaCartaUtensile(this,parametri);
+                            System.out.println("SECONDA CHIAMATA CONTROLLER");
+                            */
+
+
+                                } else if (cartaInUso.equalsIgnoreCase("Taglierina Circolare")) {
+                                    parametri.clear();
+
+                                    while (true) {
+                                        try {
+                                            int com = -3;
+                                            System.out.println("inserisci il numero del dado della riserva che vuoi scambiare con uno sul Tracciato del Round");
+                                            while (com < 0 || com >= dadiRiserva.size()) {
+                                                com = inputCommand.nextInt();
+                                                if (com < 0 || com >= dadiRiserva.size()) {
+                                                    System.out.println("INSERIMENTO POSIZIONE DADO RISERVA DA SCAMBIARE ERRATO!\n" +
+                                                            "inserisci il numero del dado della riserva che vuoi scambiare con uno sul Tracciato del Round");
+                                                }
+                                            }
+                                            parametri.add(0, com);
+                                            break;
+
+                                        } catch (InputMismatchException e) {
+                                            inputCommand.nextLine();
+                                        }
+                                    }
+                                    while (true) {
+                                        try {
+                                            int com = -3;
+                                            System.out.println("inserisci il numero del dado del Tracciato del Round che vuoi scambiare con quello selezionato dalla riserva");
+                                            while (com < 1 || com > tracciatoDelRound.size()) {
+                                                com = inputCommand.nextInt();
+                                                if (com < 1 || com > tracciatoDelRound.size()) {
+                                                    System.out.println("INDICE TRACCIATO DEL ROUND ERRATO!!\n" +
+                                                            "inserisci il numero del dado del Tracciato del Round che vuoi scambiare con quello selezionato dalla riserva");
+                                                }
+                                            }
+                                            parametri.add(1, com);
+                                            break;
+
+                                        } catch (InputMismatchException e) {
+                                            inputCommand.nextLine();
+                                        }
+                                    }
+                                    controller.usaCartaUtensile(this, parametri);
+
+                                } else if (cartaInUso.equalsIgnoreCase("Pennello Per Pasta Salda")) {
+                                    parametri.clear();
+                                    while (true) {
+                                        try {
+                                            int com = -3;
+                                            System.out.println("Inserisci il numero del dado della riserva che vuoi lanciare nuovamente");
+                                            while (com < 0 || com >= dadiRiserva.size()) {
+                                                com = inputCommand.nextInt();
+                                                if (com < 0 || com >= dadiRiserva.size()) {
+                                                    System.out.println("INSERIMENTO POSIZIONE DADO RISERVA DA RILANCIARE ERRATO!!\n" +
+                                                            "Inserisci il numero del dado della riserva che vuoi lanciare nuovamente");
+                                                }
+                                            }
+                                            parametri.add(0, com);
+                                            break;
+
+                                        } catch (InputMismatchException e) {
+                                            inputCommand.nextLine();
+                                        }
+                                    }
+                                    controller.usaCartaUtensile(this, parametri);
+                                    while (!updateView) {
+                                        System.out.print("");
+                                    }
+                                    updateView = false;
+                                    if (tool6piazzabile) {
+                                        parametri.clear();
+                                        printDado(tool6Dado);
+                                        System.out.println("");
+                                        while (true) {
+                                            try {
+                                                int com = -3;
+                                                System.out.println("Inserisci la riga in cui vuoi spostare il dado:(0 <= x <= 3)");
+                                                while (com < 0 || com > 3) {
+                                                    com = inputCommand.nextInt();
+                                                    if (com < 0 || com > 3) {
+                                                        System.out.println("INSERIMENTO RIGA ERRATO!\n" +
+                                                                "Inserisci la riga in cui vuoi spostare il dado:(0 <= x <= 3)");
+                                                    }
+                                                }
+                                                parametri.add(0, com);
+                                                break;
+
+                                            } catch (InputMismatchException e) {
+                                                inputCommand.nextLine();
+                                            }
+                                        }
+                                        while (true) {
+                                            try {
+                                                int com = -3;
+                                                System.out.println("Inserisci la colonna in cui vuoi spostare il dado:(0 <= y <= 4)");
+                                                while (com < 0 || com > 4) {
+                                                    com = inputCommand.nextInt();
+                                                    if (com < 0 || com > 4) {
+                                                        System.out.println("INSERIMENTO COLONNA ERRATO!\n" +
+                                                                "Inserisci la colonna in cui vuoi spostare il dado:(0 <= y <= 4)");
+                                                    }
+                                                }
+                                                parametri.add(1, com);
+                                                break;
+
+                                            } catch (InputMismatchException e) {
+                                                inputCommand.nextLine();
+                                            }
+                                        }
+
+
+                                        controller.usaCartaUtensile(this, parametri);
+
                                     } else {
-                                        System.out.println("Carta non utilizzabile, tracciato vuoto.");
                                         updateView = true;
+
                                     }
-                                    while (numeroDadiTool12 != 2 && numeroDadiTool12 != 1) {
-                                        System.out.println("Inserisci il numero di dadi che vuoi spostare (compreso tra 1 e 2):");
-                                        numeroDadiTool12 = command.nextInt();
+
+                                } else if (cartaInUso.equalsIgnoreCase("Martelletto")) {
+                                    controller.usaCartaUtensile(this, parametri);
+
+                                } else if (cartaInUso.equalsIgnoreCase("Tenaglia A Rotelle")) {
+                                    parametri.clear();
+                                    controller.usaCartaUtensile(this, parametri);
+
+                                } else if (cartaInUso.equalsIgnoreCase("Riga In Sughero")) {
+                                    parametri.clear();
+                                    while (true) {
+                                        try {
+                                            int com = -3;
+                                            System.out.println("inserisci posizione dado in riserva da posizionare");
+                                            while (com < 0 || com >= dadiRiserva.size()) {
+                                                com = inputCommand.nextInt();
+                                                if (com < 0 || com >= dadiRiserva.size()) {
+                                                    System.out.println("INSERIMENTO POSIZIONE DADO IN RISERVA ERRATA!\n" +
+                                                            "inserisci posizione dado in riserva da posizionare");
+                                                }
+                                            }
+                                            parametri.add(0, com);
+                                            break;
+
+                                        } catch (InputMismatchException e) {
+                                            inputCommand.nextLine();
+                                        }
                                     }
-                                    parametri.add(1, numeroDadiTool12);
-                                } else {
-                                    parametri.add(0, tRound);
-                                    parametri.add(1, numeroDadiTool12);
+
+
+                                    while (true) {
+                                        try {
+                                            int com = -3;
+                                            System.out.println("Inserisci la riga in cui vuoi posizionare il dado:(0 <= x <= 3)");
+                                            while (com < 0 || com > 3) {
+                                                com = inputCommand.nextInt();
+                                                if (com < 0 || com > 3) {
+                                                    System.out.println("INSERIMENTO RIGA ERRATO!\n" +
+                                                            "Inserisci la riga in cui vuoi posizionare il dado:(0 <= x <= 3)");
+                                                }
+                                            }
+                                            parametri.add(1, com);
+                                            break;
+
+                                        } catch (InputMismatchException e) {
+                                            inputCommand.nextLine();
+                                        }
+                                    }
+                                    while (true) {
+                                        try {
+                                            int com = -3;
+                                            System.out.println("Inserisci la colonna in cui vuoi piazzare il dado:(0 <= y <= 4)");
+                                            while (com < 0 || com > 4) {
+                                                com = inputCommand.nextInt();
+                                                if (com < 0 || com > 4) {
+                                                    System.out.println("INSERIMENTO COLONNA ERRATO!\n" +
+                                                            "Inserisci la colonna in cui vuoi piazzare il dado:(0 <= y <= 4)");
+                                                }
+                                            }
+                                            parametri.add(2, com);
+                                            break;
+
+                                        } catch (InputMismatchException e) {
+                                            inputCommand.nextLine();
+                                        }
+                                    }
+                                    controller.usaCartaUtensile(this, parametri);
+
+                                } else if (cartaInUso.equalsIgnoreCase("Tampone Diamantato")) {
+                                    parametri.clear();
+                                    while (true) {
+                                        try {
+                                            int com = -3;
+                                            System.out.println("inserisci posizione dado riserva che vuoi girare(il dado sarà reinserito in coda alla riserva)");
+                                            while (com < 0 || com >= dadiRiserva.size()) {
+                                                com = inputCommand.nextInt();
+                                                if (com < 0 || com >= dadiRiserva.size()) {
+                                                    System.out.println("INSERIMENTO POSIZIONE DADO IN RISERVA DA GIRARE ERRATO!\n" +
+                                                            "inserisci posizione dado riserva che vuoi girare(il dado sarà reinserito in coda alla riserva");
+                                                }
+                                            }
+                                            parametri.add(0, com);
+                                            break;
+
+                                        } catch (InputMismatchException e) {
+                                            inputCommand.nextLine();
+                                        }
+                                    }
+                                    controller.usaCartaUtensile(this, parametri);
+
+                                } else if (cartaInUso.equalsIgnoreCase("Diluente Per Pasta Salda")) {
+                                    if (!diluentePastaSaldaPhase2) {
+                                        while (true) {
+                                            try {
+                                                int com = -3;
+                                                System.out.println("dammi dado riserva");
+                                                while (com < 0 || com >= dadiRiserva.size()) {
+                                                    com = inputCommand.nextInt();
+                                                    if (com < 0 || com >= dadiRiserva.size()) {
+                                                        System.out.println("INSERIMENTO POSIZIONE DADO IN RISERVA ERRATO!\n" +
+                                                                "dammi dado riserva");
+                                                    }
+                                                }
+                                                parametri.add(0, com);
+                                                break;
+
+                                            } catch (InputMismatchException e) {
+                                                inputCommand.nextLine();
+                                            }
+                                        }
+
+                                        controller.usaCartaUtensile(this, parametri);
+                                        while (!updateView) {
+                                            System.out.print("");
+                                        }
+
+                                        updateView = true; //<<<<critica
+                                    } else {
+                                        updateView = false;////<<<<critica
+                                        diluentePastaSaldaPhase2 = false;
+                                        System.out.println("il dado pescato dal sacchetto è:");
+                                        printDado(tool11Dado);
+                                        System.out.println("");
+                                        while (true) {
+                                            try {
+                                                int com = -3;
+                                                System.out.println("dammi numero in cui vuoi cambiare 1-6");
+                                                while (com < 1 || com > 6) {
+                                                    com = inputCommand.nextInt();
+                                                    if (com < 1 || com > 6) {
+                                                        System.out.println("INSERIMENTO NUMERO ERRATO!\n" +
+                                                                "dammi numero in cui vuoi cambiare 1-6");
+                                                    }
+                                                }
+                                                parametri.add(0, com);
+                                                break;
+
+                                            } catch (InputMismatchException e) {
+                                                inputCommand.nextLine();
+                                            }
+                                        }
+                                        while (true) {
+                                            try {
+                                                int com = -3;
+                                                System.out.println("Inserisci la riga in cui vuoi posizionare il dado:(0 <= x <= 3)");
+                                                while (com < 0 || com > 3) {
+                                                    com = inputCommand.nextInt();
+                                                    if (com < 0 || com > 3) {
+                                                        System.out.println("INSERIMENTO RIGA ERRATO!\n" +
+                                                                "Inserisci la riga in cui vuoi posizionare il dado:(0 <= x <= 3)");
+                                                    }
+                                                }
+                                                parametri.add(1, com);
+                                                break;
+
+                                            } catch (InputMismatchException e) {
+                                                inputCommand.nextLine();
+                                            }
+                                        }
+                                        while (true) {
+                                            try {
+                                                int com = -3;
+                                                System.out.println("Inserisci la colonna in cui vuoi piazzare il dado:(0 <= y <= 4)");
+                                                while (com < 0 || com > 4) {
+                                                    com = inputCommand.nextInt();
+                                                    if (com < 0 || com > 4) {
+                                                        System.out.println("INSERIMENTO COLONNA ERRATO!\n" +
+                                                                "Inserisci la colonna in cui vuoi piazzare il dado:(0 <= y <= 4)");
+                                                    }
+                                                }
+                                                parametri.add(2, com);
+                                                break;
+
+                                            } catch (InputMismatchException e) {
+                                                inputCommand.nextLine();
+                                            }
+                                        }
+                                        controller.usaCartaUtensile(this, parametri);
+                                    }
+
+
+                                } else if (cartaInUso.equalsIgnoreCase("Taglierina Manuale")) {
+                                    parametri.clear();
+                                    if (numeroDadiTool12 == 0) {
+                                        if (tracciatoDelRound.size() != 0) {
+                                            while (!(tRound < tracciatoDelRound.size() + 1 && tRound >= 1)) {
+                                                while (true) {
+                                                    try {
+                                                        System.out.println("Inserisci il numero del dado del tracciato del round di cui vuoi prendere il colore");
+                                                        tRound = inputCommand.nextInt();
+                                                        break;
+                                                    } catch (InputMismatchException e) {
+                                                        inputCommand.nextLine();
+                                                    }
+                                                }
+                                            }
+                                            parametri.add(0, tRound);
+                                        } else {
+                                            System.out.println("Carta non utilizzabile, tracciato vuoto.");
+                                            updateView = true;
+                                        }
+                                        while (numeroDadiTool12 != 2 && numeroDadiTool12 != 1) {
+                                            while (true) {
+                                                try {
+                                                    System.out.println("Inserisci il numero di dadi che vuoi spostare (compreso tra 1 e 2):");
+                                                    numeroDadiTool12 = inputCommand.nextInt();
+                                                    break;
+                                                } catch (InputMismatchException e) {
+                                                    inputCommand.nextLine();
+                                                }
+                                            }
+                                        }
+                                        parametri.add(1, numeroDadiTool12);
+                                    } else {
+                                        parametri.add(0, tRound);
+                                        parametri.add(1, numeroDadiTool12);
+                                    }
+
+
+                                    while (true) {
+                                        try {
+                                            int com = -3;
+                                            System.out.println("Inserisci la riga in cui vuoi posizionare il dado:(0 <= x <= 3)");
+                                            while (com < 0 || com > 3) {
+                                                com = inputCommand.nextInt();
+                                                if (com < 0 || com > 3) {
+                                                    System.out.println("INSERIMENTO RIGA ERRATO!\n" +
+                                                            "Inserisci la riga in cui vuoi posizionare il dado:(0 <= x <= 3)");
+                                                }
+                                            }
+                                            parametri.add(2, com);
+                                            break;
+
+                                        } catch (InputMismatchException e) {
+                                            inputCommand.nextLine();
+                                        }
+                                    }
+                                    while (true) {
+                                        try {
+                                            int com = -3;
+                                            System.out.println("Inserisci la colonna in cui vuoi piazzare il dado:(0 <= y <= 4)");
+                                            while (com < 0 || com > 4) {
+                                                com = inputCommand.nextInt();
+                                                if (com < 0 || com > 4) {
+                                                    System.out.println("INSERIMENTO COLONNA ERRATO!\n" +
+                                                            "Inserisci la colonna in cui vuoi piazzare il dado:(0 <= y <= 4)");
+                                                }
+                                            }
+                                            parametri.add(3, com);
+                                            break;
+
+                                        } catch (InputMismatchException e) {
+                                            inputCommand.nextLine();
+                                        }
+                                    }
+
+                                    while (true) {
+                                        try {
+                                            int com = -3;
+                                            System.out.println("Inserisci la riga in cui vuoi spostare il dado:(0 <= x <= 3)");
+                                            while (com < 0 || com > 3) {
+                                                com = inputCommand.nextInt();
+                                                if (com < 0 || com > 3) {
+                                                    System.out.println("INSERIMENTO RIGA ERRATO!\n" +
+                                                            "Inserisci la riga in cui vuoi spostare il dado:(0 <= x <= 3)");
+                                                }
+                                            }
+                                            parametri.add(4, com);
+                                            break;
+
+                                        } catch (InputMismatchException e) {
+                                            inputCommand.nextLine();
+                                        }
+                                    }
+                                    while (true) {
+                                        try {
+                                            int com = -3;
+                                            System.out.println("Inserisci la colonna in cui vuoi spostare il dado:(0 <= y <= 4)");
+                                            while (com < 0 || com > 4) {
+                                                com = inputCommand.nextInt();
+                                                if (com < 0 || com > 4) {
+                                                    System.out.println("INSERIMENTO COLONNA ERRATO!\n" +
+                                                            "Inserisci la colonna in cui vuoi spostare il dado:(0 <= y <= 4)");
+                                                }
+                                            }
+                                            parametri.add(5, com);
+                                            break;
+
+                                        } catch (InputMismatchException e) {
+                                            inputCommand.nextLine();
+                                        }
+                                    }
+                                    controller.usaCartaUtensile(this, parametri);
+
                                 }
-                                System.out.println("Inserisci la riga del dado che vuoi spostare:(0 <= x <= 3)");
-                                parametri.add(2, command.nextInt());
-                                System.out.println("Inserisci la colonna del dado che vuoi spostare:(0 <= y <= 4)");
-                                parametri.add(3, command.nextInt());
-                                System.out.println("Inserisci la riga in cui vuoi spostare il dado:(0 <= x <= 3)");
-                                parametri.add(4, inputCommand.nextInt());
-                                System.out.println("Inserisci la colonna in cui vuoi spostare il dado:(0 <= y <= 4)");
-                                parametri.add(5, inputCommand.nextInt());
-                                controller.usaCartaUtensile(this, parametri);
-
                             }
+
+                            //====================
+
+                            //flagSceltaCartaUtensile = 1;
+
+
+                        } else if (cmd == 3) {
+                            passaturno = true;
+                            //flagSceltaCartaUtensile=0;
+                            // flagSceltaDado=0;
+
+                            //chiamo il metodo del controller che mi permette di passare i parametri per la mossa scelta.
+                            try {
+                                parametri.add(0, 3); // ho scelto di passare il turno
+
+                                controller.svolgimentoPartita(this, parametri);  //TODO RIVEDERE il fatto che debba essere passata anche la vista deve essere ripensato
+                                parametri = new ArrayList<Integer>(); // TODO RIVEDERE non è detto che sia necessario new dato che viene fatto solo per precauzione. potrebbe essere sufficiente lasciarlo nelle condizioni attuali senza reinizializzare, in modo da sapere quale è l'ultima chiamata che è stata fatta al model.
+
+                            } catch (MossaIllegaleException e) {
+                                System.out.print("mossa non consentita");  //TODO RIVEDERE da rivedere se funziona
+                            }
+
+
+                        } else if (cmd == 4) {
+
+                            synchronized (this) {
+                                System.out.print("Inserisci il numero della carta della quale vuoi la descrizione:");
+                                int c = -1;
+                                try {
+                                    c = inputCommand.nextInt();
+                                } catch (InputMismatchException e) {
+                                    c = -1;
+                                    inputCommand.nextLine();
+                                }
+                                while (c < 0 || c > 2) {
+                                    try {
+                                        System.out.println("inserisci un numero carta valido della quale avere la descrizione:");
+                                        c = inputCommand.nextInt();
+                                    } catch (InputMismatchException e) {
+                                        c = -1;
+                                        inputCommand.nextLine();
+                                    }
+                                }
+
+                                System.out.println();
+                                printDescrizioneCartaUtensile(carteUtensile, c);
+
+                                System.out.println("\nINSERISCI UN CARATTERE PER CONTINUARE");
+                                String s = inputCommand.next();
+                            }
+
+                            printTavoloDiGioco();   //<<-- aggiunte per aggiornare dopo aver letto la descrizione di
+                            updateView = true;      //<<-- una carta
+                            passaturno = false;       //<<--
+
                         }
 
-                        //====================
-
-                        //flagSceltaCartaUtensile = 1;
-
-
-                    } else if (cmd == 3) {
-                        passaturno = true;
-                        //flagSceltaCartaUtensile=0;
-                       // flagSceltaDado=0;
-
-                        //chiamo il metodo del controller che mi permette di passare i parametri per la mossa scelta.
-                        try {
-                            parametri.add(0,3); // ho scelto di passare il turno
-
-                            controller.svolgimentoPartita(this,parametri);  //TODO RIVEDERE il fatto che debba essere passata anche la vista deve essere ripensato
-                            parametri = new ArrayList<Integer>(); // TODO RIVEDERE non è detto che sia necessario new dato che viene fatto solo per precauzione. potrebbe essere sufficiente lasciarlo nelle condizioni attuali senza reinizializzare, in modo da sapere quale è l'ultima chiamata che è stata fatta al model.
-
-                        }catch(MossaIllegaleException e){
-                            System.out.print("mossa non consentita");  //TODO RIVEDERE da rivedere se funziona
-                        }
-
-
-
-                    } else if (cmd == 4) {
-
-                        synchronized (this) {
-                            System.out.print("Inserisci il numero della carta della quale vuoi la descrizione:");
-                            int c = inputCommand.nextInt();
-
-                            System.out.println();
-                            printDescrizioneCartaUtensile(carteUtensile, c);
-
-                            System.out.println("\nINSERISCI UN CARATTERE PER CONTINUARE");
-                            String s = inputCommand.next();
-                        }
-
-                    }
-
-
-                    if(simulazione)
-                        timer1();  //TODO RIMUOVERE serve solo per avere la simulazione di una partita - permette di settare updateView a true dopo la chiamata del metodo
-
-
-                    System.out.println("\n\n\nattendi aggiornamento del tavolo di gioco...");
-
-
-                } else {
-
-                    synchronized (this) {
-                        System.out.println("\nNON SEI IL GIOCATORE CORRENTE!\n");
 
                         if (simulazione)
-                            timer2(); //TODO RIMUOVERE serve solo per avere la simulazione di una partita - permette di settare updateView a true dopo la chiamata del metodo
+                            timer1();  //TODO RIMUOVERE serve solo per avere la simulazione di una partita - permette di settare updateView a true dopo la chiamata del metodo
+
+
+                        System.out.println("\n\n\nattendi aggiornamento del tavolo di gioco...");
+
+
+                    } else{
+
+                        synchronized (this) {
+                            System.out.println("\nNON SEI IL GIOCATORE CORRENTE!\n");
+
+                            if (simulazione)
+                                timer2(); //TODO RIMUOVERE serve solo per avere la simulazione di una partita - permette di settare updateView a true dopo la chiamata del metodo
+                        }
                     }
+
+
+                    // in attesa di un aggiornamento alla view
+
+                    while (updateView == false) {
+                        System.out.print("");
+                    }
+
+
+                }
+                if (getStatus() == ViewStatus.CalcoloPunteggio) {
+
+                    /**
+                     * Devo fare un metodo di notifica che può essere chiamato dal model che permetta di variare l'attributo della View "punteggio", per poi stamparlo
+                     * */
+
+
+                    System.out.println("CALCOLO DEL PUNTEGGIO FINALE...");
+
+                    System.out.println("\n\n\n\n");
+
+
+                    printPunteggi(punteggi);
+
+
                 }
 
 
-                // in attesa di un aggiornamento alla view
-
-                while (updateView == false) {
-                    System.out.print("");
-                }
-
-
-
-
-
-
             }
-            if (getStatus() == ViewStatus.CalcoloPunteggio){
-
-                /**
-                 * Devo fare un metodo di notifica che può essere chiamato dal model che permetta di variare l'attributo della View "punteggio", per poi stamparlo
-                 * */
-
-
-                System.out.println("CALCOLO DEL PUNTEGGIO FINALE...");
-
-                System.out.println("\n\n\n\n");
-
-
-                printPunteggi(punteggi);
-
-
-
-            }
-
-
 
         }
 
-    }
+        @Override
+        public void updateViewTool11 (String Dado) throws RemoteException {
+            this.diluentePastaSaldaPhase2 = true;
+            updateView = true;
+            tool11Dado = Dado;
+        }
 
-    @Override
-    public synchronized void notifyUser(String id,String token, String[][] schemaFronte1, String[][] schemaRetro1, String[][] schemaFronte2, String[][] schemaRetro2, String obiettivoPrivato) throws RemoteException {
-        this.id = id;
-        this.setStatus(ViewStatus.SelezioneSchema);
-        this.schemaFronte1 = schemaFronte1;
-        this.schemaRetro1 = schemaRetro1;
-        this.schemaFronte2 = schemaFronte2;
-        this.schemaRetro2 = schemaRetro2;
-        this.obiettivoPrivato = obiettivoPrivato;
-        this.token=token;
-        updateView = true;
-    }
+        @Override
+        public synchronized void notifyUser (String id, String token, String[][]schemaFronte1, String[][]
+        schemaRetro1, String[][]schemaFronte2, String[][]schemaRetro2, String obiettivoPrivato) throws RemoteException {
+            this.id = id;
+            this.setStatus(ViewStatus.SelezioneSchema);
+            this.schemaFronte1 = schemaFronte1;
+            this.schemaRetro1 = schemaRetro1;
+            this.schemaFronte2 = schemaFronte2;
+            this.schemaRetro2 = schemaRetro2;
+            this.obiettivoPrivato = obiettivoPrivato;
+            this.token = token;
+            updateView = true;
+        }
 
     public synchronized void setStatus(ViewStatus status) {
         this.status = status;
@@ -773,8 +1262,8 @@ public class View extends UnicastRemoteObject implements GameObserver, Remote {
         String ANSI_CYAN_BACKGROUND = "\u001B[46m";
         String ANSI_WHITE_BACKGROUND = "\u001B[47m";
 
-        String[][][] matriciDaStampare = new String[planceGiocatori.size()+1][a][b];
-        Object[] idGiocatori = new Object[planceGiocatori.size()+1];
+        String[][][] matriciDaStampare = new String[planceGiocatori.size() + 1][a][b];
+        Object[] idGiocatori = new Object[planceGiocatori.size() + 1];
 
         int cursoreGiocatoreCorrente = 0;
 
@@ -814,9 +1303,6 @@ public class View extends UnicastRemoteObject implements GameObserver, Remote {
             }
 
         }
-
-
-
 
 
         System.out.println();
@@ -957,7 +1443,7 @@ public class View extends UnicastRemoteObject implements GameObserver, Remote {
 
     }
 
-    public void printCarteSchema(String[][] schemaFronte1, String[][] schemaRetro1,String[][] schemaFronte2,String[][] schemaRetro2, int a, int b){
+    public void printCarteSchema(String[][] schemaFronte1, String[][] schemaRetro1, String[][] schemaFronte2, String[][] schemaRetro2, int a, int b) {
 
         //dichiarazione di tutti i valori che permettono la stampa
 
@@ -981,8 +1467,8 @@ public class View extends UnicastRemoteObject implements GameObserver, Remote {
         String ANSI_WHITE_BACKGROUND = "\u001B[47m";
 
 
-        String[][][] matriciDaStampare = new String[4+1][a][b];  //numero di plance +1
-        Object[] idGiocatori = new Object[4+1];  //numero di plance +1
+        String[][][] matriciDaStampare = new String[4 + 1][a][b];  //numero di plance +1
+        Object[] idGiocatori = new Object[4 + 1];  //numero di plance +1
 
 
         matriciDaStampare[0] = schemaFronte1;
@@ -994,8 +1480,6 @@ public class View extends UnicastRemoteObject implements GameObserver, Remote {
         idGiocatori[1] = "schemaRetro1";
         idGiocatori[2] = "schemaFronte2";
         idGiocatori[3] = "schemaRetro2";
-
-
 
 
         for (int righe = 0; righe < a; righe++) {
@@ -1014,7 +1498,6 @@ public class View extends UnicastRemoteObject implements GameObserver, Remote {
                     for (int x = 0; x < idGiocatori[carta].toString().length() + 4; x++)
                         System.out.print(" ");
                 }
-
 
 
                 for (int col = 0; col < b; col++) {
@@ -1061,8 +1544,6 @@ public class View extends UnicastRemoteObject implements GameObserver, Remote {
                         System.out.print("N");
 
 
-
-
                     System.out.print(" ");
 
 
@@ -1077,16 +1558,9 @@ public class View extends UnicastRemoteObject implements GameObserver, Remote {
         System.out.print("|\n");
 
 
-
-
-
-
-
-
-
     }
 
-    public void printCartaObiettivoPrivato(HashMap<String,String > ob) {
+    public void printCartaObiettivoPrivato(HashMap<String, String> ob) {
 
         System.out.print("\nCarta Obiettivo Privato:   " + ob.get(id));
         System.out.println();
@@ -1100,7 +1574,7 @@ public class View extends UnicastRemoteObject implements GameObserver, Remote {
 
 
         int i = 0;
-        for (String carta: listaCartaUtensile){
+        for (String carta : listaCartaUtensile) {
 
 
             if (carta.toLowerCase().startsWith("f")) {
@@ -1214,10 +1688,10 @@ public class View extends UnicastRemoteObject implements GameObserver, Remote {
 
 
         int i = 0;
-        for(String carta: listaCartaUtensile){
+        for (String carta : listaCartaUtensile) {
 
             if (scelta == i)
-                System.out.println("Descrizione:  " + carta.substring(carta.indexOf('*')+1, carta.length()));
+                System.out.println("Descrizione:  " + carta.substring(carta.indexOf('*') + 1, carta.length()));
 
             i++;
 
@@ -1227,12 +1701,12 @@ public class View extends UnicastRemoteObject implements GameObserver, Remote {
 
     }
 
-    public void printPunteggi(HashMap<String, Integer> punteggi){
+    public void printPunteggi(HashMap<String, Integer> punteggi) {
 
 
         //il punteggio del giocatore corrente
 
-        System.out.println("Il tuo punteggio è: "+ punteggi.get(id));
+        System.out.println("Il tuo punteggio è: " + punteggi.get(id));
 
         Iterator it1 = punteggi.entrySet().iterator();
 
@@ -1242,45 +1716,39 @@ public class View extends UnicastRemoteObject implements GameObserver, Remote {
             Map.Entry e = (Map.Entry) it1.next();
 
             //il punteggio degli altri giocatori
-            if( !( (String) e.getKey() ).equalsIgnoreCase(id) )
-                System.out.println("il punteggio di "+ (String) e.getKey() + "é " + e.getValue());
+            if (!((String) e.getKey()).equalsIgnoreCase(id))
+                System.out.println("il punteggio di " + (String) e.getKey() + "é " + e.getValue());
 
         }
-            if(id.equals(vincitore)){
-                System.out.println("HAI VINTO !!!!");
-            }
-            else System.out.println("HAI PERSO :(\nil vincitore è: "+vincitore);
-
-
+        if (id.equals(vincitore)) {
+            System.out.println("HAI VINTO !!!!");
+        } else System.out.println("HAI PERSO :(\nil vincitore è: " + vincitore);
 
 
     }
 
-    public void printPiazzamentoScorretto(String giocatoreCorrente) throws RemoteException{
+    public void printPiazzamentoScorretto(String giocatoreCorrente) throws RemoteException {
 
 
-
-        if(giocatoreCorrente.equalsIgnoreCase(this.id))
+        if (giocatoreCorrente.equalsIgnoreCase(this.id))
             System.out.println("\n\nerrore: ");
 
         mossaCorretta = false;
 
 
-
-
     }
 
-    public void printTracciatoDelRound(ArrayList<String> tracciatoDelRound){
+    public void printTracciatoDelRound(ArrayList<String> tracciatoDelRound) {
 
         System.out.print("\nTracciato del Round: ");
 
-        for (int i=1; i<=tracciatoDelRound.size(); i++)
-            System.out.print(i+" ");
+        for (int i = 1; i <= tracciatoDelRound.size(); i++)
+            System.out.print(i + " ");
 
         System.out.print("\n                     ");
 
 
-        for (String Dado : tracciatoDelRound){
+        for (String Dado : tracciatoDelRound) {
             printDado(Dado);
             System.out.print(" ");
         }
@@ -1289,49 +1757,47 @@ public class View extends UnicastRemoteObject implements GameObserver, Remote {
 
     }
 
-    public void updateView(HashMap< String,String[][]> planceGiocatori , ArrayList<String> listaCartaUtensile, String giocatoreCorrente, int turno, int round, ArrayList<String > dadiRiserva, String dadoSelezionato,ArrayList<String> carteObiettivoPubblico,HashMap<String,String> carteObiettivoPrivato, ArrayList<String> tracciatoDelRound,HashSet<Integer> azioniGiocatore) throws RemoteException {
+    public void updateView(HashMap<String, String[][]> planceGiocatori, ArrayList<String> listaCartaUtensile, String giocatoreCorrente, int turno, int round, ArrayList<String> dadiRiserva, String dadoSelezionato, ArrayList<String> carteObiettivoPubblico, HashMap<String, String> carteObiettivoPrivato, ArrayList<String> tracciatoDelRound, HashSet<Integer> azioniGiocatore) throws RemoteException {
 
 
         //per la carta utensile    map <"TPennello Per Eglomise" "descrizione">
 
-        this.startGame=true;
+        this.startGame = true;
         this.planceGiocatori = planceGiocatori;
         this.carteUtensile = listaCartaUtensile;
-        this.giocatoreCorrente= giocatoreCorrente;
+        this.giocatoreCorrente = giocatoreCorrente;
         this.turno = turno;
         this.round = round;
         this.dadiRiserva = dadiRiserva;
         this.dadoSelezionato = dadoSelezionato;
-        this.carteObiettivoPubblico=carteObiettivoPubblico;
-        this.carteObiettivoPrivato=carteObiettivoPrivato;
+        this.carteObiettivoPubblico = carteObiettivoPubblico;
+        this.carteObiettivoPrivato = carteObiettivoPrivato;
         this.tracciatoDelRound = tracciatoDelRound;
 
-        if(azioniGiocatore.contains(1)|| azioniGiocatore.contains(4)) flagSceltaDado=0;
-        else flagSceltaDado=2;
+        if (azioniGiocatore.contains(1) || azioniGiocatore.contains(4)) flagSceltaDado = 0;
+        else flagSceltaDado = 2;
 
-        if(azioniGiocatore.contains(2)) flagSceltaCartaUtensile=0;
-        else flagSceltaCartaUtensile=1;
+        if (azioniGiocatore.contains(2)) flagSceltaCartaUtensile = 0;
+        else flagSceltaCartaUtensile = 1;
 
 
         this.mossaCorretta = true;
-        if (cartaInUso.equals("Lathekin") && !lathekinPhase2){
-            lathekinPhase2=true;
-        }else if(cartaInUso.equals("Lathekin") && lathekinPhase2){
-            lathekinPhase2=false;
+        if (cartaInUso.equals("Lathekin") && !lathekinPhase2) {
+            lathekinPhase2 = true;
+        } else if (cartaInUso.equals("Lathekin") && lathekinPhase2) {
+            lathekinPhase2 = false;
         }
-        if (cartaInUso.equals("Taglierina Manuale") && numeroDadiTool12>0){
+        if (cartaInUso.equals("Taglierina Manuale") && numeroDadiTool12 > 0) {
             numeroDadiTool12--;
         }
         this.updateView = true;
-
-
 
 
     }
 
     //faccio altri metodi updateView in base alla situazione
 
-    public void updateViewPlanciaGiocatoreCorrente(String[][] plancia) throws RemoteException{
+    public void updateViewPlanciaGiocatoreCorrente(String[][] plancia) throws RemoteException {
 
         //non ho bisogno che mi venga passato il giocatore corrente, in quanto è già salvato nella View
 
@@ -1341,10 +1807,9 @@ public class View extends UnicastRemoteObject implements GameObserver, Remote {
         this.updateView = true;
 
 
-
     }
 
-    public void updateViewTurno(int turno) throws RemoteException{
+    public void updateViewTurno(int turno) throws RemoteException {
 
         this.turno = turno;
 
@@ -1352,13 +1817,9 @@ public class View extends UnicastRemoteObject implements GameObserver, Remote {
         this.updateView = true;
 
 
-
-
-
-
     }
 
-    public void updateViewRound(int round) throws RemoteException{
+    public void updateViewRound(int round) throws RemoteException {
 
         this.round = round;
 
@@ -1366,12 +1827,9 @@ public class View extends UnicastRemoteObject implements GameObserver, Remote {
         this.updateView = true;
 
 
-
-
-
     }
 
-    public void updateViewGiocatoreCorrente(String giocatoreCorrente) throws RemoteException{
+    public void updateViewGiocatoreCorrente(String giocatoreCorrente) throws RemoteException {
 
         this.giocatoreCorrente = giocatoreCorrente;
 
@@ -1379,10 +1837,9 @@ public class View extends UnicastRemoteObject implements GameObserver, Remote {
         this.updateView = true;
 
 
-
     }
 
-    public void updateViewPlanceGiocatori(HashMap< String,String[][]> planceGiocatori) throws RemoteException{
+    public void updateViewPlanceGiocatori(HashMap<String, String[][]> planceGiocatori) throws RemoteException {
 
         this.planceGiocatori = planceGiocatori;
 
@@ -1390,11 +1847,9 @@ public class View extends UnicastRemoteObject implements GameObserver, Remote {
         this.updateView = true;
 
 
-
-
     }
 
-    public void updateViewCarteUtensile(ArrayList<String> listaCartaUtensile) throws RemoteException{
+    public void updateViewCarteUtensile(ArrayList<String> listaCartaUtensile) throws RemoteException {
 
         this.carteUtensile = listaCartaUtensile;
 
@@ -1402,10 +1857,9 @@ public class View extends UnicastRemoteObject implements GameObserver, Remote {
         this.updateView = true;
 
 
-
     }
 
-    public void updateViewDadiRiserva(ArrayList<String > dadiRiserva) throws RemoteException{
+    public void updateViewDadiRiserva(ArrayList<String> dadiRiserva) throws RemoteException {
 
         this.dadiRiserva = dadiRiserva;
 
@@ -1413,10 +1867,9 @@ public class View extends UnicastRemoteObject implements GameObserver, Remote {
         this.updateView = true;
 
 
-
     }
 
-    public void updateViewDadoSelezionato(String dadoSelezionato) throws RemoteException{
+    public void updateViewDadoSelezionato(String dadoSelezionato) throws RemoteException {
 
         this.dadoSelezionato = dadoSelezionato;
 
@@ -1424,49 +1877,45 @@ public class View extends UnicastRemoteObject implements GameObserver, Remote {
         this.updateView = true;
 
 
-
     }
 
-    public synchronized void updateViewPunteggio(HashMap<String, Integer> punteggi,String vincitore) throws RemoteException {
+    public synchronized void updateViewPunteggio(HashMap<String, Integer> punteggi, String vincitore) throws RemoteException {
 
         this.punteggi = punteggi;
         this.mossaCorretta = true;
-        this.vincitore=vincitore;
+        this.vincitore = vincitore;
         setStatus(ViewStatus.CalcoloPunteggio);
-        this.updateView=true;
-
+        this.updateView = true;
 
 
     }
 
     @Override
     public synchronized void updateViewTool6Bool(boolean piazzabile) throws RemoteException {
-        tool6piazzabile=piazzabile;
-        if(!piazzabile) updateView=true;
+        tool6piazzabile = piazzabile;
+        if (!piazzabile) updateView = true;
     }
 
     @Override
     public synchronized void updateViewTool6Die(String Dado) throws RemoteException {
-        tool6Dado=Dado;
-        updateView=true;
+        tool6Dado = Dado;
+        updateView = true;
     }
+
     @Override
-    public synchronized void updateUsername(boolean usernameOK){
-        this.usernameOK=usernameOK;
-        updateView=true;
+    public synchronized void updateUsername(boolean usernameOK) {
+        this.usernameOK = usernameOK;
+        updateView = true;
     }
 
 
     //=========================
 
 
-
     public void setGame() {
 
 
         //String[][] CartaSchema = {{"rosso", "2", "verde", "blu", "giallo"}, {"n", "n", "n", "n", "n"}, {"n", "n", "n", "n", "n"}, {"n", "n", "n", "n", "n"}};
-
-
 
 
         String[][] Plancia1 = {{"2rosso", "4verde", "verde", "blu", "giallo"}, {"n", "n", "5giallo", "n", "n"}, {"n", "n", "verde", "n", "n"}, {"n", "n", "n", "n", "n"}};
@@ -1476,10 +1925,6 @@ public class View extends UnicastRemoteObject implements GameObserver, Remote {
         String[][] Plancia3 = {{"6rosso", "2", "verde", "blu", "giallo"}, {"n", "n", "n", "n", "n"}, {"n", "n", "n", "n", "n"}, {"n", "n", "n", "n", "n"}};
 
         String[][] Plancia4 = {{"rosso", "2", "verde", "4blu", "giallo"}, {"n", "n", "n", "n", "n"}, {"n", "n", "n", "n", "n"}, {"n", "n", "n", "n", "n"}};
-
-
-
-
 
 
         planceGiocatori.put("1hhh", Plancia1);
@@ -1506,9 +1951,6 @@ public class View extends UnicastRemoteObject implements GameObserver, Remote {
         dadiRiserva.add("5verde");
 
 
-
-
-
         giocatoreCorrente = "pippo";
         id = "pippo";
 
@@ -1522,11 +1964,10 @@ public class View extends UnicastRemoteObject implements GameObserver, Remote {
         round = 4;
 
     }   //TODO RIMUOVERE non serve nel vero programma
-    public void timer1(){
+
+    public void timer1() {
 
         String[][] PlanciaDiProva = {{"2rosso", "2rosso", "2rosso", "2rosso", "2rosso"}, {"n", "n", "n", "n", "n"}, {"n", "n", "n", "n", "n"}, {"n", "n", "n", "n", "n"}};
-
-
 
 
         //=====timer per simulare il delay dato dal server. verrà chiamato un metodo che permetterà di rendere true "updateView"
@@ -1549,7 +1990,8 @@ public class View extends UnicastRemoteObject implements GameObserver, Remote {
         */
 
     }   //TODO RIMUOVERE non serve nel vero programma
-    public void timer2(){
+
+    public void timer2() {
 
         //=====timer per simulare il delay dato dal server. verrà chiamato un metodo che permetterà di rendere true "updateView"
 
@@ -1572,14 +2014,15 @@ public class View extends UnicastRemoteObject implements GameObserver, Remote {
         //=====
 
     }   //TODO RIMUOVERE non serve nel vero programma
-    public void scorriCartaUtensile(int cmd){
+
+    public void scorriCartaUtensile(int cmd) {
         //=== da rimuovere, solo per prova... per testare le carte utensile
-        int indiceScorrimento=0;
+        int indiceScorrimento = 0;
         boolean trovato = false;
 
-        for(String carta: carteUtensile){
+        for (String carta : carteUtensile) {
 
-            if (indiceScorrimento==cmd) {
+            if (indiceScorrimento == cmd) {
 
                 cartaInUso = carta.substring(1, carta.indexOf('*'));
             }
@@ -1590,10 +2033,11 @@ public class View extends UnicastRemoteObject implements GameObserver, Remote {
 
         //===   ----------------------------------- ===
     }
-    private int cercaUtensile(String nome){
-        int i=0;
-        for (String carta: carteUtensile){
-            if (carta.substring(1, carta.indexOf('*')).equals(nome)){
+
+    private int cercaUtensile(String nome) {
+        int i = 0;
+        for (String carta : carteUtensile) {
+            if (carta.substring(1, carta.indexOf('*')).equals(nome)) {
                 break;
             }
             i++;
@@ -1610,7 +2054,8 @@ public class View extends UnicastRemoteObject implements GameObserver, Remote {
     public void ping() throws RemoteException {
 
     }
-    private void exit(){
+
+    private void exit() {
         Timer t = new Timer();
         t.schedule(new TimerTask() {
             @Override
@@ -1619,12 +2064,12 @@ public class View extends UnicastRemoteObject implements GameObserver, Remote {
                     System.exit(0);
                 }
             }
-        },500);
+        }, 500);
     }
 
     @Override
     public synchronized void notifyUserExit(String username) throws RemoteException {
-        if (this.getStatus()==ViewStatus.SvolgimentoPartita) {
+        if (this.getStatus() == ViewStatus.SvolgimentoPartita) {
             System.out.println("============================================================================");
             System.out.println(username + " è uscito dalla partita.");
             System.out.println("============================================================================");

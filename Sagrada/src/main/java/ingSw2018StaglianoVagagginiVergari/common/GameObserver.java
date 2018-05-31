@@ -41,5 +41,5 @@ public interface GameObserver extends Remote {
     public void notifyExit() throws RemoteException;
     public void ping() throws RemoteException;
     public void notifyUserExit(String username) throws RemoteException;
-
+    public void updateViewTool11(String Dado) throws RemoteException;
 }
