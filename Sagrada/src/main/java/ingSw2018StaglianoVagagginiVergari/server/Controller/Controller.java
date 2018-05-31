@@ -73,9 +73,9 @@ public class Controller extends UnicastRemoteObject implements RemoteController 
             throw new FullGameException("La partita è già in corso.");
         }
     }
-    public synchronized void abbandonaPartita(GameObserver view, String username){
+    public synchronized void abbandonaPartita(GameObserver view, String username) throws RemoteException {
         if (getStatus()==ControllerStatus.AggiuntaObserver) {
-            partita.removeObserver(view, username);
+            partita.removeObserver(username);
             if (partita.numberOfObserver() < 2 && timerSetted) {
                 t.cancel();
                 timerSetted=false;
@@ -86,7 +86,30 @@ public class Controller extends UnicastRemoteObject implements RemoteController 
     //Fase di scelta dello schema, il controller riceve la view e l'id, setta la faccia della carta schema scelta.
     public void scegliSchema(GameObserver view, String idUser,boolean carta1, boolean fronte) throws RemoteException{
         partita.sceltaSchema(view, idUser,carta1, fronte);
-        if(partita.contaSchemi())  setStatus(ControllerStatus.SvolgimentoPartita);
+        if(partita.contaSchemi()) {
+            setStatus(ControllerStatus.SvolgimentoPartita);
+             new Thread(new Runnable() { //deamon that checks the connection with clients
+                @Override
+                public void run() {
+                    while (true) {
+                        HashMap<String, GameObserver> gameObserverClone = new HashMap<>();
+                        gameObserverClone=(HashMap<String, GameObserver>)partita.getGameObservers().clone();
+                        for (String username : gameObserverClone.keySet()) {
+                            if (partita.pingClient(partita.getGameObservers().get(username))){
+
+                            }else{
+                                try {
+                                    partita.removeObserver(username);
+                                } catch (RemoteException e) {
+                                    e.printStackTrace();
+                                }
+                            }
+                        }
+                    }
+                }
+            }).start();
+        }
+
         partita.inizializzaAzioniGiocatore();
     }
 
@@ -100,8 +123,6 @@ public class Controller extends UnicastRemoteObject implements RemoteController 
         for (Utente u: partita.getOrdineRound()) {
             System.out.println(u.getId());
         }
-
-        System.out.println("Gioc corr"+partita.getCurrentPlayer());
 
         if (partita.getAzioniGiocatore().contains(parametri.get(0))|| partita.getAzioniGiocatore().contains(4)) {
             int n=parametri.get(0);
@@ -318,7 +339,7 @@ public class Controller extends UnicastRemoteObject implements RemoteController 
                 }
                 break;
             case CartaU12:
-                //for (CartaUtensile u : partita.getListaCartaUtensile()) {
+                for (CartaUtensile u : partita.getListaCartaUtensile()) {
                     if (partita.getListaCartaUtensile().get(0).getId()==12) {
                         TaglierinaManuale carta = (TaglierinaManuale) partita.getListaCartaUtensile().get(0);
                         carta.setR(parametri.get(0));
@@ -330,7 +351,7 @@ public class Controller extends UnicastRemoteObject implements RemoteController 
                         carta.usaEffettoCarta(partita);
 
                     }
-                //}
+                }
 
                 break;
 
@@ -356,12 +377,26 @@ public class Controller extends UnicastRemoteObject implements RemoteController 
         }
         else partita.incrementaTurno();
 
-        System.out.println("FFF"+partita.getCurrentPlayer());
-
 
     }
 
+    @Override
+    public int login(GameObserver view, String username, String token) throws RemoteException {
+        if (partita.getUserTokens().keySet().contains(username)){
+            if (partita.getUserTokens().get(username).equals(token)){
+                if (partita.replaceObserver(username, view)){
+                    return 1;
+                }else{
+                    return 2;
+                }
 
+            }else{
+                return 0;
+            }
+        }else{
+           return 0;
+        }
+    }
 
     public synchronized void setStatus(ControllerStatus status) {
         this.status = status;

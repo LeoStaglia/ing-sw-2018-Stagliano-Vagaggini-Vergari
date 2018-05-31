@@ -12,7 +12,8 @@ public class Utente implements Serializable{
     private Plancia plancia;
     private int segnalini;
     private String id;
-    private static HashSet<String> idSet = new HashSet<>();
+    private String token;
+    private static HashSet<String> tokenSet = new HashSet<>();
 
     public String getId() {
         return id;
@@ -21,15 +22,20 @@ public class Utente implements Serializable{
     //multiplayer constructor
     public Utente(Plancia plancia, Constraint coloreObiettivoPrivato){
         this.plancia=plancia;
+        for (String token: tokenSet){
+            this.token =token;
+            tokenSet.remove(token);
+            break;
+        }
         obiettivoPrivato= new ArrayList<>();
         obiettivoPrivato.add(new CartaObiettivoPrivato(coloreObiettivoPrivato));
 
     }
     //singleplayer constructor
     public Utente(Plancia plancia, Constraint coloreObiettivoPrivato1, Constraint coloreObiettivoPrivato2){
-        for (String id: idSet){
-            this.id =id;
-            idSet.remove(id);
+        for (String token: tokenSet){
+            this.token =token;
+            tokenSet.remove(token);
             break;
         }
         this.plancia=plancia;
@@ -68,21 +74,25 @@ public class Utente implements Serializable{
         this.segnalini=difficolta;
     }
 
-    /*public static void inizializzaIdSet(){
+    public static void inizializzaTokenSet(){
         String alfabeto = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
         Random ran = new Random();
-        while(idSet.size()<=4){
+        while(tokenSet.size()<=4){
             StringBuilder builder = new StringBuilder();
-            for (int j=0; j<13; j++){
+            for (int j=0; j<4; j++){
                 builder.append(alfabeto.charAt(ran.nextInt(alfabeto.length())));
             }
-            idSet.add(builder.toString());
+            tokenSet.add(builder.toString());
         }
 
-    }*/
+    }
 
 
     public void setId(String username) {
         this.id = username;
+    }
+
+    public String getToken() {
+        return token;
     }
 }

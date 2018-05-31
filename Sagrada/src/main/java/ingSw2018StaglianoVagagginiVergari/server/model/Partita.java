@@ -8,11 +8,13 @@ import ingSw2018StaglianoVagagginiVergari.server.model.carteSchema.FactorySchema
 import ingSw2018StaglianoVagagginiVergari.server.model.carteSchema.Schema;
 
 import java.rmi.RemoteException;
+import java.rmi.server.UnicastRemoteObject;
 import java.util.*;
 
 public class Partita {
 
     private HashMap<String, GameObserver> gameObservers;
+    private HashMap<String, String> userTokens;
     private Dado dadoSelezionato = null;
     private ArrayList<String> setOfColors = new ArrayList<String>();
     private ArrayList<Dado> riserva = new ArrayList<Dado>();
@@ -48,13 +50,82 @@ public class Partita {
     public Partita(){
         riempiSetofColors();
         riempiSacchetto();
-        //Utente.inizializzaIdSet();
+        Utente.inizializzaTokenSet();
         inizializzaCarteSchema();
         inizializzaMazzoCarteUtensile();
         inizializzaMazzoCarteObiettivoPubblico();
         inizializzaPlance();
         inizializzaObiettiviPrivati();
         gameObservers= new HashMap<>();
+        userTokens = new HashMap<>();
+    }
+
+    public boolean replaceObserver(String username, GameObserver view) throws RemoteException{
+        //TODO rendere parametrico l'update su un ArrayList di view.
+        if (gameObservers.get(username)!=null) {
+            GameObserver oldView = gameObservers.get(username);
+            if (pingClient(oldView)) {
+                oldView.notifyExit();
+            }
+            removeObserver(username);
+        }
+        gameObservers.put(username,  view);
+        for (Utente u: listaGiocatori){
+            if (u.getId().equals(username)){
+                if (u.getPlancia().getCartaSchema()!=null){
+
+                    HashMap<String,String[][]> planceGiocatori=new HashMap<>();
+                    for (Utente utente:listaGiocatori) {
+                        planceGiocatori.put(utente.getId(),utente.getPlancia().rappresentazionePlancia());
+                    }
+
+                    ArrayList<String> listCartaUtensile = new ArrayList<>();
+
+
+                    for (CartaUtensile c: listaCartaUtensile) {
+                        StringBuilder builder=new StringBuilder();
+                        if(c.getCosto()==1) {builder.append("F");}
+                        else{ builder.append("T");}
+                        builder.append(c.getNome());
+                        builder.append("*");
+                        builder.append(c.getDescrizione());
+                        listCartaUtensile.add(builder.toString());
+                    }
+
+                    ArrayList<String> dadiRiserva=new ArrayList<>();
+                    for (Dado d:riserva) {
+                        dadiRiserva.add(d.toString());
+                    }
+
+
+                    ArrayList<String> carteObiettivoPubblico=new ArrayList<>();
+                    for (CartaObiettivoPubblico c:listaCartaObiettivoPubblico) {
+                        carteObiettivoPubblico.add(c.getNome());
+                        //TODO inserire descrizione carta
+                    }
+                    HashMap<String,String> listCarteObiettivoPrivato=new HashMap<>();
+
+                    for (Utente utente:listaGiocatori) {
+                        listCarteObiettivoPrivato.put(utente.getId(),utente.getObiettivoPrivato().get(0).getColore().getDescrizione());
+                    }
+                    ArrayList<String> tracciato = new ArrayList<>();
+
+                    for (Dado d: tracciatoDelRound.getRimanenzeRiservaOn()){
+                        tracciato.add(d.toString());
+                    }
+                    view.updateView(planceGiocatori,listCartaUtensile,getCurrentPlayer().getId(),getTurno(),getTracciatoDelRound().getRoundAttuale(),dadiRiserva,"null",carteObiettivoPubblico,listCarteObiettivoPrivato, tracciato,azioniGiocatore);
+                    return true;
+                }else{
+                    for (Utente utente:listaGiocatori){
+                        if (utente.getId().equals(username)){
+                            view.notifyUser(utente.getId(),utente.getToken(),scelteSchemi.get(utente).getFirst().stringRepresentation(true), scelteSchemi.get(utente).getFirst().stringRepresentation(false),scelteSchemi.get(utente).getSecond().stringRepresentation(true), scelteSchemi.get(utente).getSecond().stringRepresentation(false), utente.getObiettivoPrivato().get(0).getColore().getDescrizione());
+                            return false;
+                        }
+                    }
+                }
+            }
+        }
+        return false;
     }
 
     public void addObserver(GameObserver view, String username) throws RemoteException{
@@ -68,9 +139,6 @@ public class Partita {
     }
     public int numberOfObserver(){
         return gameObservers.size();
-    }
-    public void removeObserver(GameObserver view, String username){
-        gameObservers.remove(username, view);
     }
 
     public void inizializzaAzioniGiocatore(){
@@ -92,8 +160,9 @@ public class Partita {
             Utente u = new Utente(this.getPlanciaFromList(), this.getPrivatoFromList());
             u.setId(username);
             listaGiocatori.add(u);
+            userTokens.put(username, u.getToken());
             scelteSchemi.put(u, new Coppia<Schema, Schema>(getSchemaFromList(), getSchemaFromList()));
-            view.notifyUser(u.getId(),scelteSchemi.get(u).getFirst().stringRepresentation(true),scelteSchemi.get(u).getFirst().stringRepresentation(false),scelteSchemi.get(u).getSecond().stringRepresentation(true), scelteSchemi.get(u).getSecond().stringRepresentation(false), u.getObiettivoPrivato().get(0).toString());
+            view.notifyUser(u.getId(), u.getToken(), scelteSchemi.get(u).getFirst().stringRepresentation(true),scelteSchemi.get(u).getFirst().stringRepresentation(false),scelteSchemi.get(u).getSecond().stringRepresentation(true), scelteSchemi.get(u).getSecond().stringRepresentation(false), u.getObiettivoPrivato().get(0).toString());
         }
         riempiRiserva();
         setListaCartaObiettivoPubblico();
@@ -470,7 +539,6 @@ public class Partita {
             if(u.getPlancia().getCartaSchema()==null) return false;
         }
         // preparazione updateView iniziale
-
         updateGenerale();
 
 
@@ -478,9 +546,11 @@ public class Partita {
         return true;
     }
 
-    public void updateGenerale() throws RemoteException{
-        for (String username:gameObservers.keySet()) {
-            GameObserver view = gameObservers.get(username);
+    public synchronized void updateGenerale()throws RemoteException{
+        HashMap<String, GameObserver> gameObserverClone = new HashMap<>();
+        gameObserverClone = (HashMap<String, GameObserver>) gameObservers.clone();
+        for (String username:gameObserverClone.keySet()) {
+            GameObserver view = gameObserverClone.get(username);
             HashMap<String,String[][]> planceGiocatori=new HashMap<>();
             for (Utente u:listaGiocatori) {
                 planceGiocatori.put(u.getId(),u.getPlancia().rappresentazionePlancia());
@@ -520,8 +590,11 @@ public class Partita {
             for (Dado d: tracciatoDelRound.getRimanenzeRiservaOn()){
                 tracciato.add(d.toString());
             }
-
-            view.updateView(planceGiocatori,listCartaUtensile,getCurrentPlayer().getId(),getTurno(),getTracciatoDelRound().getRoundAttuale(),dadiRiserva,"null",carteObiettivoPubblico,listCarteObiettivoPrivato, tracciato,azioniGiocatore);
+            if (pingClient(view)) {
+                view.updateView(planceGiocatori, listCartaUtensile, getCurrentPlayer().getId(), getTurno(), getTracciatoDelRound().getRoundAttuale(), dadiRiserva, "null", carteObiettivoPubblico, listCarteObiettivoPrivato, tracciato, azioniGiocatore);
+            }else{
+                removeObserver(username);
+            }
         }
 
     }
@@ -604,6 +677,28 @@ public class Partita {
     public HashMap<String, GameObserver> getGameObservers() {
         return gameObservers;
     }
+
+    public HashMap<String, String> getUserTokens() {
+        return userTokens;
+    }
+    public boolean pingClient(GameObserver view){
+        boolean result=false;
+        try{
+            view.ping();
+            result=true;
+        }catch(RemoteException ex){
+            return result;
+        }
+        return result;
+    }
+    public synchronized void removeObserver(String username) throws RemoteException {
+        gameObservers.remove(username);
+        for (String user:gameObservers.keySet()){
+            if (!(user).equals(username))
+            gameObservers.get(user).notifyUserExit(username);
+        }
+    }
+
     // end various getter
 
 }
