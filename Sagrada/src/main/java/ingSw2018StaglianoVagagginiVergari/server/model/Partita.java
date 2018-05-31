@@ -133,7 +133,6 @@ public class Partita {
             gameObservers.put(username, view);
             view.updateUsername(true);
         }else{
-            //TODO gestisci update
             view.updateUsername(false);
         }
     }
@@ -404,10 +403,12 @@ public class Partita {
 
     // populate the stack of Tool Cards(12)
     private void inizializzaMazzoCarteUtensile() {
-        for (int i = 1; i <= 12; i++) {
-            mazzoCarteUtensile.add(i);
+        //for (int i = 1; i <= 12; i++) {
+            mazzoCarteUtensile.add(2);
+        mazzoCarteUtensile.add(2);
+        mazzoCarteUtensile.add(2);
         }
-    }
+    //}
 
 
     // populate the stack of Public Objective Cards(10)
@@ -681,7 +682,7 @@ public class Partita {
     public HashMap<String, String> getUserTokens() {
         return userTokens;
     }
-    public boolean pingClient(GameObserver view){
+    public synchronized boolean pingClient(GameObserver view){
         boolean result=false;
         try{
             view.ping();

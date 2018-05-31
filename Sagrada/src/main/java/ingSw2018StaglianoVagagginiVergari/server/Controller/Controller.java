@@ -40,7 +40,6 @@ public class Controller extends UnicastRemoteObject implements RemoteController 
             if (partita.numberOfObserver() == 4) {
                 throw new FullGameException("The game is full");
             }
-
             partita.addObserver(view, username);
 
             if (partita.numberOfObserver() == 2) {
@@ -93,17 +92,20 @@ public class Controller extends UnicastRemoteObject implements RemoteController 
                 public void run() {
                     while (true) {
                         HashMap<String, GameObserver> gameObserverClone = new HashMap<>();
-                        gameObserverClone=(HashMap<String, GameObserver>)partita.getGameObservers().clone();
-                        for (String username : gameObserverClone.keySet()) {
-                            if (partita.pingClient(partita.getGameObservers().get(username))){
+                        synchronized (partita) {
+                            gameObserverClone = (HashMap<String, GameObserver>) partita.getGameObservers().clone();
+                            for (String username : gameObserverClone.keySet()) {
+                                if (partita.pingClient(partita.getGameObservers().get(username))) {
 
-                            }else{
-                                try {
-                                    partita.removeObserver(username);
-                                } catch (RemoteException e) {
-                                    e.printStackTrace();
+                                } else {
+                                    try {
+                                        partita.removeObserver(username);
+                                    } catch (RemoteException e) {
+                                        e.printStackTrace();
+                                    }
                                 }
                             }
+
                         }
                     }
                 }
@@ -211,16 +213,16 @@ public class Controller extends UnicastRemoteObject implements RemoteController 
 
                 break;
             case CartaU2:
-                for (CartaUtensile u : partita.getListaCartaUtensile()) {
-                    if (u.getId() == 2) {
-                        PennelloPerEglomise carta= (PennelloPerEglomise) u;
+                //for (CartaUtensile u : partita.getListaCartaUtensile()) {
+                    if (partita.getListaCartaUtensile().get(0).getId() == 2) {
+                        PennelloPerEglomise carta= (PennelloPerEglomise) partita.getListaCartaUtensile().get(0);
                         carta.setxDie(parametri.get(0));
                         carta.setyDie(parametri.get(1));
                         carta.setxCell(parametri.get(2));
                         carta.setyCell(parametri.get(3));
                         carta.usaEffettoCarta(partita);
                     }
-                }
+               // }
                 break;
             case CartaU3:
                 for (CartaUtensile u : partita.getListaCartaUtensile()) {

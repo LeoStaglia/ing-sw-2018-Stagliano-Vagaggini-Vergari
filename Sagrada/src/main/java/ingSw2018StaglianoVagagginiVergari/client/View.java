@@ -174,7 +174,6 @@ public class View extends UnicastRemoteObject implements GameObserver, Remote {
                         System.out.println("Token:");
                         token = command.next();
                         login = controller.login(this, username, token);
-
                         tentativi++;
                     }
                     if (login == 1) {
@@ -208,7 +207,7 @@ public class View extends UnicastRemoteObject implements GameObserver, Remote {
                 }
                 System.out.println(status);
                 while (!updateView) {
-                    System.out.print("");
+                    wait();
                 }
                 updateView = false;
             }
@@ -398,9 +397,9 @@ public class View extends UnicastRemoteObject implements GameObserver, Remote {
                         }
 
 
-                            if (!lathekinPhase2 || numeroDadiTool12==0) {
-                                scorriCartaUtensile(cmd);
-                            }
+                        if (!lathekinPhase2 || numeroDadiTool12 == 0) {
+                            scorriCartaUtensile(cmd);
+                        }
 
 
                         //====================  QUI VERRANNO FATTE RICHIESTE DIVERSE IN BASE ALLA CARTA UTENSILE
@@ -1428,7 +1427,7 @@ public class View extends UnicastRemoteObject implements GameObserver, Remote {
 
     }
 
-    public void updateViewPunteggio(HashMap<String, Integer> punteggi,String vincitore) throws RemoteException {
+    public synchronized void updateViewPunteggio(HashMap<String, Integer> punteggi,String vincitore) throws RemoteException {
 
         this.punteggi = punteggi;
         this.mossaCorretta = true;
@@ -1441,18 +1440,18 @@ public class View extends UnicastRemoteObject implements GameObserver, Remote {
     }
 
     @Override
-    public void updateViewTool6Bool(boolean piazzabile) throws RemoteException {
+    public synchronized void updateViewTool6Bool(boolean piazzabile) throws RemoteException {
         tool6piazzabile=piazzabile;
         if(!piazzabile) updateView=true;
     }
 
     @Override
-    public void updateViewTool6Die(String Dado) throws RemoteException {
+    public synchronized void updateViewTool6Die(String Dado) throws RemoteException {
         tool6Dado=Dado;
         updateView=true;
     }
     @Override
-    public void updateUsername(boolean usernameOK){
+    public synchronized void updateUsername(boolean usernameOK){
         this.usernameOK=usernameOK;
         updateView=true;
     }
@@ -1611,12 +1610,12 @@ public class View extends UnicastRemoteObject implements GameObserver, Remote {
     public void ping() throws RemoteException {
 
     }
-    private synchronized void exit() throws NoSuchObjectException {
+    private void exit(){
         Timer t = new Timer();
         t.schedule(new TimerTask() {
             @Override
             public void run() {
-                synchronized (this){
+                {
                     System.exit(0);
                 }
             }
