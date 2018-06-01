@@ -3,6 +3,7 @@ package ingSw2018StaglianoVagagginiVergari.model;
 import Eccezioni.MossaIllegaleException;
 import ingSw2018StaglianoVagagginiVergari.server.model.Dado;
 import ingSw2018StaglianoVagagginiVergari.server.model.Plancia;
+import ingSw2018StaglianoVagagginiVergari.server.model.carteSchema.AuroraeMagnificus;
 import ingSw2018StaglianoVagagginiVergari.server.model.carteSchema.Schema;
 import ingSw2018StaglianoVagagginiVergari.server.model.carteSchema.ViaLux;
 import ingSw2018StaglianoVagagginiVergari.server.model.carteSchema.Virtus;
@@ -29,6 +30,7 @@ class PlanciaTest {
         when(mockedDie2.getColore()).thenReturn("Viola");
         when(mockedDie2.getNumero()).thenReturn(2);
         schema = ViaLux.get();
+        schema.scegliFaccia(true);
         schema.scegliFaccia(false);
         p=new Plancia("Rosso");
         p.inserisciCartaSchema(schema);
@@ -336,6 +338,28 @@ class PlanciaTest {
         when(db5.getColore()).thenReturn("Giallo");
         p.calcolaMosse(db5, false, false);
         assertThrows(MossaIllegaleException.class, ()->p.piazzaDado(2,2, db5));
+        //--------------------------------------------------------------------------------------------------------------
+        for (int i=0;i<4;i++){
+            for (int j=0; j<5; j++){
+                p.rimuoviDado(i,j);
+            }
+        }
+        Schema schema2 = AuroraeMagnificus.get();
+        schema2.scegliFaccia(true);
+        p.inserisciCartaSchema(schema2);
+        Dado dx1 = mock(Dado.class);
+        when(dx1.getNumero()).thenReturn(4);
+        when(dx1.getColore()).thenReturn("Blu");
+        p.calcolaMosse(dx1, false, false);
+        p.piazzaDado(3,4, dx1);
+        assertEquals(p.leggiPlancia(3,4), dx1);
+        Dado dx2 = mock(Dado.class);
+        when(dx2.getNumero()).thenReturn(1);
+        when(dx2.getColore()).thenReturn("Blu");
+        p.calcolaMosse(dx2, false, false);
+        p.piazzaDado(2,3, dx2);
+        assertEquals(p.leggiPlancia(2,3), dx2);
+
 
 
 
