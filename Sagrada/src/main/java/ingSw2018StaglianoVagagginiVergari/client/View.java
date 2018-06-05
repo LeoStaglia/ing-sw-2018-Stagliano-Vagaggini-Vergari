@@ -157,6 +157,7 @@ public class View extends UnicastRemoteObject implements GameObserver, Remote {
             System.exit(0);
         } else if (cmd == 1) {
             while (login == 0) {
+                cmd=-1;
                 while(cmd!=1 && cmd!=2) {
                     System.out.println("(1) Per partecipare a una nuova partita, (2) per login.");
                     try {
@@ -1376,6 +1377,9 @@ public class View extends UnicastRemoteObject implements GameObserver, Remote {
                 updateView = true;      //<<-- una carta
                 passaturno = false;       //<<--
 
+            }else {
+                updateMessage("SCELTA IMPOSSIBILE");
+                updateView=true;
             }
 
 
