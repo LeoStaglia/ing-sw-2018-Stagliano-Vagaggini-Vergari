@@ -42,16 +42,29 @@ public class AlesatoreRame implements CartaUtensile {
 
     @Override
     public void usaEffettoCarta(Partita p) throws RemoteException{
-        costo=true;
-        Dado d= p.getCurrentPlayer().getPlancia().leggiPlancia(xDie, yDie);
-        p.getCurrentPlayer().getPlancia().rimuoviDado(xDie, yDie);
-        p.getCurrentPlayer().getPlancia().calcolaMosse(d, false, true);
-        try{
-            p.getCurrentPlayer().getPlancia().piazzaDado(xCell, yCell, d);
-        }catch(MossaIllegaleException e){
-
+        Dado[][] grigliaGiocoCopy=new Dado[4][5];
+        setGrigliaGiocoCopy(p,grigliaGiocoCopy);
+        if (p.getCurrentPlayer().getPlancia().leggiPlancia(xDie, yDie)!=null) {
+            Dado d = p.getCurrentPlayer().getPlancia().leggiPlancia(xDie, yDie);
+            p.getCurrentPlayer().getPlancia().rimuoviDado(xDie, yDie);
+            p.getCurrentPlayer().getPlancia().calcolaMosse(d, false, true);
+            try {
+                p.getCurrentPlayer().getPlancia().piazzaDado(xCell, yCell, d);
+                p.getCurrentPlayer().setSegnalini(p.getCurrentPlayer().getSegnalini() - getCosto());
+                p.getAzioniGiocatore().remove(2);
+                costo = true;
+                p.updateGenerale();
+            } catch (MossaIllegaleException e) {
+                p.getCurrentPlayer().getPlancia().setGrigliaGioco(grigliaGiocoCopy);
+                p.updateMessage("MOSSA NON VALIDA !!");
+                p.updateCurrentPlayer();
+            }
+        }else {
+            p.getCurrentPlayer().getPlancia().setGrigliaGioco(grigliaGiocoCopy);
+            p.updateMessage("MOSSA NON VALIDA !!");
+            p.updateCurrentPlayer();
         }
-        p.updateGenerale();
+
     }
 
     @Override
@@ -92,6 +105,14 @@ public class AlesatoreRame implements CartaUtensile {
 
     public void setyCell(int yCell) {
         this.yCell = yCell;
+    }
+
+    public void setGrigliaGiocoCopy(Partita p,Dado[][] grigliaGiocoCopy) {
+        for(int i=0;i<4;i++){
+            for(int j=0;j<5;j++){
+                grigliaGiocoCopy[i][j]=p.getCurrentPlayer().getPlancia().getGrigliaGioco()[i][j];
+            }
+        }
     }
 }
 

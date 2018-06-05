@@ -12,7 +12,7 @@ public interface RemoteController extends Remote{
     public void partecipaPartita(GameObserver view, String username) throws InterruptedException, RemoteException, FullGameException;
     public void abbandonaPartita(GameObserver view, String username) throws RemoteException;
     public void scegliSchema(GameObserver view, String idUser,boolean carta1, boolean fronte)throws RemoteException;
-    public void svolgimentoPartita(GameObserver view,ArrayList<Integer> parametri) throws MossaIllegaleException, RemoteException;
+    public void svolgimentoPartita(GameObserver view,ArrayList<Integer> parametri) throws RemoteException;
     public void usaCartaUtensile(GameObserver view,ArrayList<Integer> parametri) throws RemoteException;
     public int login(GameObserver view, String username, String token) throws RemoteException;
 

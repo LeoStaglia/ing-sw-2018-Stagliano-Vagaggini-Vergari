@@ -42,10 +42,28 @@ public class PinzaSgrossatrice implements CartaUtensile {
     }
 
     public void usaEffettoCarta(Partita p) throws RemoteException {  // viene passata solo la Partita, dato che si ha traccia dell'utente corrente
-        costo=true;
-        if(scelta==1) p.getDadoSelezionato().incrementa();
-        if(scelta==-1) p.getDadoSelezionato().decrementa();
+        if(scelta==1) {
+            if(p.getDadoSelezionato().incrementa());
+            else {
+                p.reInserisciDadoinRiserva(p.getDadoSelezionato());
+                p.updateMessage("NON PUOI INCREMENTARE UN 6 !!!");
+                p.updateCurrentPlayer();
+                return;
+            }
+        }
+        if(scelta==-1){
+            if(p.getDadoSelezionato().decrementa());
+            else {
+                p.reInserisciDadoinRiserva(p.getDadoSelezionato());
+                p.updateMessage("NON PUOI DECREMENTARE UN 1 !!!");
+                p.updateCurrentPlayer();
+                return;
+            }
+        }
         p.reInserisciDadoinRiserva(p.getDadoSelezionato());
+        p.getCurrentPlayer().setSegnalini(p.getCurrentPlayer().getSegnalini() - getCosto());
+        p.getAzioniGiocatore().remove(2);
+        costo=true;
         p.updateGenerale();
 
 

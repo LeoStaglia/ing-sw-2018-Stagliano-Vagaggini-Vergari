@@ -7,6 +7,7 @@ import ingSw2018StaglianoVagagginiVergari.server.model.Dado;
 import ingSw2018StaglianoVagagginiVergari.server.model.Partita;
 
 import java.rmi.RemoteException;
+import java.util.ArrayList;
 
 
 public class DiluentePerPastaSalda implements CartaUtensile {
@@ -19,6 +20,8 @@ public class DiluentePerPastaSalda implements CartaUtensile {
     int x;
     int y;
     boolean secondPhase=false;
+   private Dado[][] grigliaGiocoCopy=new Dado[4][5];
+   private ArrayList<Dado> riservaCopy=new ArrayList<>();
     String descrizione="Dopo aver scelto un dado, riponilo nel Sacchetto,\n" +
             "poi pescane uno dal Sacchetto\n\n"+
             "N.B. Scegli il valore del nuovo dado e\n" +
@@ -46,7 +49,10 @@ public class DiluentePerPastaSalda implements CartaUtensile {
 
     @Override
     public void usaEffettoCarta(Partita PartitaCorrente) throws RemoteException {
+
         if (!secondPhase){
+            setGrigliaGiocoCopy(PartitaCorrente,grigliaGiocoCopy);
+           setRiservaCopy(PartitaCorrente,riservaCopy);
             PartitaCorrente.getAzioniGiocatore().add(2);
             secondPhase=true;
             PartitaCorrente.updateGenerale();
@@ -56,14 +62,22 @@ public class DiluentePerPastaSalda implements CartaUtensile {
             secondPhase=false;
             PartitaCorrente.getCurrentPlayer().getPlancia().calcolaMosse(PartitaCorrente.getDadoSelezionato(),false,false);
             try {
+                PartitaCorrente.getAzioniGiocatore().remove(2); //se si arriva a questo punto ho già eseguito la prima parte dell'effetto
                 PartitaCorrente.getCurrentPlayer().getPlancia().piazzaDado(x,y,PartitaCorrente.getDadoSelezionato());
                 PartitaCorrente.getAzioniGiocatore().remove(1);
+                PartitaCorrente.getCurrentPlayer().setSegnalini(PartitaCorrente.getCurrentPlayer().getSegnalini() - getCosto());
+                costo=true;
+                PartitaCorrente.updateGenerale();
             }
             catch (MossaIllegaleException e){
-                //todo need to define the behaviour
+                PartitaCorrente.getCurrentPlayer().getPlancia().setGrigliaGioco(grigliaGiocoCopy);
+                PartitaCorrente.setRiserva(riservaCopy);
+                riservaCopy.clear();
+                PartitaCorrente.updateMessage("MOSSA NON VALIDA IL DADO è STATO REINSERITO IN RISERVA !!");
+                PartitaCorrente.updateCurrentPlayer();
             }
-            costo=true;
-            PartitaCorrente.updateGenerale();
+
+
 
         }
 
@@ -119,5 +133,20 @@ public class DiluentePerPastaSalda implements CartaUtensile {
 
     public boolean isSecondPhase() {
         return secondPhase;
+    }
+
+    public void setGrigliaGiocoCopy(Partita p,Dado[][] grigliaGiocoCopy) {
+        for(int i=0;i<4;i++){
+            for(int j=0;j<3;j++){
+                grigliaGiocoCopy[i][j]=p.getCurrentPlayer().getPlancia().getGrigliaGioco()[i][j];
+            }
+        }
+    }
+
+    public void setRiservaCopy(Partita p,ArrayList<Dado> riservaCopy){
+        for (Dado d:p.getRiserva()) {
+            riservaCopy.add(d);
+        }
+
     }
 }

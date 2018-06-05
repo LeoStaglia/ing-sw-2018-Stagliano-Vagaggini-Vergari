@@ -805,5 +805,15 @@ public class Plancia implements Serializable {
         return result;
 
     }
+    public Dado[][] getGrigliaGioco() {
+        return grigliaGioco;
+    }
 
+    public void setGrigliaGioco(Dado[][] grigliaGioco) {
+        for(int i=0;i<4;i++){
+            for(int j=0;j<5;j++){
+               this.grigliaGioco[i][j]=grigliaGioco[i][j];
+            }
+        }
+    }
 }

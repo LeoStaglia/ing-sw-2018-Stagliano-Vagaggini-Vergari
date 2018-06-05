@@ -64,6 +64,9 @@ public class TamponeDiamantato implements CartaUtensile {
 
         PartitaCorrente.setDadoSelezionato(DadoinMano);
         PartitaCorrente.reInserisciDadoinRiserva(DadoinMano);
+        PartitaCorrente.getAzioniGiocatore().remove(2);
+        PartitaCorrente.getCurrentPlayer().setSegnalini(PartitaCorrente.getCurrentPlayer().getSegnalini() - getCosto());
+        costo = true;
         PartitaCorrente.updateGenerale();
 
 

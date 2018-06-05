@@ -39,10 +39,23 @@ public class TenagliaARotelle implements CartaUtensile {
 
 
     public void usaEffettoCarta(Partita p) throws RemoteException{  // viene passata solo la Partita, dato che si ha traccia dell'utente corrente
-        costo=true;
-        p.setOrdineRoundTool8Start();
-        p.getAzioniGiocatore().add(4);
-        p.updateGenerale();
+        int conta=0;
+        for(int i=p.getTurno()-1;i<p.getOrdineRound().size();i++){
+            if(p.getOrdineRound().get(i)==p.getCurrentPlayer()) conta++;
+        }
+
+        if(conta==2) {
+            p.setOrdineRoundTool8Start();
+            p.getCurrentPlayer().setSegnalini(p.getCurrentPlayer().getSegnalini() - getCosto());
+            p.getAzioniGiocatore().remove(2);
+            p.getAzioniGiocatore().add(4);
+            costo = true;
+            p.updateGenerale();
+        }
+        else{
+            p.updateMessage("NON PUOI USARE QUESTA CARTA NEL TUO SECONDO TURNO");
+            p.updateCurrentPlayer();
+        }
 
         // devo fare in modo di segnalare che questa carta è stata utilizzata al fine di richiamare SetOrdineRoundTool8End
           // oppure richiamo ogni volta setOrdineRoundTool8End()

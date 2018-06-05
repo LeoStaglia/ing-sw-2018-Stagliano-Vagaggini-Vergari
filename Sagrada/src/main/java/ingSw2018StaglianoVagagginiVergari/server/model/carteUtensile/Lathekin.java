@@ -22,6 +22,7 @@ public class Lathekin implements CartaUtensile {
     private int xCell;
     private int yCell;
     private boolean secondPhase=false;
+    Dado[][] grigliaGiocoCopy=new Dado[4][5];
     // Utente Utilizzatore;   quando avremo dichiarato Utente, decommentare
 
 
@@ -44,7 +45,10 @@ public class Lathekin implements CartaUtensile {
 
     @Override
     public void usaEffettoCarta(Partita p) throws RemoteException{
-        costo=true;
+        if(!secondPhase){
+            setGrigliaGiocoCopy(p);
+        }
+
         if (p.getCurrentPlayer().getPlancia().leggiPlancia(xDie, yDie)!=null){
             Dado d = p.getCurrentPlayer().getPlancia().leggiPlancia(xDie, yDie); // d è uguale a Dado selezionato
             p.getCurrentPlayer().getPlancia().rimuoviDado(xDie, yDie);
@@ -56,13 +60,28 @@ public class Lathekin implements CartaUtensile {
                     secondPhase=true;
                 }else{
                     secondPhase=false;
+                    p.getCurrentPlayer().setSegnalini(p.getCurrentPlayer().getSegnalini() - getCosto());
+                    p.getAzioniGiocatore().remove(2);
+                    costo=true;
                 }
+                p.updateTool4(secondPhase);
+                p.updateGenerale();
             }catch(MossaIllegaleException e){
                 //TODO notifica di piazzamento impossibile alla View
+                secondPhase=false;
+                p.getCurrentPlayer().getPlancia().setGrigliaGioco(grigliaGiocoCopy);
+                p.updateMessage("MOSSA NON VALIDA !!");
+                p.updateTool4(secondPhase);
+                p.updateCurrentPlayer();
             }
-            p.updateGenerale();
+
         }else{
             //TODO notifica di errore delle coordinate del dado alla View
+            secondPhase=false;
+            p.getCurrentPlayer().getPlancia().setGrigliaGioco(grigliaGiocoCopy);
+            p.updateMessage("MOSSA NON VALIDA !!");
+            p.updateTool4(secondPhase);
+            p.updateCurrentPlayer();
         }
 
 
@@ -106,5 +125,13 @@ public class Lathekin implements CartaUtensile {
     @Override
     public String getNome() {
         return Nome;
+    }
+
+    public void setGrigliaGiocoCopy(Partita p) {
+        for(int i=0;i<4;i++){
+            for(int j=0;j<5;j++){
+                grigliaGiocoCopy[i][j]=p.getCurrentPlayer().getPlancia().getGrigliaGioco()[i][j];
+            }
+        }
     }
 }

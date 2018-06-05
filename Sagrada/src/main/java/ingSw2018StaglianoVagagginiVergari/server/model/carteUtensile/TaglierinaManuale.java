@@ -23,6 +23,7 @@ public class TaglierinaManuale implements CartaUtensile {
     private int x; // coordinata x nuovo piazzamento su plancia
     private int y; // coordinata y nuovo piazzamento su plancia
     private int numeroDadi;
+    Dado[][] grigliaGiocoCopy=new Dado[4][5];
 
     // Utente Utilizzatore;   quando avremo dichiarato Utente, decommentare
 
@@ -72,28 +73,43 @@ public class TaglierinaManuale implements CartaUtensile {
     }
 
     public void usaEffettoCarta(Partita p) throws RemoteException{
-        costo=true;
         String color=null;
         color=p.getTracciatoDelRound().getRimanenzeRiservaOn(r).getColore();
 
-           Dado d;
-            if(p.getCurrentPlayer().getPlancia().leggiPlancia(i,j).getColore().equals(color)) {
-                d=p.getCurrentPlayer().getPlancia().leggiPlancia(i,j); // d è uguale a Dado selezionato
-                p.getCurrentPlayer().getPlancia().rimuoviDado(i, j);
-                p.getCurrentPlayer().getPlancia().calcolaMosse(d, false, false);
+        setGrigliaGiocoCopy(p);
+        Dado d;
+            if (p.getCurrentPlayer().getPlancia().leggiPlancia(i, j)!=null) {
+               if (p.getCurrentPlayer().getPlancia().leggiPlancia(i, j).getColore().equals(color)) {
+                   d = p.getCurrentPlayer().getPlancia().leggiPlancia(i, j); // d è uguale a Dado selezionato
+                   p.getCurrentPlayer().getPlancia().rimuoviDado(i, j);
+                   p.getCurrentPlayer().getPlancia().calcolaMosse(d, false, false);
 
-                try {p.getCurrentPlayer().getPlancia().piazzaDado(x, y, d);
-                    if (numeroDadi==2){
-                        p.getAzioniGiocatore().add(2);
-                    }
-                }
-                catch (MossaIllegaleException e){
-                    //TODO gestione Mossa Illegale
-                }
-                p.updateGenerale();
-            }
+                   try {
+                       p.getCurrentPlayer().getPlancia().piazzaDado(x, y, d);
+                       if (numeroDadi != 2) {
+                           p.getAzioniGiocatore().remove(2);
+                           p.getCurrentPlayer().setSegnalini(p.getCurrentPlayer().getSegnalini() - getCosto());
+                           costo = true;
+                           p.updateTool12(false);
+                           p.updateGenerale();
+                       }
+                       else{
+                           p.updateTool12(true);
+                           p.updateGenerale();
+                       }
+                   } catch (MossaIllegaleException e) {
+                       p.getCurrentPlayer().getPlancia().setGrigliaGioco(grigliaGiocoCopy);
+                       p.updateMessage("MOSSA NON VALIDA !!");
+                       p.updateTool12(false);
+                       p.updateCurrentPlayer();
+                   }
 
-            //TODO scelta utente se vuole proseguire o meno al secondo lancio da gestire nel controller
+               }
+           }else {
+               p.getCurrentPlayer().getPlancia().setGrigliaGioco(grigliaGiocoCopy);
+               p.updateMessage("MOSSA NON VALIDA !!");
+                p.updateTool12(false);
+               p.updateCurrentPlayer();}
         }
 
     public int getCosto() {
@@ -115,6 +131,14 @@ public class TaglierinaManuale implements CartaUtensile {
     @Override
     public String getNome() {
         return Nome;
+    }
+
+    public void setGrigliaGiocoCopy(Partita p) {
+        for(int i=0;i<4;i++){
+            for(int j=0;j<5;j++){
+                grigliaGiocoCopy[i][j]=p.getCurrentPlayer().getPlancia().getGrigliaGioco()[i][j];
+            }
+        }
     }
 }
 

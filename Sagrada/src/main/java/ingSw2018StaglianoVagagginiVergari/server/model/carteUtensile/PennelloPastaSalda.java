@@ -38,10 +38,10 @@ public class PennelloPastaSalda implements CartaUtensile {
 
 
     @Override
-    public void usaEffettoCarta(Partita p) throws RemoteException, MossaIllegaleException{
-        costo=true;
+    public void usaEffettoCarta(Partita p) throws RemoteException,MossaIllegaleException{
         Boolean[][] mossePermesse;
         if(fase1) {
+            p.getAzioniGiocatore().remove(2);
             p.getDadoSelezionato().lanciaDado();
 
 
@@ -54,26 +54,42 @@ public class PennelloPastaSalda implements CartaUtensile {
                     }
                 }
             }
-            for (String username: p.getGameObservers().keySet()){
-                GameObserver view = p.getGameObservers().get(username);
+           // for (String username: p.getGameObservers().keySet()){
+                GameObserver view = p.getGameObservers().get(p.getCurrentPlayer().getId());
                 view.updateViewTool6Bool(piazzabile);
                 if (piazzabile){
+                    p.updateTool6piazzato(false);
                     view.updateViewTool6Die(p.getDadoSelezionato().toString());
                     fase1=false;
                 }
-            }
+            //}
             if (!piazzabile){
                 p.reInserisciDadoinRiserva(p.getDadoSelezionato());
+                p.getCurrentPlayer().setSegnalini(p.getCurrentPlayer().getSegnalini() - getCosto());
+                p.getAzioniGiocatore().remove(2);
+                costo=true;
+                p.updateTool6piazzato(false);
+                p.updateMessage("Il dado pescato non è piazzabile, è stato reinserito in riserva !!");
                 p.updateGenerale();
             }
         }else{
             try{
                 p.getCurrentPlayer().getPlancia().piazzaDado(xCell, yCell, p.getDadoSelezionato());
                 piazzabile=false;
+                p.getCurrentPlayer().setSegnalini(p.getCurrentPlayer().getSegnalini() - getCosto());
+                p.getAzioniGiocatore().remove(2);
+                p.getAzioniGiocatore().remove(1);
+                costo=true;
+                p.updateTool6piazzato(true);
+                System.out.println("PIPPO PLUTO");
                 p.updateGenerale();
                 fase1=true;
 
             }catch(MossaIllegaleException e){
+                fase1=false;
+                p.updateTool6piazzato(false);
+                p.updateMessage("MOSSA NON VALIDA !!");
+                p.updateCurrentPlayer();
                 throw e;
             }
         }

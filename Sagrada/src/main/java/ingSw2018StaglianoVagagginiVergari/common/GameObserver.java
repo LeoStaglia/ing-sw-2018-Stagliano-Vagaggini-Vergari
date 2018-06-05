@@ -37,9 +37,14 @@ public interface GameObserver extends Remote {
 
     public void updateViewTool6Die(String Dado) throws RemoteException;
 
+    public void updateViewTool6piazzato (boolean piazzato) throws RemoteException;
+
     public void updateUsername(boolean usernameOK) throws RemoteException;
     public void notifyExit() throws RemoteException;
     public void ping() throws RemoteException;
     public void notifyUserExit(String username) throws RemoteException;
     public void updateViewTool11(String Dado) throws RemoteException;
+    public void updateMessage (String message) throws RemoteException;
+    public void updateViewTool4 (boolean fase) throws RemoteException;
+    public void updateViewTool12 (boolean fase) throws RemoteException;
 }

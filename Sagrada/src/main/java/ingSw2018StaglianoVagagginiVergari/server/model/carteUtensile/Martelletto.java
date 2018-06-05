@@ -41,15 +41,29 @@ public class Martelletto implements CartaUtensile {
 
 
     public void usaEffettoCarta(Partita p) throws RemoteException {
-        costo=true;
         int conta=0;
         for(int i=p.getTurno()-1;i<p.getOrdineRound().size();i++){
             if(p.getOrdineRound().get(i)==p.getCurrentPlayer()) conta++;
         }
 
-        if(conta==1 && p.getAzioniGiocatore().contains(1))
-       p.rilanciaDadiInRiserva();
-       p.updateGenerale();
+        if(conta==1 && p.getAzioniGiocatore().contains(1)) {
+            costo=true;
+            p.rilanciaDadiInRiserva();
+            p.getCurrentPlayer().setSegnalini(p.getCurrentPlayer().getSegnalini() - getCosto());
+            p.getAzioniGiocatore().remove(2);
+            p.updateGenerale();
+        }
+        else {
+            if(conta==2){
+                p.updateMessage("NON E'IL TUO SECONDO TURNO");
+                p.updateCurrentPlayer();
+            }
+            else{
+                p.updateMessage("HAI GIA' PIAZZATO UN DADO IN QUESTO TURNO !!!");
+                p.updateCurrentPlayer();
+            }
+        }
+
 
        //TODO eccezione in caso si sia al primo turno? o la carta non ha effetto?
 

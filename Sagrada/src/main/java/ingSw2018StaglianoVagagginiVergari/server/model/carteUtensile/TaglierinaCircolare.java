@@ -38,9 +38,11 @@ public class TaglierinaCircolare implements CartaUtensile {
 
 
     public void usaEffettoCarta(Partita p) throws RemoteException {
-        costo=true;
         p.reInserisciDadoinRiserva(p.getTracciatoDelRound().removeRimanenzeRiservaOn(i));
         p.getTracciatoDelRound().setRimanenzeRiservaOn(i,p.getDadoSelezionato());
+        p.getCurrentPlayer().setSegnalini(p.getCurrentPlayer().getSegnalini() - getCosto());
+        p.getAzioniGiocatore().remove(2);
+        costo=true;
         p.updateGenerale();
 
 
