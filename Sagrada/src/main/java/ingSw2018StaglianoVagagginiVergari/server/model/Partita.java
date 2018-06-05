@@ -723,7 +723,7 @@ public class Partita {
 
             for (String username:gameObservers.keySet()){
                 GameObserver view = gameObservers.get(username);
-                view.printPiazzamentoScorretto(getCurrentPlayer().getId());
+                view.setPiazzamentoScorretto(getCurrentPlayer().getId());
             }
 
 

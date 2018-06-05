@@ -31,7 +31,7 @@ public interface GameObserver extends Remote {
 
     public void updateViewPunteggio(HashMap<String, Integer> punteggi,String vincitore) throws RemoteException;
 
-    public void printPiazzamentoScorretto(String giocatoreCorrente) throws RemoteException;
+    public void setPiazzamentoScorretto(String giocatoreCorrente) throws RemoteException;
 
     public void updateViewTool6Bool(boolean piazzabile) throws RemoteException;
 
