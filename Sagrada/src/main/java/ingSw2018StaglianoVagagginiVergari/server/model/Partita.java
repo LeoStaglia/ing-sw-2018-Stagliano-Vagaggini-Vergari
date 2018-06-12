@@ -51,6 +51,7 @@ public class Partita {
         riempiSacchetto();
         Utente.inizializzaTokenSet();
         inizializzaCarteSchema();
+        inizializzaAzioniGiocatore();
         inizializzaMazzoCarteUtensile();
         inizializzaMazzoCarteObiettivoPubblico();
         inizializzaPlance();
@@ -63,9 +64,7 @@ public class Partita {
         //TODO rendere parametrico l'update su un ArrayList di view.
         if (gameObservers.get(username) != null) {
             GameObserver oldView = gameObservers.get(username);
-            if (pingClient(oldView)) {
-                oldView.notifyExit();
-            }
+            oldView.notifyExit();
             removeObserver(username);
         }
         gameObservers.put(username, view);
@@ -597,11 +596,7 @@ public class Partita {
             for (Dado d : tracciatoDelRound.getRimanenzeRiservaOn()) {
                 tracciato.add(d.toString());
             }
-            if (pingClient(view)) {
-                view.updateView(planceGiocatori, listCartaUtensile, getCurrentPlayer().getId(), getTurno(), getTracciatoDelRound().getRoundAttuale(), dadiRiserva, "null", carteObiettivoPubblico, listCarteObiettivoPrivato, tracciato, azioniGiocatore);
-            } else {
-                removeObserver(username);
-            }
+            view.updateView(planceGiocatori, listCartaUtensile, getCurrentPlayer().getId(), getTurno(), getTracciatoDelRound().getRoundAttuale(), dadiRiserva, "null", carteObiettivoPubblico, listCarteObiettivoPrivato, tracciato, azioniGiocatore);
         }
 
     }
@@ -653,11 +648,7 @@ public class Partita {
             for (Dado d : tracciatoDelRound.getRimanenzeRiservaOn()) {
                 tracciato.add(d.toString());
             }
-            if (pingClient(view)) {
-                view.updateView(planceGiocatori, listCartaUtensile, getCurrentPlayer().getId(), getTurno(), getTracciatoDelRound().getRoundAttuale(), dadiRiserva, "null", carteObiettivoPubblico, listCarteObiettivoPrivato, tracciato, azioniGiocatore);
-            } else {
-                removeObserver(getCurrentPlayer().getId());
-            }
+            view.updateView(planceGiocatori, listCartaUtensile, getCurrentPlayer().getId(), getTurno(), getTracciatoDelRound().getRoundAttuale(), dadiRiserva, "null", carteObiettivoPubblico, listCarteObiettivoPrivato, tracciato, azioniGiocatore);
         }
     }
 
@@ -667,20 +658,24 @@ public class Partita {
         gameObserverClone = (HashMap<String, GameObserver>) gameObservers.clone();
 
         GameObserver view = gameObserverClone.get(getCurrentPlayer().getId());
-
-        if (pingClient(view)) {
+        if (pingClient(view)){
             view.updateMessage(message);
-        } else {
-           removeObserver(getCurrentPlayer().getId());
+        }else{
+            removeObserver(getCurrentPlayer().getId());
         }
     }
 
 
-
-
-
-
-
+    public boolean pingClient(GameObserver view){
+        boolean result=false;
+        try{
+            view.ping();
+            result=true;
+        }catch(RemoteException ex){
+            return result;
+        }
+        return result;
+    }
 
 
     public void updateTool11(String dado) throws RemoteException {
@@ -721,12 +716,10 @@ public class Partita {
             updateCurrentPlayer();
             //todo errorHandler - dopo che il metodo piazzadado viene chiamato una volta, non viene più chiamata l'eccezione???
 
-            for (String username:gameObservers.keySet()){
+            /*for (String username:gameObservers.keySet()){
                 GameObserver view = gameObservers.get(username);
                 view.setPiazzamentoScorretto(getCurrentPlayer().getId());
-            }
-
-
+            }*/
 
 
         }
@@ -796,21 +789,15 @@ public class Partita {
     public HashMap<String, String> getUserTokens() {
         return userTokens;
     }
-    public synchronized boolean pingClient(GameObserver view){
-        boolean result=false;
-        try{
-            view.ping();
-            result=true;
-        }catch(RemoteException ex){
-            return result;
-        }
-        return result;
-    }
-    public synchronized void removeObserver(String username) throws RemoteException {
+    public void removeObserver(String username){
         gameObservers.remove(username);
         for (String user:gameObservers.keySet()){
             if (!(user).equals(username))
-            gameObservers.get(user).notifyUserExit(username);
+            try{
+                gameObservers.get(user).notifyUserExit(username);
+            }catch(RemoteException ex){
+
+            }
         }
     }
 

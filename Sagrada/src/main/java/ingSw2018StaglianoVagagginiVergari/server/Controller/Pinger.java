@@ -31,7 +31,7 @@ public class Pinger extends Thread {
 
             gameObserverClone = (HashMap<String, GameObserver>) partita.getGameObservers().clone();
             for (String username : gameObserverClone.keySet()) {
-                if (pingClient(partita.getGameObservers().get(username))) {
+                if (partita.pingClient(partita.getGameObservers().get(username))) {
                     pingFailed.replace(partita.getGameObservers().get(username), 0);
                 } else {
                     int n = pingFailed.get(partita.getGameObservers().get(username));
@@ -45,14 +45,5 @@ public class Pinger extends Thread {
 
         }
     }
-    public boolean pingClient(GameObserver view){
-        boolean result=false;
-        try{
-            view.ping();
-            result=true;
-        }catch(RemoteException ex){
-            return result;
-        }
-        return result;
-    }
+
 }
