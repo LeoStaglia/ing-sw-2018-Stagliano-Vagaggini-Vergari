@@ -1,12 +1,10 @@
 package ingSw2018StaglianoVagagginiVergari.model;
 
 import Eccezioni.MossaIllegaleException;
+import com.sun.org.apache.xpath.internal.operations.Bool;
 import ingSw2018StaglianoVagagginiVergari.server.model.Dado;
 import ingSw2018StaglianoVagagginiVergari.server.model.Plancia;
-import ingSw2018StaglianoVagagginiVergari.server.model.carteSchema.AuroraeMagnificus;
-import ingSw2018StaglianoVagagginiVergari.server.model.carteSchema.Schema;
-import ingSw2018StaglianoVagagginiVergari.server.model.carteSchema.ViaLux;
-import ingSw2018StaglianoVagagginiVergari.server.model.carteSchema.Virtus;
+import ingSw2018StaglianoVagagginiVergari.server.model.carteSchema.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -359,8 +357,28 @@ class PlanciaTest {
         p.calcolaMosse(dx2, false, false);
         p.piazzaDado(2,3, dx2);
         assertEquals(p.leggiPlancia(2,3), dx2);
-
-
+        //--------------------------------------------------------------------------------------------------------------
+        for (int i=0;i<4;i++){
+            for (int j=0; j<5; j++){
+                p.rimuoviDado(i,j);
+            }
+        }
+        Schema schema3 = Firelight.get();
+        p.inserisciCartaSchema(schema3);
+        schema3.scegliFaccia(true);
+        Dado x1 = mock(Dado.class);
+        when(x1.getNumero()).thenReturn(5);
+        when(x1.getColore()).thenReturn("Giallo");
+        Boolean[][] matrix = p.calcolaMosse(x1, false, false);
+        for (int i=0; i<4; i++){
+            System.out.println("");
+            for (int j=0; j<5; j++){
+                System.out.print(matrix[i][j]);
+                System.out.print(" ");
+            }
+        }
+        p.piazzaDado(0,3, x1);
+        assertEquals(p.leggiPlancia(0,3), x1);
 
 
 

@@ -22,7 +22,7 @@ import java.util.TimerTask;*/
 
 public class Controller extends UnicastRemoteObject implements RemoteController {
 
-    private Partita partita;
+    private final Partita partita;
 
     private Timer t;
 
@@ -87,32 +87,11 @@ public class Controller extends UnicastRemoteObject implements RemoteController 
         partita.sceltaSchema(view, idUser,carta1, fronte);
         if(partita.contaSchemi()) {
             setStatus(ControllerStatus.SvolgimentoPartita);
-             new Thread(new Runnable() { //deamon that checks the connection with clients
-                @Override
-                public void run() {
-                    while (true) {
-                        HashMap<String, GameObserver> gameObserverClone = new HashMap<>();
-                        synchronized (partita) {
-                            gameObserverClone = (HashMap<String, GameObserver>) partita.getGameObservers().clone();
-                            for (String username : gameObserverClone.keySet()) {
-                                if (partita.pingClient(partita.getGameObservers().get(username))) {
-
-                                } else {
-                                    try {
-                                        partita.removeObserver(username);
-                                    } catch (RemoteException e) {
-                                        e.printStackTrace();
-                                    }
-                                }
-                            }
-
-                        }
-                    }
-                }
-            }).start();
+            t = new Timer();
+            t.schedule(new TurnTimer(this, partita), 20000);
+            new Pinger(partita, this).start();
         }
 
-        partita.inizializzaAzioniGiocatore();
     }
 
 
@@ -121,7 +100,7 @@ public class Controller extends UnicastRemoteObject implements RemoteController 
 
 
 
-    public synchronized void svolgimentoPartita(GameObserver view,ArrayList<Integer> parametri) throws RemoteException {
+    public void svolgimentoPartita(GameObserver view,ArrayList<Integer> parametri) throws RemoteException {
        /* for (Utente u: partita.getOrdineRound()) {
             System.out.println(u.getId());
         }*/
@@ -140,7 +119,10 @@ public class Controller extends UnicastRemoteObject implements RemoteController 
                 partita.piazzamentoDado(parametri.get(2), parametri.get(3), false, false);
             }
             if (n == 2) this.scegliCartaUtensile(view,parametri.get(1));
-            if (n == 3) this.passaTurno(view);
+            if (n == 3) {
+                this.passaTurno(view);
+
+            }
 
         }
 
@@ -365,6 +347,8 @@ public class Controller extends UnicastRemoteObject implements RemoteController 
                 setStatus(ControllerStatus.SvolgimentoPartita);
                 break;
 
+                //TODO ramo else
+
         }
         setStatus(ControllerStatus.SvolgimentoPartita);
 
@@ -374,14 +358,22 @@ public class Controller extends UnicastRemoteObject implements RemoteController 
 
     public synchronized void passaTurno(GameObserver view) throws RemoteException {
         partita.inizializzaAzioniGiocatore();
+        t.cancel();
         if(partita.getTurno()==partita.getOrdineRound().size()){
             if (partita.getTracciatoDelRound().getRoundAttuale() < 10) {
                 partita.nextRound();
+                t = new Timer();
+                t.schedule(new TurnTimer(this, partita), 20000);
             } else { setStatus(ControllerStatus.CalcoloPunteggio);
                 partita.calcolaPunteggioFinale();                                               }
+        }
+        else{
+            partita.incrementaTurno();
+            t= new Timer();
+            t.schedule(new TurnTimer(this, partita), 20000);
 
         }
-        else partita.incrementaTurno();
+
 
 
     }
