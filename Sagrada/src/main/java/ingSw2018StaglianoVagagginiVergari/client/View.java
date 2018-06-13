@@ -114,6 +114,8 @@ public class View extends UnicastRemoteObject implements GameObserver, Remote {
 
     private Scanner inputCommand = new Scanner(System.in);
 
+    private StringNonBlockingScanner inputLine = new StringNonBlockingScanner();
+
     private IntegerNonBlockingScanner input = new IntegerNonBlockingScanner();
 
     private boolean passaturno = false;
@@ -1578,7 +1580,7 @@ public class View extends UnicastRemoteObject implements GameObserver, Remote {
                         stampante.printDescrizioneCartaUtensile(carteUtensile, c);
 
                         System.out.println("\nINSERISCI UN CARATTERE PER CONTINUARE");
-                        String s = inputCommand.next();
+                        String s = inputLine.call();
                     }
 
                     stampante.printTavoloDiGioco(turno, round, segnalini, tracciatoDelRound, planceGiocatori, 4, 5, giocatoreCorrente, id, carteObiettivoPubblico, carteObiettivoPrivato, carteUtensile, dadiRiserva, dadoSelezionato);  //<<-- aggiunte per aggiornare dopo aver letto la descrizione di
@@ -1610,7 +1612,7 @@ public class View extends UnicastRemoteObject implements GameObserver, Remote {
                         stampante.printDescrizioneCartaUtensile(carteUtensile, c);
 
                         System.out.println("\nINSERISCI UN CARATTERE PER CONTINUARE");
-                        String s = inputCommand.next();
+                        String s = inputLine.call();
                     }
 
                     stampante.printTavoloDiGioco(turno, round, segnalini, tracciatoDelRound, planceGiocatori, 4, 5, giocatoreCorrente, id, carteObiettivoPubblico, carteObiettivoPrivato, carteUtensile, dadiRiserva, dadoSelezionato);  //<<-- aggiunte per aggiornare dopo aver letto la descrizione di
