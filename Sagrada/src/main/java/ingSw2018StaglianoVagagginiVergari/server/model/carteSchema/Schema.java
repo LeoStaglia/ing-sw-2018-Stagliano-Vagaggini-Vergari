@@ -8,6 +8,8 @@ public interface Schema {
     public int getDifficoltaFronte();
     public int getDifficoltaRetro();
     public String[][] stringRepresentation(Boolean fronte);
+    public String getNomeFronte();
+    public String getNomeRetro();
 
 
 }

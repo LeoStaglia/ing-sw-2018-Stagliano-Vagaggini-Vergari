@@ -63,6 +63,11 @@ public class View extends UnicastRemoteObject implements GameObserver, Remote {
     private String[][] schemaRetro1;
     private String[][] schemaFronte2;
     private String[][] schemaRetro2;
+
+    private Integer[] difficoltàCarteSchema;
+    private String[] nomeCarteSchema;
+
+
     private String obiettivoPrivato;
     private HashMap<String, String> carteObiettivoPrivato = new HashMap<>();
     //private boolean updateView;
@@ -124,6 +129,8 @@ public class View extends UnicastRemoteObject implements GameObserver, Remote {
 
     private int round;
 
+    private  int segnalini;
+
     private ArrayList<String> tracciatoDelRound;
 
     private HashSet<Integer> azioniGiocatore;
@@ -145,6 +152,13 @@ public class View extends UnicastRemoteObject implements GameObserver, Remote {
     }
 
     public void run() throws IOException, InterruptedException{
+
+
+        if(controller instanceof ProxyClient) {
+            ((ProxyClient) controller).ClientListener();
+        }
+
+
         cmd = 0;
         username = null;
         boolean carta1 = false;
@@ -179,7 +193,7 @@ public class View extends UnicastRemoteObject implements GameObserver, Remote {
                         try {
                             controller.partecipaPartita(this, username);
                             while (!updateView) {
-                                System.out.println("");
+                                System.out.print("");
                             }
                             updateView = false;
                         } catch (FullGameException e) {
@@ -246,13 +260,15 @@ public class View extends UnicastRemoteObject implements GameObserver, Remote {
 
         @Override
         public synchronized void notifyUser (String id, String token, String[][]schemaFronte1, String[][]
-        schemaRetro1, String[][]schemaFronte2, String[][]schemaRetro2, String obiettivoPrivato) throws RemoteException {
+        schemaRetro1, String[][]schemaFronte2, String[][]schemaRetro2, String obiettivoPrivato, Integer[] difficoltàCarteSchema, String[] nomeCarteSchema) throws RemoteException {
             this.id = id;
             this.setStatus(ViewStatus.SelezioneSchema);
             this.schemaFronte1 = schemaFronte1;
             this.schemaRetro1 = schemaRetro1;
             this.schemaFronte2 = schemaFronte2;
             this.schemaRetro2 = schemaRetro2;
+            this.difficoltàCarteSchema = difficoltàCarteSchema;
+            this.nomeCarteSchema = nomeCarteSchema;
             this.obiettivoPrivato = obiettivoPrivato;
             this.token = token;
             updateView = true;
@@ -285,7 +301,7 @@ public class View extends UnicastRemoteObject implements GameObserver, Remote {
 
 
 
-    public void updateView(HashMap<String, String[][]> planceGiocatori, ArrayList<String> listaCartaUtensile, String giocatoreCorrente, int turno, int round, ArrayList<String> dadiRiserva, String dadoSelezionato, ArrayList<String> carteObiettivoPubblico, HashMap<String, String> carteObiettivoPrivato, ArrayList<String> tracciatoDelRound, HashSet<Integer> azioniGiocatore) throws RemoteException {
+    public void updateView(HashMap<String, String[][]> planceGiocatori, ArrayList<String> listaCartaUtensile, String giocatoreCorrente, int turno, int round, int segnalini, ArrayList<String> dadiRiserva, String dadoSelezionato, ArrayList<String> carteObiettivoPubblico, HashMap<String, String> carteObiettivoPrivato, ArrayList<String> tracciatoDelRound, HashSet<Integer> azioniGiocatore) throws RemoteException {
 
 
         //per la carta utensile    map <"TPennello Per Eglomise" "descrizione">
@@ -296,6 +312,7 @@ public class View extends UnicastRemoteObject implements GameObserver, Remote {
         this.giocatoreCorrente = giocatoreCorrente;
         this.turno = turno;
         this.round = round;
+        this.segnalini = segnalini;
         this.dadiRiserva = dadiRiserva;
         this.dadoSelezionato = dadoSelezionato;
         this.carteObiettivoPubblico = carteObiettivoPubblico;
@@ -579,7 +596,7 @@ public class View extends UnicastRemoteObject implements GameObserver, Remote {
         System.out.println("\n\n\n\n\n\n\n\n\n\n\n\n");
 
 
-        stampante.printTavoloDiGioco(turno, round, tracciatoDelRound, planceGiocatori, 4, 5, giocatoreCorrente, id, carteObiettivoPubblico, carteObiettivoPrivato, carteUtensile, dadiRiserva, dadoSelezionato);
+        stampante.printTavoloDiGioco(turno, round, segnalini, tracciatoDelRound, planceGiocatori, 4, 5, giocatoreCorrente, id, carteObiettivoPubblico, carteObiettivoPrivato, carteUtensile, dadiRiserva, dadoSelezionato);
 
 
         updateView = false;
@@ -617,9 +634,11 @@ public class View extends UnicastRemoteObject implements GameObserver, Remote {
 
         // prototipo della funzione:  private void stampaSchema(boolean carta1, boolean fronte);
         System.out.println("Benvenuto " + id + ", il token per accedere alla partita è: " + token);
+        System.out.println("============================================================================");
+        System.out.println("Questo è l'obiettivo privato:  "+ obiettivoPrivato);
+        System.out.println("============================================================================");
 
-        System.out.println();
-        stampante.printCarteSchema(schemaFronte1, schemaRetro1, schemaFronte2, schemaRetro2, 4, 5);
+        stampante.printCarteSchema(schemaFronte1, schemaRetro1, schemaFronte2, schemaRetro2, 4, 5, difficoltàCarteSchema, nomeCarteSchema);
         System.out.println();
 
 
@@ -679,7 +698,7 @@ public class View extends UnicastRemoteObject implements GameObserver, Remote {
                 }
             }
         }
-        System.out.println(status);
+        // System.out.println(status);
         while (!updateView) {
             wait();
         }
@@ -1556,7 +1575,7 @@ public class View extends UnicastRemoteObject implements GameObserver, Remote {
                         String s = inputCommand.next();
                     }
 
-                    stampante.printTavoloDiGioco(turno, round, tracciatoDelRound, planceGiocatori, 4, 5, giocatoreCorrente, id, carteObiettivoPubblico, carteObiettivoPrivato, carteUtensile, dadiRiserva, dadoSelezionato);  //<<-- aggiunte per aggiornare dopo aver letto la descrizione di
+                    stampante.printTavoloDiGioco(turno, round, segnalini, tracciatoDelRound, planceGiocatori, 4, 5, giocatoreCorrente, id, carteObiettivoPubblico, carteObiettivoPrivato, carteUtensile, dadiRiserva, dadoSelezionato);  //<<-- aggiunte per aggiornare dopo aver letto la descrizione di
                     updateView = true;      //<<-- una carta
                     passaturno = false;       //<<--
 

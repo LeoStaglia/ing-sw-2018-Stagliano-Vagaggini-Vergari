@@ -1,6 +1,7 @@
 package ingSw2018StaglianoVagagginiVergari.client;
 
 import ingSw2018StaglianoVagagginiVergari.server.model.Constraint;
+import ingSw2018StaglianoVagagginiVergari.server.model.Plancia;
 
 import java.util.*;
 
@@ -27,9 +28,9 @@ public class Printer {
     String ANSI_WHITE_BACKGROUND = "\u001B[47m";
 
 
-    public void printTurnoRound(int turno, int round) {
+    public void printTurnoRoundSegnalini(int turno, int round, int segnalini) {
 
-        System.out.println("\nTurno Corrente: " + turno + "    Round Corrente: " + round);
+        System.out.println("\nTurno Corrente: " + turno + "    Round Corrente: " + round + "   Segnalini favore: " + segnalini);
 
     }
 
@@ -350,14 +351,14 @@ public class Printer {
 
     }
 
-    public void printTavoloDiGioco( int turno, int round, ArrayList<String> tracciatoDelRound, HashMap<String, String[][]> planceGiocatori, int a, int b, String giocatoreCorrente, String id, ArrayList<String> carteObiettivoPubblico, HashMap<String, String> carteObiettivoPrivato, ArrayList<String> carteUtensile, ArrayList<String> dadiRiserva, String dadoSelezionato  ){
+    public void printTavoloDiGioco( int turno, int round, int segnalini, ArrayList<String> tracciatoDelRound, HashMap<String, String[][]> planceGiocatori, int a, int b, String giocatoreCorrente, String id, ArrayList<String> carteObiettivoPubblico, HashMap<String, String> carteObiettivoPrivato, ArrayList<String> carteUtensile, ArrayList<String> dadiRiserva, String dadoSelezionato  ){
 
 
 
 
         System.out.println("\n<===========================================================================================================================================>");
 
-        printTurnoRound(turno, round);
+        printTurnoRoundSegnalini(turno, round, segnalini);
 
         printTracciatoDelRound(tracciatoDelRound);
 
@@ -371,9 +372,9 @@ public class Printer {
 
         printDadiRiserva(dadiRiserva);
 
-        System.out.print("\nDado selezionato:   ");
+        //System.out.print("\nDado selezionato:   ");
 
-        printDado(dadoSelezionato);
+        //printDado(dadoSelezionato);
 
 
         System.out.println("\n\n<===========================================================================================================================================>");
@@ -381,10 +382,10 @@ public class Printer {
 
     }
 
-    public void printCarteSchema(String[][] schemaFronte1, String[][] schemaRetro1, String[][] schemaFronte2, String[][] schemaRetro2, int a, int b) {
+    public void printCarteSchema(String[][] schemaFronte1, String[][] schemaRetro1, String[][] schemaFronte2, String[][] schemaRetro2, int a, int b, Integer[] difficoltàCarteSchema, String[] nomeCarteSchema) {
 
         String[][][] matriciDaStampare = new String[4 + 1][a][b];  //numero di plance +1
-        Object[] idGiocatori = new Object[4 + 1];  //numero di plance +1
+        Object[] idDiff= new Object[4 + 1];  //numero di plance +1
 
 
         matriciDaStampare[0] = schemaFronte1;
@@ -392,10 +393,11 @@ public class Printer {
         matriciDaStampare[2] = schemaFronte2;
         matriciDaStampare[3] = schemaRetro2;
 
-        idGiocatori[0] = "schemaFronte1";
-        idGiocatori[1] = "schemaRetro1";
-        idGiocatori[2] = "schemaFronte2";
-        idGiocatori[3] = "schemaRetro2";
+
+        idDiff[0] = nomeCarteSchema[0] + "  Diff: " + difficoltàCarteSchema[0];
+        idDiff[1] = nomeCarteSchema[1] + "  Diff: " + difficoltàCarteSchema[1];
+        idDiff[2] = nomeCarteSchema[2] + "  Diff: " + difficoltàCarteSchema[2];
+        idDiff[3] = nomeCarteSchema[3] + "  Diff: " + difficoltàCarteSchema[3];
 
 
         for (int righe = 0; righe < a; righe++) {
@@ -409,11 +411,24 @@ public class Printer {
 
 
                 if (righe == 0)
-                    System.out.print(idGiocatori[carta] + "    ");
-                else {
-                    for (int x = 0; x < idGiocatori[carta].toString().length() + 4; x++)
+                    System.out.print(nomeCarteSchema[carta] + "    ");
+                else if (righe == 3){
+                    System.out.print("Diff: " + difficoltàCarteSchema[carta]);
+                    for (int x = 0; x < nomeCarteSchema[carta].toString().length() -3; x++)
                         System.out.print(" ");
                 }
+                else {
+                    for (int x = 0; x < nomeCarteSchema[carta].toString().length() + 4; x++)
+                        System.out.print(" ");
+                }
+
+
+
+
+
+
+
+
 
 
                 for (int col = 0; col < b; col++) {
@@ -476,7 +491,124 @@ public class Printer {
 
     }
 
+    public void printScritta(String scritta, String colore){
 
+        if(colore.equalsIgnoreCase("rosso")){
+            System.out.println(ANSI_RED+scritta+ANSI_RESET);
+        }
+        if(colore.equalsIgnoreCase("verde")){
+            System.out.println(ANSI_GREEN+scritta+ANSI_RESET);
+        }
+        if(colore.equalsIgnoreCase("giallo")){
+            System.out.println(ANSI_YELLOW+scritta+ANSI_RESET);
+        }
+        if(colore.equalsIgnoreCase("blu")){
+            System.out.println(ANSI_BLUE+scritta+ANSI_RESET);
+        }
+        if(colore.equalsIgnoreCase("viola")){
+            System.out.println(ANSI_PURPLE+scritta+ANSI_RESET);
+        }
+
+
+
+    }
+
+    public void printPlancia(String[][] plancia){
+
+        int a = 4;
+        int b = 5;
+
+        for (int r = 0; r < a ; r++){
+
+            System.out.println();
+            for (int c = 0; c < b; c++) {
+
+                //===================== QUESTO è IL CORPO DELLA STAMPA
+
+
+                //questa prima parte è la stampa della cella in cui non è stato posizionato il dado
+
+                String stringa = plancia[r][c];
+
+                if (stringa.equalsIgnoreCase(Constraint.ROSSO.getDescrizione()))
+                    System.out.print(ANSI_RED + "R" + ANSI_RESET);
+
+                else if (stringa.equalsIgnoreCase(Constraint.GIALLO.getDescrizione()))
+                    System.out.print(ANSI_YELLOW + "G" + ANSI_RESET);
+
+                else if (stringa.equalsIgnoreCase(Constraint.VERDE.getDescrizione()))
+                    System.out.print(ANSI_GREEN + "V" + ANSI_RESET);
+
+                else if (stringa.equalsIgnoreCase(Constraint.BLU.getDescrizione()))
+                    System.out.print(ANSI_BLUE + "B" + ANSI_RESET);
+
+                else if (stringa.equalsIgnoreCase(Constraint.VIOLA.getDescrizione()))
+                    System.out.print(ANSI_PURPLE + "V" + ANSI_RESET);
+
+                else if (stringa.equalsIgnoreCase(Constraint.UNO.getDescrizione()))
+                    System.out.print(1);
+
+                else if (stringa.equalsIgnoreCase(Constraint.DUE.getDescrizione()))
+                    System.out.print(2);
+
+                else if (stringa.equalsIgnoreCase(Constraint.TRE.getDescrizione()))
+                    System.out.print(3);
+
+                else if (stringa.equalsIgnoreCase(Constraint.QUATTRO.getDescrizione()))
+                    System.out.print(4);
+
+                else if (stringa.equalsIgnoreCase(Constraint.CINQUE.getDescrizione()))
+                    System.out.print(5);
+
+                else if (stringa.equalsIgnoreCase(Constraint.SEI.getDescrizione()))
+                    System.out.print(6);
+
+                else if (stringa.equalsIgnoreCase(Constraint.NONE.getDescrizione()))
+                    System.out.print("N");
+
+                else {
+
+                    //questa parte stampa in maniera diversa le celle in cui è stato piazzato un dado
+
+                    if (stringa.contains(Constraint.ROSSO.getDescrizione().toLowerCase()))
+                        System.out.print(ANSI_RED_BACKGROUND + ANSI_BLACK + stringa.charAt(0) + ANSI_RESET);
+
+                    else if (stringa.contains(Constraint.GIALLO.getDescrizione().toLowerCase()))
+                        System.out.print(ANSI_YELLOW_BACKGROUND + ANSI_BLACK + stringa.charAt(0) + ANSI_RESET);
+
+                    else if (stringa.contains(Constraint.VERDE.getDescrizione().toLowerCase()))
+                        System.out.print(ANSI_GREEN_BACKGROUND + ANSI_BLACK + stringa.charAt(0) + ANSI_RESET);
+
+                    else if (stringa.contains(Constraint.BLU.getDescrizione().toLowerCase()))
+                        System.out.print(ANSI_BLUE_BACKGROUND + ANSI_BLACK + stringa.charAt(0) + ANSI_RESET);
+
+                    else if (stringa.contains(Constraint.VIOLA.getDescrizione().toLowerCase()))
+                        System.out.print(ANSI_PURPLE_BACKGROUND + ANSI_BLACK + stringa.charAt(0) + ANSI_RESET);
+
+                }
+
+
+                System.out.print(" ");
+
+
+                //=====================FINE DEL CORPO DELLA STAMPA
+
+            }
+
+        }
+
+        System.out.println();
+
+
+
+
+
+
+
+
+
+
+    }
 
 
 }

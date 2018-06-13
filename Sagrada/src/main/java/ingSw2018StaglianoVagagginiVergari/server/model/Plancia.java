@@ -696,7 +696,7 @@ public class Plancia implements Serializable {
 
 
 
-        System.out.println("\nquesta è la matrice definitiva di posizionamento");
+        //System.out.println("\nquesta è la matrice definitiva di posizionamento");
 
 
 
@@ -707,7 +707,7 @@ public class Plancia implements Serializable {
         //scorro la matrice IsDadoInPlanciaCorrente e in base al fatto che una posizione abbia un dado adiacente o meno, setto false
 
         for (int i=0;i<4;i++){
-            System.out.println();
+            //System.out.println();
             for(int j=0;j<5;j++){
 
 
@@ -776,7 +776,7 @@ public class Plancia implements Serializable {
 
 
 
-                System.out.print(NuoviPiazzamentiPermessi[i][j]+" ");
+                //System.out.print(NuoviPiazzamentiPermessi[i][j]+" ");
 
 
 

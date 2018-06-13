@@ -7,8 +7,10 @@ import ingSw2018StaglianoVagagginiVergari.server.model.carteSchema.CartaSchema;
 import ingSw2018StaglianoVagagginiVergari.server.model.carteSchema.FactorySchema;
 import ingSw2018StaglianoVagagginiVergari.server.model.carteSchema.Schema;
 
+import java.io.IOException;
 import java.rmi.RemoteException;
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 
 public class Partita {
 
@@ -114,12 +116,27 @@ public class Partita {
                     for (Dado d : tracciatoDelRound.getRimanenzeRiservaOn()) {
                         tracciato.add(d.toString());
                     }
-                    view.updateView(planceGiocatori, listCartaUtensile, getCurrentPlayer().getId(), getTurno(), getTracciatoDelRound().getRoundAttuale(), dadiRiserva, "null", carteObiettivoPubblico, listCarteObiettivoPrivato, tracciato, azioniGiocatore);
+                    view.updateView(planceGiocatori, listCartaUtensile, getCurrentPlayer().getId(), getTurno(),getTracciatoDelRound().getRoundAttuale(),cercaUtente(username).getSegnalini(), dadiRiserva, "null", carteObiettivoPubblico, listCarteObiettivoPrivato, tracciato, azioniGiocatore);
                     return true;
                 } else {
                     for (Utente utente : listaGiocatori) {
                         if (utente.getId().equals(username)) {
-                            view.notifyUser(utente.getId(), utente.getToken(), scelteSchemi.get(utente).getFirst().stringRepresentation(true), scelteSchemi.get(utente).getFirst().stringRepresentation(false), scelteSchemi.get(utente).getSecond().stringRepresentation(true), scelteSchemi.get(utente).getSecond().stringRepresentation(false), utente.getObiettivoPrivato().get(0).getColore().getDescrizione());
+
+                            Integer[] difficoltàCarteSchema = new Integer[4];
+                            String[] nomeCarteSchema = new String[4];
+                            difficoltàCarteSchema[0] = scelteSchemi.get(utente).getFirst().getDifficoltaFronte();
+                            difficoltàCarteSchema[1] = scelteSchemi.get(utente).getFirst().getDifficoltaRetro();
+                            difficoltàCarteSchema[2] = scelteSchemi.get(utente).getSecond().getDifficoltaRetro();
+                            difficoltàCarteSchema[3] = scelteSchemi.get(utente).getSecond().getDifficoltaRetro();
+                            nomeCarteSchema[0] = scelteSchemi.get(utente).getFirst().getNomeFronte();
+                            nomeCarteSchema[1] = scelteSchemi.get(utente).getFirst().getNomeRetro();
+                            nomeCarteSchema[2] = scelteSchemi.get(utente).getSecond().getNomeFronte();
+                            nomeCarteSchema[3] = scelteSchemi.get(utente).getSecond().getNomeRetro();
+
+
+
+
+                            view.notifyUser(utente.getId(), utente.getToken(), scelteSchemi.get(utente).getFirst().stringRepresentation(true), scelteSchemi.get(utente).getFirst().stringRepresentation(false), scelteSchemi.get(utente).getSecond().stringRepresentation(true), scelteSchemi.get(utente).getSecond().stringRepresentation(false), utente.getObiettivoPrivato().get(0).getColore().getDescrizione(), difficoltàCarteSchema, nomeCarteSchema);
                             return false;
                         }
                     }
@@ -163,7 +180,19 @@ public class Partita {
             listaGiocatori.add(u);
             userTokens.put(username, u.getToken());
             scelteSchemi.put(u, new Coppia<Schema, Schema>(getSchemaFromList(), getSchemaFromList()));
-            view.notifyUser(u.getId(), u.getToken(), scelteSchemi.get(u).getFirst().stringRepresentation(true), scelteSchemi.get(u).getFirst().stringRepresentation(false), scelteSchemi.get(u).getSecond().stringRepresentation(true), scelteSchemi.get(u).getSecond().stringRepresentation(false), u.getObiettivoPrivato().get(0).toString());
+
+            Integer[] difficoltàCarteSchema = new Integer[4];
+            String[] nomeCarteSchema = new String[4];
+            difficoltàCarteSchema[0] = scelteSchemi.get(u).getFirst().getDifficoltaFronte();
+            difficoltàCarteSchema[1] = scelteSchemi.get(u).getFirst().getDifficoltaRetro();
+            difficoltàCarteSchema[2] = scelteSchemi.get(u).getSecond().getDifficoltaRetro();
+            difficoltàCarteSchema[3] = scelteSchemi.get(u).getSecond().getDifficoltaRetro();
+            nomeCarteSchema[0] = scelteSchemi.get(u).getFirst().getNomeFronte();
+            nomeCarteSchema[1] = scelteSchemi.get(u).getFirst().getNomeRetro();
+            nomeCarteSchema[2] = scelteSchemi.get(u).getSecond().getNomeFronte();
+            nomeCarteSchema[3] = scelteSchemi.get(u).getSecond().getNomeRetro();
+
+            view.notifyUser(u.getId(), u.getToken(), scelteSchemi.get(u).getFirst().stringRepresentation(true), scelteSchemi.get(u).getFirst().stringRepresentation(false), scelteSchemi.get(u).getSecond().stringRepresentation(true), scelteSchemi.get(u).getSecond().stringRepresentation(false), u.getObiettivoPrivato().get(0).toString(), difficoltàCarteSchema, nomeCarteSchema);
         }
         riempiRiserva();
         setListaCartaObiettivoPubblico();
@@ -596,9 +625,17 @@ public class Partita {
             for (Dado d : tracciatoDelRound.getRimanenzeRiservaOn()) {
                 tracciato.add(d.toString());
             }
-            view.updateView(planceGiocatori, listCartaUtensile, getCurrentPlayer().getId(), getTurno(), getTracciatoDelRound().getRoundAttuale(), dadiRiserva, "null", carteObiettivoPubblico, listCarteObiettivoPrivato, tracciato, azioniGiocatore);
+            view.updateView(planceGiocatori, listCartaUtensile, getCurrentPlayer().getId(), getTurno(), getTracciatoDelRound().getRoundAttuale(),cercaUtente(username).getSegnalini(), dadiRiserva, "null", carteObiettivoPubblico, listCarteObiettivoPrivato, tracciato, azioniGiocatore);
         }
 
+    }
+
+
+    public synchronized Utente cercaUtente(String username){
+        for (Utente u: listaGiocatori) {
+            if(u.getId().equals(username)) return u;
+        }
+        return null;
     }
 
     public synchronized void updateCurrentPlayer() throws RemoteException {
@@ -648,7 +685,7 @@ public class Partita {
             for (Dado d : tracciatoDelRound.getRimanenzeRiservaOn()) {
                 tracciato.add(d.toString());
             }
-            view.updateView(planceGiocatori, listCartaUtensile, getCurrentPlayer().getId(), getTurno(), getTracciatoDelRound().getRoundAttuale(), dadiRiserva, "null", carteObiettivoPubblico, listCarteObiettivoPrivato, tracciato, azioniGiocatore);
+            view.updateView(planceGiocatori, listCartaUtensile, getCurrentPlayer().getId(), getTurno(), getTracciatoDelRound().getRoundAttuale(),cercaUtente(username).getSegnalini(), dadiRiserva, "null", carteObiettivoPubblico, listCarteObiettivoPrivato, tracciato, azioniGiocatore);
         }
     }
 
