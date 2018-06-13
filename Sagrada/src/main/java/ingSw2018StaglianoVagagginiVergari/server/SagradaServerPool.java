@@ -2,6 +2,7 @@ package ingSw2018StaglianoVagagginiVergari.server;
 
 import ingSw2018StaglianoVagagginiVergari.server.Controller.ClientHandler;
 import ingSw2018StaglianoVagagginiVergari.server.Controller.Controller;
+import ingSw2018StaglianoVagagginiVergari.server.Controller.MultiController;
 
 import java.io.IOException;
 import java.net.ServerSocket;
@@ -12,9 +13,9 @@ import java.util.concurrent.Executors;
 public class SagradaServerPool {
     private final ServerSocket serverSocket;
     private final ExecutorService pool;
-    private Controller controller;
+    private MultiController  controller;
 
-    public SagradaServerPool(int port, Controller controller) throws IOException {
+    public SagradaServerPool(int port, MultiController controller)throws IOException {
         serverSocket = new ServerSocket(port);
         pool = Executors.newCachedThreadPool();
         System.out.println("Server socket started! Listening on " + port);

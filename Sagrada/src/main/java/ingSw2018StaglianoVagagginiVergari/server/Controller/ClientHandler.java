@@ -3,6 +3,7 @@ package ingSw2018StaglianoVagagginiVergari.server.Controller;
 import Eccezioni.FullGameException;
 import ingSw2018StaglianoVagagginiVergari.common.GameObserver;
 
+import java.io.EOFException;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -18,42 +19,34 @@ public class ClientHandler implements Runnable,GameObserver {
     private final ObjectOutputStream out;
     private boolean stop;
     private Controller controller;
+    private MultiController multiController;
 
-    public ClientHandler(Socket s, Controller controller) throws IOException {
+    public ClientHandler(Socket s, MultiController controller) throws IOException {
         this.socket = s;
         this.out = new ObjectOutputStream(s.getOutputStream());
         this.in = new ObjectInputStream(s.getInputStream());
-        this.controller = controller;
+        this.multiController = controller;
     }
 
     private void printError(String message) {
         System.err.println(">>> ERROR@" + socket.getRemoteSocketAddress() + ": " + message);
     }
 
-
-    public void run2() {
+    @Override
+    public void run() {
         try {
-
-
             do {
-
                 ArrayList<Object> response = null;
-
-
                 try {
+                        response = (ArrayList<Object>) in.readObject();  //receive data from socket
 
-
-                    response = (ArrayList<Object>) in.readObject();   //receive data from socket
-
-
-
+                }catch(EOFException e){  //TODO mex
+                    this.close();
                 } catch (IOException e1) {
                     e1.printStackTrace();
                 } catch (ClassNotFoundException e1) {
                     e1.printStackTrace();
                 }
-
-
                 if (response != null) {
                     try {
                         InvocaController(response);
@@ -67,68 +60,12 @@ public class ClientHandler implements Runnable,GameObserver {
 
                 }
             } while (!stop);
-
-
-
         } catch (Exception e) {
             printError(e.getClass().getSimpleName() + " - " + e.getMessage());
         }
 
         close();
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    public void run() {
-        try {
-
-
-            do {
-
-                ArrayList<Object> response = null;
-                response = (ArrayList<Object>) in.readObject();   //receive data from socket
-                if (response != null){
-                    InvocaController(response);
-                }
-
-
-            } while (!stop);
-
-        } catch (Exception e) {
-            printError(e.getClass().getSimpleName() + " - " + e.getMessage());
-        }
-
-        close();
-    }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
     public void stop() {
         stop = true;
@@ -283,10 +220,11 @@ public class ClientHandler implements Runnable,GameObserver {
 
     @Override
     public void ping() throws RemoteException {
-        ArrayList<Object> parametriInviati=new ArrayList<>();
-        parametriInviati.add("ping");
-        WriteOut(parametriInviati);
-
+        if (!socket.isClosed()) {
+            return;
+        } else {
+            throw new RemoteException();
+        }
     }
 
     @Override
@@ -334,6 +272,11 @@ public class ClientHandler implements Runnable,GameObserver {
 
     }
 
+    @Override
+    public void updatePagamento() throws RemoteException {
+
+    }
+
     public void sbloccoUtensile(){
         ArrayList<Object> parametriInviati=new ArrayList<>();
 
@@ -341,47 +284,34 @@ public class ClientHandler implements Runnable,GameObserver {
         WriteOut(parametriInviati);
     }
 
-    public void WriteOut(ArrayList<Object> parametriInviati) {
-        try {
-
-
-            this.out.writeObject(parametriInviati);
-            this.out.flush();
-
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-
-
-
+    public void esitoUsername(int esito){
+        ArrayList<Object> parametriInviati=new ArrayList<>();
+        parametriInviati.add(esito);
+        parametriInviati.add("username");
+        WriteOut(parametriInviati);
     }
-
 
     @Override
     public void notifyTurnTimer() throws RemoteException {
-        //TODO definire comportamento
+        ArrayList<Object> parametriInviati=new ArrayList<>();
+        parametriInviati.add("notifyTurnTimer");
+        WriteOut(parametriInviati);
     }
+
+
+    public void WriteOut(ArrayList<Object> parametriInviati) {
+        try {
+            out.writeObject(parametriInviati);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+
 
     public void InvocaController(ArrayList<Object> parametriRicevuti) throws InterruptedException, RemoteException, FullGameException {
         String comando;
         comando=(String) parametriRicevuti.remove(parametriRicevuti.size()-1);
-
-        /*public void partecipaPartita(GameObserver view, String username) throws InterruptedException, RemoteException, FullGameException;
-
-        public void abbandonaPartita(GameObserver view, String username) throws RemoteException;
-
-        public void scegliSchema(GameObserver view, String idUser,boolean carta1, boolean fronte)throws RemoteException;
-
-        public void svolgimentoPartita(GameObserver view,ArrayList<Integer> parametri) throws RemoteException;
-
-        public void usaCartaUtensile(GameObserver view,ArrayList<Integer> parametri) throws RemoteException;
-
-        public int login(GameObserver view, String username, String token) throws RemoteException;*/
-
-
-
 
         switch (comando){
             case "partecipaPartita":{
@@ -409,7 +339,6 @@ public class ClientHandler implements Runnable,GameObserver {
             }
             case "svolgimentoPartita":{
                 ArrayList<Integer> parametri=(ArrayList<Integer>) parametriRicevuti.get(0);
-                System.out.println(parametri+"Vettore");
                 controller.svolgimentoPartita(this,parametri);
                 if(parametri.get(0)==2 || parametri.get(0)==3){
                     sbloccoUtensile();
@@ -423,40 +352,29 @@ public class ClientHandler implements Runnable,GameObserver {
                 break;
             }
             case "login":{
+                int log;
                 String username=(String) parametriRicevuti.get(0);
                 String token=(String) parametriRicevuti.get(1);
-                controller.login(this,username,token);
-
+                log=controller.login(this,username,token);
+                System.out.println("esito"+log);
+                esitoUsername(log);
                 break;
             }
-
-
-
-
-
-            /*  parametriInviati.add("partecipaPartita");
-    parametriInviati.add("abbandonaPartita");
-     parametriInviati.add("scegliSchema");
-      parametriInviati.add("svolgimentoPartita");
-    parametriInviati.add("usaCartaUtensile");
-     parametriInviati.add("login");
-     */
-
-
-
-
-
-
-
-
-
+            case "assegnaController":{
+                controller=multiController.AssegnaController();
+                sbloccoUtensile();
+                break;
+            }
+            case"cercaController":{
+                String username=(String) parametriRicevuti.get(0);
+                controller=multiController.CercaController(username);
+                if(controller==null){
+                    esitoUsername(1);
+                }
+                sbloccoUtensile();
+                break;
+            }
         }
-
-
-
-
-
-
     }
 }
 

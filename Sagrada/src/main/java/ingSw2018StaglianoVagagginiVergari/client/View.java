@@ -1,15 +1,11 @@
 package ingSw2018StaglianoVagagginiVergari.client;
 
 import Eccezioni.FullGameException;
-import Eccezioni.MossaIllegaleException;
-import com.sun.tools.doclets.formats.html.SourceToHTMLConverter;
 import ingSw2018StaglianoVagagginiVergari.common.GameObserver;
 import ingSw2018StaglianoVagagginiVergari.common.RemoteController;
-import ingSw2018StaglianoVagagginiVergari.server.model.CartaObiettivoPubblico;
-import ingSw2018StaglianoVagagginiVergari.server.model.CartaUtensile;
-import ingSw2018StaglianoVagagginiVergari.server.model.Constraint;
-import ingSw2018StaglianoVagagginiVergari.server.model.FactoryCartaObiettivoPubblico;
-import ingSw2018StaglianoVagagginiVergari.server.model.carteUtensile.TaglierinaManuale;
+import ingSw2018StaglianoVagagginiVergari.common.RemoteMultiController;
+import ingSw2018StaglianoVagagginiVergari.server.Controller.MultiController;
+import sun.awt.Mutex;
 
 import java.io.IOException;
 import java.rmi.Remote;
@@ -53,6 +49,7 @@ public class View extends UnicastRemoteObject implements GameObserver, Remote {
 
     private int punteggio;
     private boolean printPunteggio = false;
+    private boolean puoiPagare=true;
 
 
     //private String id;
@@ -141,24 +138,19 @@ public class View extends UnicastRemoteObject implements GameObserver, Remote {
 
     private String username;
 
+    RemoteMultiController multiController;
+
     //==================t
 
 
-    public View(RemoteController controller) throws RemoteException {
-        this.controller = controller;
+    public View(RemoteMultiController controller) throws RemoteException {
+        this.multiController = controller;
         setStatus(ViewStatus.Preparazione);
         command = new Scanner(System.in);
         updateView = false;
     }
 
     public void run() throws IOException, InterruptedException{
-
-
-        if(controller instanceof ProxyClient) {
-            ((ProxyClient) controller).ClientListener();
-        }
-
-
         cmd = 0;
         username = null;
         boolean carta1 = false;
@@ -191,11 +183,15 @@ public class View extends UnicastRemoteObject implements GameObserver, Remote {
                         System.out.println("Inserisci un nuovo username");
                         username = command.next();
                         try {
-                            controller.partecipaPartita(this, username);
-                            while (!updateView) {
-                                System.out.print("");
+                            controller=multiController.CercaController(username);
+                            if(controller==null) {
+                                controller = multiController.AssegnaController();
+                                controller.partecipaPartita(this, username);
+                                while (!updateView) {
+                                    System.out.print("");
+                                }
+                                updateView = false;
                             }
-                            updateView = false;
                         } catch (FullGameException e) {
                             System.out.println(e.getMessage());
                             System.exit(0);
@@ -210,8 +206,17 @@ public class View extends UnicastRemoteObject implements GameObserver, Remote {
                         String token;
                         System.out.println("Token:");
                         token = command.next();
-                        login = controller.login(this, username, token);
-                        tentativi++;
+                        controller=multiController.CercaController(username);
+                        if(controller!=null) {
+                            login = controller.login(this, username, token);
+                            System.out.println(controller);
+                            tentativi++;
+                        }else {
+                            System.out.println("NON SEI REGISTRATO IN NESSUNA PARTITA");
+                            Pausa(4);
+                            System.exit(0);
+                        }
+
                     }
                     if (login == 1) {
                         id = username;
@@ -232,8 +237,6 @@ public class View extends UnicastRemoteObject implements GameObserver, Remote {
 
                 }
             }
-
-
 
             if (getStatus() == ViewStatus.Preparazione)
                 preparazionePartita();
@@ -500,6 +503,11 @@ public class View extends UnicastRemoteObject implements GameObserver, Remote {
         Pausa(4);
     }
 
+    public void updatePagamento(){
+        this.puoiPagare=false;
+        this.cartaInUso="";
+    }
+
 
     private void Pausa(int secondi){
         long start = System.currentTimeMillis();
@@ -684,7 +692,6 @@ public class View extends UnicastRemoteObject implements GameObserver, Remote {
         System.out.println("Preparazione partita... Attendi. (0) per uscire");
         while (status == ViewStatus.Preparazione) {
             if (System.in.available() > 0) {
-                while(cmd!=0) {
                     try {
                         cmd = inputCommand.nextInt();
                     } catch (InputMismatchException e) {
@@ -695,7 +702,6 @@ public class View extends UnicastRemoteObject implements GameObserver, Remote {
                         controller.abbandonaPartita(this, username);
                         System.exit(0);
                     }
-                }
             }
         }
         // System.out.println(status);
@@ -742,7 +748,7 @@ public class View extends UnicastRemoteObject implements GameObserver, Remote {
                         else
                             System.out.println("(-) hai già usato l'effetto di una carta");
 
-                        System.out.println("(3) passa il turno\n(4) descrizione carta utensile\n\nSCEGLI:");
+                    System.out.println("(3) passa il turno\n(4) descrizione carta utensile\n(5) descrizione carta obiettivo pubblico\n\nSCEGLI:");
 
 
                         try {
@@ -752,7 +758,7 @@ public class View extends UnicastRemoteObject implements GameObserver, Remote {
                             inputCommand.nextLine();// flush the buffer
                         }
 
-                        while (cmd != 1 && cmd != 2 && cmd != 3 && cmd != 4) {
+                        while (cmd != 1 && cmd != 2 && cmd != 3 && cmd != 4 && cmd !=5) {
                             System.out.println("SCELTA NON VALIDA! Reinserisci scelta:");
                             try {
                                 cmd = input.call();
@@ -876,7 +882,7 @@ public class View extends UnicastRemoteObject implements GameObserver, Remote {
                         parametri = new ArrayList<>();
                         // try {
                         parametri.add(0, 2); // ho scelto di selezionare la carta utensile
-                        if (!lathekinPhase2 || numeroDadiTool12 > 0 || !diluentePastaSaldaPhase2) {
+                        if (!lathekinPhase2 && numeroDadiTool12==0 && !diluentePastaSaldaPhase2) {
                             parametri.add(1, cmd);   // questo è il numero della carta utensile che ha selezionato
                         } else if (numeroDadiTool12 > 0) {
                             parametri.add(1, cercaUtensile("Taglierina Manuale"));
@@ -897,7 +903,7 @@ public class View extends UnicastRemoteObject implements GameObserver, Remote {
                     }
 
 
-                    if (!lathekinPhase2 || numeroDadiTool12 == 0 || !diluentePastaSaldaPhase2) {
+                    if (!lathekinPhase2 && numeroDadiTool12 == 0 && !diluentePastaSaldaPhase2) {
                         scorriCartaUtensile(cmd);//TODO RIMUOVERE serve solo per avere la simulazione di una partita
                     }
 
@@ -1579,7 +1585,39 @@ public class View extends UnicastRemoteObject implements GameObserver, Remote {
                     updateView = true;      //<<-- una carta
                     passaturno = false;       //<<--
 
-                } else {
+                }else if (cmd == 5) {
+
+                    synchronized (View.this) {
+                        System.out.print("Inserisci il numero della carta della quale vuoi la descrizione:");
+                        int c = -1;
+                        try {
+                            c = input.call();
+                        } catch (InputMismatchException e) {
+                            c = -1;
+                            inputCommand.nextLine();
+                        }
+                        while (c < 0 || c > 2) {
+                            try {
+                                System.out.println("inserisci un numero carta valido della quale avere la descrizione:");
+                                c = input.call();
+                            } catch (InputMismatchException e) {
+                                c = -1;
+                                inputCommand.nextLine();
+                            }
+                        }
+
+                        System.out.println();
+                        stampante.printDescrizioneCartaUtensile(carteUtensile, c);
+
+                        System.out.println("\nINSERISCI UN CARATTERE PER CONTINUARE");
+                        String s = inputCommand.next();
+                    }
+
+                    stampante.printTavoloDiGioco(turno, round, segnalini, tracciatoDelRound, planceGiocatori, 4, 5, giocatoreCorrente, id, carteObiettivoPubblico, carteObiettivoPrivato, carteUtensile, dadiRiserva, dadoSelezionato);  //<<-- aggiunte per aggiornare dopo aver letto la descrizione di
+                    updateView = true;      //<<-- una carta
+                    passaturno = false;       //<<--
+
+                }else {
                     try {
                         updateMessage("SCELTA IMPOSSIBILE");
                     } catch (RemoteException ex) {

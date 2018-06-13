@@ -7,6 +7,8 @@ public class SfumatureDiverseRiga implements CartaObiettivoPubblico {
 
     private final int puntiVittoria = 5;
     private final String nome = "SfumatureDiverseRiga";
+    private String descrizione="Sfumature diverse-Riga\n" +
+            "Righe senza sfumature ripetute";
 
     //----------------------------all this part is required for Singleton Pattern----------------------------------
 
@@ -82,6 +84,8 @@ public class SfumatureDiverseRiga implements CartaObiettivoPubblico {
 
     }
 
-
+    public String getDescrizione() {
+        return descrizione;
+    }
 }
 

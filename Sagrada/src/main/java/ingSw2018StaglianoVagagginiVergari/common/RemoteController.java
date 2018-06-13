@@ -2,6 +2,7 @@ package ingSw2018StaglianoVagagginiVergari.common;
 
 import Eccezioni.FullGameException;
 import Eccezioni.MossaIllegaleException;
+import ingSw2018StaglianoVagagginiVergari.server.model.Partita;
 
 import java.rmi.Remote;
 import java.rmi.RemoteException;
@@ -15,6 +16,8 @@ public interface RemoteController extends Remote{
     public void svolgimentoPartita(GameObserver view,ArrayList<Integer> parametri) throws RemoteException;
     public void usaCartaUtensile(GameObserver view,ArrayList<Integer> parametri) throws RemoteException;
     public int login(GameObserver view, String username, String token) throws RemoteException;
+    public Partita getPartita() throws RemoteException;
+   // public void ClientListener() throws RemoteException;
 
 
 

@@ -15,6 +15,7 @@ import java.rmi.Remote;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 
 /* import java.util.ArrayList;
 import java.util.Timer;
@@ -33,7 +34,8 @@ public class Controller extends UnicastRemoteObject implements RemoteController 
     public Controller() throws RemoteException {
         partita = new Partita();
         status = ControllerStatus.AggiuntaObserver;
-    }
+        System.out.println("Nuovo Controller");
+        }
 
     public synchronized void partecipaPartita(GameObserver view, String username) throws InterruptedException, RemoteException, FullGameException{
         if (status==ControllerStatus.AggiuntaObserver) {
@@ -99,7 +101,7 @@ public class Controller extends UnicastRemoteObject implements RemoteController 
 
 
 
-
+    //TODO synchronized?
     public void svolgimentoPartita(GameObserver view,ArrayList<Integer> parametri) throws RemoteException {
        /* for (Utente u: partita.getOrdineRound()) {
             System.out.println(u.getId());
@@ -118,11 +120,11 @@ public class Controller extends UnicastRemoteObject implements RemoteController 
                 partita.setDadoSelezionato(parametri.get(1));
                 partita.piazzamentoDado(parametri.get(2), parametri.get(3), false, false);
             }
-            if (n == 2) this.scegliCartaUtensile(view,parametri.get(1));
-            if (n == 3) {
-                this.passaTurno(view);
-
+            if (n == 2) {
+                if(this.scegliCartaUtensile(view, parametri.get(1)));
+                else partita.updatePagamento();
             }
+            if (n == 3) this.passaTurno(view);
 
         }
 
@@ -136,9 +138,9 @@ public class Controller extends UnicastRemoteObject implements RemoteController 
 
     }*/
 
-    public synchronized void scegliCartaUtensile(GameObserver view,int k) {
-        if (partita.getListaCartaUtensile().get(k).getCosto()<= partita.getCurrentPlayer().getSegnalini()) {
-           // partita.getCurrentPlayer().setSegnalini(partita.getCurrentPlayer().getSegnalini() - partita.getListaCartaUtensile().get(k).getCosto());
+    public synchronized boolean scegliCartaUtensile(GameObserver view, int k) {
+        if (partita.getListaCartaUtensile().get(k).getCosto() <= partita.getCurrentPlayer().getSegnalini()) {
+            // partita.getCurrentPlayer().setSegnalini(partita.getCurrentPlayer().getSegnalini() - partita.getListaCartaUtensile().get(k).getCosto());
             // TODO  da segnalare
 
             switch (partita.getListaCartaUtensile().get(k).getId()) {
@@ -179,7 +181,15 @@ public class Controller extends UnicastRemoteObject implements RemoteController 
                     setStatus(ControllerStatus.CartaU12);
                     break;
             }
+        }else {
+            try {
+                partita.updateMessage("NON PUOI PAGARE LA CARTA");
+                return false;
+            } catch (RemoteException e) {
+                e.printStackTrace();
+            }
         }
+        return true;
     }
 
 
@@ -331,7 +341,8 @@ public class Controller extends UnicastRemoteObject implements RemoteController 
                     if ( u.getId()==12) {
                         TaglierinaManuale carta = (TaglierinaManuale) u;
                         carta.setR(parametri.get(0));
-                        carta.setNumeroDadi(parametri.get(1));carta.setI(parametri.get(2));
+                        carta.setNumeroDadi(parametri.get(1));
+                        carta.setI(parametri.get(2));
                         carta.setJ(parametri.get(3));
                         carta.setX(parametri.get(4));
                         carta.setY(parametri.get(5));
@@ -403,5 +414,8 @@ public class Controller extends UnicastRemoteObject implements RemoteController 
         return status;
     }
 
+    public Partita getPartita() {
+        return partita;
+    }
 }
 

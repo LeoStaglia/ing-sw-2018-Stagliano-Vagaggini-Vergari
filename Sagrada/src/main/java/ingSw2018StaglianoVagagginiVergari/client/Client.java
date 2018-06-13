@@ -2,6 +2,8 @@ package ingSw2018StaglianoVagagginiVergari.client;
 
 import Eccezioni.MossaIllegaleException;
 import ingSw2018StaglianoVagagginiVergari.common.RemoteController;
+import ingSw2018StaglianoVagagginiVergari.common.RemoteMultiController;
+import ingSw2018StaglianoVagagginiVergari.server.Controller.MultiController;
 
 import java.io.IOException;
 import java.rmi.NotBoundException;
@@ -29,8 +31,8 @@ public class Client {
         }else {
 
             Registry registry = LocateRegistry.getRegistry(7501);
-            RemoteController controller = (RemoteController) registry.lookup("controller");
-            new View(controller).run();
+            RemoteMultiController multiController = (RemoteMultiController) registry.lookup("controller");
+            new View(multiController).run();
         }
 
     }

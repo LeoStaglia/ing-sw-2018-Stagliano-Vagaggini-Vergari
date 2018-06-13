@@ -14,6 +14,8 @@ public class DiagonaliColorate implements CartaObiettivoPubblico {
 
     private final int puntiVittoria = 1;
     private final String nome = "DiagonaliColorate";
+    private String descrizione="Diagonali Colorate\n" +
+            "Numero di dadi dello stesso colore diagonalmente adiacenti";
 
     //----------------------------all this part is required for Singleton Pattern----------------------------------
 
@@ -136,6 +138,7 @@ public class DiagonaliColorate implements CartaObiettivoPubblico {
 
     }
 
-
-
+    public String getDescrizione() {
+        return descrizione;
+    }
 }

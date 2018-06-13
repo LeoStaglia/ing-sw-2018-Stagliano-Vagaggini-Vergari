@@ -7,6 +7,7 @@ import ingSw2018StaglianoVagagginiVergari.server.model.Utente;
 
 import java.rmi.RemoteException;
 import java.util.HashMap;
+import java.util.concurrent.TimeUnit;
 
 public class Pinger extends Thread {
 
@@ -33,6 +34,11 @@ public class Pinger extends Thread {
             for (String username : gameObserverClone.keySet()) {
                 if (partita.pingClient(partita.getGameObservers().get(username))) {
                     pingFailed.replace(partita.getGameObservers().get(username), 0);
+                    try {
+                        TimeUnit.MILLISECONDS.sleep(100);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
                 } else {
                     int n = pingFailed.get(partita.getGameObservers().get(username));
                     n++;

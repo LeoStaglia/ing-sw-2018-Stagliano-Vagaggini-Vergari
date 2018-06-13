@@ -9,7 +9,8 @@ public class VarietaDiColore implements CartaObiettivoPubblico {
 
     private final int puntiVittoria = 4;
     private final String nome = "VarietaDiColore";
-
+    private String descrizione= "Varietà di Colore\n" +
+            "Set di dadi di ogni colore ovunque";
     //----------------------------all this part is required for Singleton Pattern----------------------------------
 
     private static VarietaDiColore instance = new VarietaDiColore();
@@ -84,5 +85,7 @@ public class VarietaDiColore implements CartaObiettivoPubblico {
 
     }
 
-
+    public String getDescrizione() {
+        return descrizione;
+    }
 }

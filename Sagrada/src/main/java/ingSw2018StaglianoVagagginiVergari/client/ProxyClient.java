@@ -3,36 +3,40 @@ package ingSw2018StaglianoVagagginiVergari.client;
 import Eccezioni.FullGameException;
 import ingSw2018StaglianoVagagginiVergari.common.GameObserver;
 import ingSw2018StaglianoVagagginiVergari.common.RemoteController;
+import ingSw2018StaglianoVagagginiVergari.common.RemoteMultiController;
+import ingSw2018StaglianoVagagginiVergari.server.Controller.Controller;
+import ingSw2018StaglianoVagagginiVergari.server.Controller.MultiController;
+import ingSw2018StaglianoVagagginiVergari.server.model.Partita;
 
 import java.io.IOException;
+import java.rmi.Remote;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
+import java.util.concurrent.Semaphore;
 
-public class ProxyClient implements Runnable,RemoteController {
+public class ProxyClient implements Runnable,RemoteMultiController,RemoteController {
 
 
-    Object monitor = new Object(); //LAST
-
-    Printer stampante = new Printer();
+    Object monitor = new Object(); //object that regulate the flux
 
     // reference to networking layer
     private ClientSocket clientSocket;
-    //  private Thread receiver;
     Thread receiver;
 
     // the view
     private View view;
 
-
-    // Pieces of the model
+    private int log=0;
 
 
     public ProxyClient(ClientSocket clientSocket) {
         this.clientSocket = clientSocket;
         try {
             this.view = new View(this);
+            ClientListener();
         } catch (RemoteException e) {
             e.printStackTrace();
         }
@@ -49,7 +53,6 @@ public class ProxyClient implements Runnable,RemoteController {
                         if (response != null) {
                             try {
                                 this.InvocaView(response);
-
                             } catch (RemoteException e) {
                                 e.printStackTrace();
                             }
@@ -72,9 +75,9 @@ public class ProxyClient implements Runnable,RemoteController {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-
     }
 
+    // ----Overridden Methods
 
 
     @Override
@@ -85,15 +88,6 @@ public class ProxyClient implements Runnable,RemoteController {
         parametriInviati.add("partecipaPartita");
 
         clientSocket.request(parametriInviati);
-
-
-
-
-
-      /*  parametriRicevuti=clientSocket.nextResponse();
-
-
-        InvocaView(parametriRicevuti);*/
     }
 
     @Override
@@ -103,8 +97,6 @@ public class ProxyClient implements Runnable,RemoteController {
         parametriInviati.add(username);
         parametriInviati.add("abbandonaPartita");
         clientSocket.request(parametriInviati);
-
-       // InvocaView(parametriRicevuti);
         }
 
     @Override
@@ -116,9 +108,6 @@ public class ProxyClient implements Runnable,RemoteController {
         parametriInviati.add(fronte);
         parametriInviati.add("scegliSchema");
         clientSocket.request(parametriInviati);
-        /*
-        parametriRicevuti=clientSocket.nextResponse();
-        InvocaView(parametriRicevuti);*/
 
     }
 
@@ -130,19 +119,13 @@ public class ProxyClient implements Runnable,RemoteController {
         parametriInviati.add("svolgimentoPartita");
         clientSocket.request(parametriInviati);
       //  if(parametri.get(0)!=2 && parametri.get(0)!=3) {
-            bloccoMonitor( "svolgimentoPartita");
+            bloccoMonitor(monitor);
       // }
 
 
     }
 
 
-
-
-
-
-       /* parametriRicevuti=clientSocket.nextResponse();
-        InvocaView(parametriRicevuti);*/
 
 
     @Override
@@ -152,11 +135,7 @@ public class ProxyClient implements Runnable,RemoteController {
         parametriInviati.add(parametri.clone());
         parametriInviati.add("usaCartaUtensile");
         clientSocket.request(parametriInviati);
-        bloccoMonitor( "usaCartaUtensile");
-
-      /*  parametriRicevuti=clientSocket.nextResponse();
-        InvocaView(parametriRicevuti);
-        */
+        bloccoMonitor(monitor);
 
     }
 
@@ -167,12 +146,9 @@ public class ProxyClient implements Runnable,RemoteController {
         parametriInviati.add(username);
         parametriInviati.add(token);
         parametriInviati.add("login");
-
         clientSocket.request(parametriInviati);
-
-       /* parametriRicevuti=clientSocket.nextResponse();
-        InvocaView(parametriRicevuti);*/
-        return 0;
+        bloccoMonitor(monitor);
+        return this.getLog();
     }
 
     // public void notifyUser(String id,String token, String[][] schemaFronte1, String[][] schemaRetro1 ,String[][] schemaFronte2,String[][] schemaRetro2 ,String obiettivoPrivato)
@@ -216,7 +192,7 @@ public class ProxyClient implements Runnable,RemoteController {
                 HashSet<Integer> azioniGiocatore = (HashSet<Integer>) parametriRicevuti.get(10);
                 int segnalini=(int) parametriRicevuti.get(11);
                 view.updateView(planceGiocatori, listaCartaUtensile, giocatoreCorrente, turno, round,segnalini, dadiRiserva, dadoSelezionato, carteObiettivoPubblico, obiettiviPrivati, tracciatoDelRound, azioniGiocatore);
-                sbloccaMonitor( "updateView");
+                sbloccaMonitor(monitor);
                 break;
             }
             case "updateViewPunteggio": {
@@ -225,8 +201,6 @@ public class ProxyClient implements Runnable,RemoteController {
                 view.updateViewPunteggio(punteggi, vincitore);
                 break;
             }
-
-            //public void setPiazzamentoScorretto(String giocatoreCorrente) throws RemoteException;
             case "setPiazzamentoScorretto": {
                 String giocatoreCorrente = (String) parametriRicevuti.get(0);
                 view.setPiazzamentoScorretto(giocatoreCorrente);
@@ -241,7 +215,7 @@ public class ProxyClient implements Runnable,RemoteController {
             case "updateViewTool6Die":{
                 String Dado= (String) parametriRicevuti.get(0);
                 view.updateViewTool6Die(Dado);
-                sbloccaMonitor( "updateViewTool6Die");
+                sbloccaMonitor(monitor);
                 break;
             }
             case "updateViewTool6piazzato":{
@@ -269,21 +243,19 @@ public class ProxyClient implements Runnable,RemoteController {
                 break;
             }
             case "sbloccoUtensile":{
-                System.out.println();
-                sbloccaMonitor( "sbloccoUtensile");
+                sbloccaMonitor(monitor);
                 break;
             }
-
-            /*
-
-
-            public void updateViewTool4 (boolean fase) throws RemoteException;
-            public void updateViewTool12 (boolean fase) throws RemoteException;*/
+            case "username":{
+                int esito=(int)parametriRicevuti.get(0);
+                log=esito;
+                break;
+            }
 
             case "updateViewTool11":{
                 String Dado=(String) parametriRicevuti.get(0);
                 view.updateViewTool11(Dado);
-                sbloccaMonitor( "updateViewTool11");
+                sbloccaMonitor(monitor);
                 break;
             }
 
@@ -302,34 +274,71 @@ public class ProxyClient implements Runnable,RemoteController {
                 view.updateViewTool12(fase);
                 break;
             }
+            case "notifyTurnTimer":{
+                view.notifyTurnTimer();
+                sbloccaMonitor(monitor);
+            }
         }
 
     }
-
-    public void bloccoMonitor( String stringa) {
+    // function to lock the monitor that blocks the asynchronous call
+    public void bloccoMonitor(Object monitor) {
         synchronized (monitor) {
 
             try {
-
-
-                //stampante.printScritta("STO BLOCCANDO IN ATTESA DI RISPOSTA con la wait - "+stringa, "verde");
                 monitor.wait();
-                //stampante.printScritta("SONO STATO SBLOCCATO ", "verde");
-
-
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
         }
     }
 
-    public void sbloccaMonitor( String stringa){
+    //function to unlock the monitor that blocks the asynchronous call
+    public void sbloccaMonitor(Object monitor){
         synchronized (monitor) {
             monitor.notifyAll();
-            //stampante.printScritta("HO SBLOCCATO IL MONITOR con notifyall -  "+stringa, "verde");
         }
     }
+
+    @Override
+    //This function returns an available controller to the client
+    public RemoteController AssegnaController() throws RemoteException {
+        ArrayList<Object> parametriInviati=new ArrayList<>();
+        parametriInviati.add("assegnaController");
+        clientSocket.request(parametriInviati);
+        bloccoMonitor(monitor);
+        return this;
+
     }
+
+    @Override
+    //This function returns the instance of the controller bound with the use
+    public RemoteController CercaController(String username) throws RemoteException {
+        log=0;
+        ArrayList<Object> parametriInviati=new ArrayList<>();
+        parametriInviati.add(username);
+        parametriInviati.add("cercaController");
+        clientSocket.request(parametriInviati);
+        bloccoMonitor(monitor);
+        if(log==0) {
+            return this;
+        }
+
+        else {
+            log = 0;
+            return null;
+        }
+    }
+
+    @Override
+    public Partita getPartita() {
+        return null;
+    }
+
+    public int getLog() {
+        return log;
+    }
+}
 
 
 

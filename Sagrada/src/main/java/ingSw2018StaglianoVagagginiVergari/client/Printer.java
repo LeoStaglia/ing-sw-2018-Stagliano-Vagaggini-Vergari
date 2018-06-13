@@ -37,12 +37,17 @@ public class Printer {
     public void printCarteObiettivoPubblico(ArrayList<String> listaCartaObiettivoPubblico) {
 
         System.out.print("\nCarte Obiettivo Pubblico:   ");
-        for (String carta : listaCartaObiettivoPubblico) {
-            System.out.print(carta + "   ");
 
+        int i = 0;
+
+        for (String carta : listaCartaObiettivoPubblico) {
+
+                System.out.print("(" + i + ")" + carta.substring(0, carta.indexOf('*')));
+
+            System.out.print("  ");
+            i++;
         }
         System.out.println();
-
 
     }
 
@@ -351,7 +356,32 @@ public class Printer {
 
     }
 
-    public void printTavoloDiGioco( int turno, int round, int segnalini, ArrayList<String> tracciatoDelRound, HashMap<String, String[][]> planceGiocatori, int a, int b, String giocatoreCorrente, String id, ArrayList<String> carteObiettivoPubblico, HashMap<String, String> carteObiettivoPrivato, ArrayList<String> carteUtensile, ArrayList<String> dadiRiserva, String dadoSelezionato  ){
+    public void printDescrizioneCartaObiettivoPubblico(ArrayList<String> listaCartaObiettivoPubblico, int scelta) {
+
+
+        int i = 0;
+        for (String carta :listaCartaObiettivoPubblico) {
+
+            if (scelta == i)
+                System.out.println("Descrizione:  " + carta.substring(carta.indexOf('*') + 1, carta.length()));
+
+            i++;
+
+        }
+        System.out.println();
+
+
+    }
+
+
+
+
+
+
+
+
+
+    public void printTavoloDiGioco( int turno, int round,int segnalini, ArrayList<String> tracciatoDelRound, HashMap<String, String[][]> planceGiocatori, int a, int b, String giocatoreCorrente, String id, ArrayList<String> carteObiettivoPubblico, HashMap<String, String> carteObiettivoPrivato, ArrayList<String> carteUtensile, ArrayList<String> dadiRiserva, String dadoSelezionato  ){
 
 
 

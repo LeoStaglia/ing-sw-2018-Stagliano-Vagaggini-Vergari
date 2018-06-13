@@ -66,7 +66,9 @@ public class Partita {
         //TODO rendere parametrico l'update su un ArrayList di view.
         if (gameObservers.get(username) != null) {
             GameObserver oldView = gameObservers.get(username);
-            oldView.notifyExit();
+            if (pingClient(oldView)) {
+                oldView.notifyExit();
+            }
             removeObserver(username);
         }
         gameObservers.put(username, view);
@@ -612,8 +614,11 @@ public class Partita {
 
             ArrayList<String> carteObiettivoPubblico = new ArrayList<>();
             for (CartaObiettivoPubblico c : listaCartaObiettivoPubblico) {
-                carteObiettivoPubblico.add(c.getNome());
-                //TODO inserire descrizione carta
+                StringBuilder builder = new StringBuilder();
+                builder.append(c.getNome());
+                builder.append("*");
+                builder.append(c.getDescrizione());
+                carteObiettivoPubblico.add(builder.toString());
             }
             HashMap<String, String> listCarteObiettivoPrivato = new HashMap<>();
 
@@ -625,9 +630,12 @@ public class Partita {
             for (Dado d : tracciatoDelRound.getRimanenzeRiservaOn()) {
                 tracciato.add(d.toString());
             }
-            view.updateView(planceGiocatori, listCartaUtensile, getCurrentPlayer().getId(), getTurno(), getTracciatoDelRound().getRoundAttuale(),cercaUtente(username).getSegnalini(), dadiRiserva, "null", carteObiettivoPubblico, listCarteObiettivoPrivato, tracciato, azioniGiocatore);
+            if (pingClient(view)) {
+                view.updateView(planceGiocatori, listCartaUtensile, getCurrentPlayer().getId(), getTurno(), getTracciatoDelRound().getRoundAttuale(), cercaUtente(username).getSegnalini(), dadiRiserva, "null", carteObiettivoPubblico, listCarteObiettivoPrivato, tracciato, azioniGiocatore);
+            } else {
+                removeObserver(username);
+            }
         }
-
     }
 
 
@@ -672,8 +680,11 @@ public class Partita {
 
             ArrayList<String> carteObiettivoPubblico = new ArrayList<>();
             for (CartaObiettivoPubblico c : listaCartaObiettivoPubblico) {
-                carteObiettivoPubblico.add(c.getNome());
-                //TODO inserire descrizione carta
+                StringBuilder builder = new StringBuilder();
+                builder.append(c.getNome());
+                builder.append("*");
+                builder.append(c.getDescrizione());
+                carteObiettivoPubblico.add(builder.toString());
             }
             HashMap<String, String> listCarteObiettivoPrivato = new HashMap<>();
 
@@ -685,7 +696,11 @@ public class Partita {
             for (Dado d : tracciatoDelRound.getRimanenzeRiservaOn()) {
                 tracciato.add(d.toString());
             }
-            view.updateView(planceGiocatori, listCartaUtensile, getCurrentPlayer().getId(), getTurno(), getTracciatoDelRound().getRoundAttuale(),cercaUtente(username).getSegnalini(), dadiRiserva, "null", carteObiettivoPubblico, listCarteObiettivoPrivato, tracciato, azioniGiocatore);
+            if (pingClient(view)) {
+                view.updateView(planceGiocatori, listCartaUtensile, getCurrentPlayer().getId(), getTurno(), getTracciatoDelRound().getRoundAttuale(),cercaUtente(username).getSegnalini(), dadiRiserva, "null", carteObiettivoPubblico, listCarteObiettivoPrivato, tracciato, azioniGiocatore);
+            } else {
+                removeObserver(getCurrentPlayer().getId());
+            }
         }
     }
 
@@ -701,6 +716,22 @@ public class Partita {
             removeObserver(getCurrentPlayer().getId());
         }
     }
+
+    public synchronized void updatePagamento() throws RemoteException {
+        HashMap<String, GameObserver> gameObserverClone = new HashMap<>();
+        gameObserverClone = (HashMap<String, GameObserver>) gameObservers.clone();
+
+        GameObserver view = gameObserverClone.get(getCurrentPlayer().getId());
+
+        if (pingClient(view)) {
+            view.updatePagamento();
+            this.updateCurrentPlayer();
+        } else {
+            removeObserver(getCurrentPlayer().getId());
+        }
+    }
+
+
 
 
     public boolean pingClient(GameObserver view){

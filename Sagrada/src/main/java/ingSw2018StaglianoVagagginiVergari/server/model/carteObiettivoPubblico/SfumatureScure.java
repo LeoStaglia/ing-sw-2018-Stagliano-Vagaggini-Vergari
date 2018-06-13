@@ -7,7 +7,8 @@ public class SfumatureScure implements CartaObiettivoPubblico {
 
     private final int puntiVittoria = 2;
     private final String nome = "SfumatureScure";
-
+    private String descrizione="Sumature Scure\n" +
+            "Set di 5 e 6 ovunque";
     //----------------------------all this part is required for Singleton Pattern----------------------------------
 
     private static SfumatureScure instance = new SfumatureScure();
@@ -62,6 +63,7 @@ public class SfumatureScure implements CartaObiettivoPubblico {
 
     }
 
-
-
+    public String getDescrizione() {
+        return descrizione;
+    }
 }

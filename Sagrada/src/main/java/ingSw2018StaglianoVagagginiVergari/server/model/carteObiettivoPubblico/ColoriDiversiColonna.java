@@ -7,6 +7,8 @@ public class ColoriDiversiColonna implements CartaObiettivoPubblico {
 
     private final int puntiVittoria = 5;
     private final String nome = "ColoriDiversiColonna";
+    private String descrizione="Colori diversi-Colonna\n" +
+                                "Colonne senza colori ripetuti";
 
     //----------------------------all this part is required for Singleton Pattern----------------------------------
 
@@ -79,4 +81,7 @@ public class ColoriDiversiColonna implements CartaObiettivoPubblico {
 
     }
 
+    public String getDescrizione() {
+        return descrizione;
+    }
 }
