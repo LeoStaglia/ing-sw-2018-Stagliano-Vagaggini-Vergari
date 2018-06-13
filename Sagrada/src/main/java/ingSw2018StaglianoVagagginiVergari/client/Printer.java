@@ -28,9 +28,9 @@ public class Printer {
     String ANSI_WHITE_BACKGROUND = "\u001B[47m";
 
 
-    public void printTurnoRoundSegnalini(int turno, int round, int segnalini) {
+    public void printTurnoRound(int turno, int round) {
 
-        System.out.println("\nTurno Corrente: " + turno + "    Round Corrente: " + round + "   Segnalini favore: " + segnalini);
+        System.out.println("\nTurno Corrente: " + turno + "    Round Corrente: " + round );
 
     }
 
@@ -149,10 +149,11 @@ public class Printer {
 
     }
 
-    public void printPlanceGiocatori(Map<String, String[][]> planceGiocatori, int a, int b, String giocatoreCorrente, String tuoId) {
+    public void printPlanceGiocatori(Map<String, String[][]> planceGiocatori, int a, int b, String giocatoreCorrente, String tuoId, HashMap<String, Integer> segnaliniGiocatori) {
 
         String[][][] matriciDaStampare = new String[planceGiocatori.size() + 1][a][b];
         Object[] idGiocatori = new Object[planceGiocatori.size() + 1];
+        Integer[] segnaliniGioc = new Integer[planceGiocatori.size()+1];
 
         int cursoreGiocatoreCorrente = 0;
 
@@ -169,6 +170,7 @@ public class Printer {
                 idGiocatori[0] = en1.getKey();
 
                 matriciDaStampare[0] = (String[][]) en1.getValue();
+                segnaliniGioc[0] = segnaliniGiocatori.get(en1.getKey());
             } //<<---
         }
 
@@ -184,6 +186,7 @@ public class Printer {
             if (!en2.getKey().equals(tuoId)) {
                 idGiocatori[i] = en2.getKey();
                 matriciDaStampare[i] = (String[][]) en2.getValue();
+                segnaliniGioc[i] = segnaliniGiocatori.get(en2.getKey());
 
                 if (en2.getKey().equals(giocatoreCorrente))
                     cursoreGiocatoreCorrente = i;
@@ -208,14 +211,26 @@ public class Printer {
 
                 if (righe == 0) {
                     if (giocatore == 0)
-                        System.out.print(" Tua Plancia  ");
+                        System.out.print(" Tua Plancia    ");
                     else
                         System.out.print(" Giocatore " + idGiocatori[giocatore] + "    ");
-                } else if ((righe == a - 1) && (giocatore == cursoreGiocatoreCorrente)) {
+
+                } else if(righe == a-2){
+
+                    System.out.print(" Segnalini: "+ segnaliniGioc[giocatore]);
+                    if (giocatore == 0)
+                        System.out.print("   ");
+                    else {
+                        for (int x = 0; x < idGiocatori[giocatore].toString().length() + 2; x++)
+                            System.out.print(" ");
+                    }
+
+                }
+                else if ((righe == a - 1) && (giocatore == cursoreGiocatoreCorrente)) {
                     System.out.print(" Corrente");
 
                     if (giocatore == 0)
-                        System.out.print("     ");
+                        System.out.print("       ");
                     else {
                         for (int x = 0; x < idGiocatori[giocatore].toString().length() + 6; x++)
                             System.out.print(" ");
@@ -227,7 +242,7 @@ public class Printer {
                     for (int x = 0; x < idGiocatori[giocatore].toString().length() + 15; x++)
                         System.out.print(" ");
                 } else
-                    System.out.print("              ");
+                    System.out.print("                ");
 
 
                 for (int col = 0; col < b; col++) {
@@ -381,18 +396,18 @@ public class Printer {
 
 
 
-    public void printTavoloDiGioco( int turno, int round,int segnalini, ArrayList<String> tracciatoDelRound, HashMap<String, String[][]> planceGiocatori, int a, int b, String giocatoreCorrente, String id, ArrayList<String> carteObiettivoPubblico, HashMap<String, String> carteObiettivoPrivato, ArrayList<String> carteUtensile, ArrayList<String> dadiRiserva, String dadoSelezionato  ){
+    public void printTavoloDiGioco( int turno, int round,HashMap<String, Integer> segnaliniGiocatori, ArrayList<String> tracciatoDelRound, HashMap<String, String[][]> planceGiocatori, int a, int b, String giocatoreCorrente, String id, ArrayList<String> carteObiettivoPubblico, HashMap<String, String> carteObiettivoPrivato, ArrayList<String> carteUtensile, ArrayList<String> dadiRiserva, String dadoSelezionato  ){
 
 
 
 
         System.out.println("\n<===========================================================================================================================================>");
 
-        printTurnoRoundSegnalini(turno, round, segnalini);
+        printTurnoRound(turno, round);
 
         printTracciatoDelRound(tracciatoDelRound);
 
-        printPlanceGiocatori(planceGiocatori, 4, 5, giocatoreCorrente, id);
+        printPlanceGiocatori(planceGiocatori, 4, 5, giocatoreCorrente, id,segnaliniGiocatori);
 
         printCarteObiettivoPubblico(carteObiettivoPubblico);
 

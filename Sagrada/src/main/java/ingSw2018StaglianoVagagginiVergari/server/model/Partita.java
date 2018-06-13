@@ -84,6 +84,11 @@ public class Partita {
                     ArrayList<String> listCartaUtensile = new ArrayList<>();
 
 
+                    HashMap<String, Integer> segnaliniGiocatori = new HashMap<>();
+                    for (Utente user : listaGiocatori) {
+                        segnaliniGiocatori.put(user.getId(), user.getSegnalini());
+                    }
+
                     for (CartaUtensile c : listaCartaUtensile) {
                         StringBuilder builder = new StringBuilder();
                         if (c.getCosto() == 1) {
@@ -118,7 +123,7 @@ public class Partita {
                     for (Dado d : tracciatoDelRound.getRimanenzeRiservaOn()) {
                         tracciato.add(d.toString());
                     }
-                    view.updateView(planceGiocatori, listCartaUtensile, getCurrentPlayer().getId(), getTurno(),getTracciatoDelRound().getRoundAttuale(),cercaUtente(username).getSegnalini(), dadiRiserva, "null", carteObiettivoPubblico, listCarteObiettivoPrivato, tracciato, azioniGiocatore);
+                    view.updateView(planceGiocatori, listCartaUtensile, getCurrentPlayer().getId(), getTurno(),getTracciatoDelRound().getRoundAttuale(),segnaliniGiocatori, dadiRiserva, "null", carteObiettivoPubblico, listCarteObiettivoPrivato, tracciato, azioniGiocatore);
                     return true;
                 } else {
                     for (Utente utente : listaGiocatori) {
@@ -585,10 +590,18 @@ public class Partita {
         gameObserverClone = (HashMap<String, GameObserver>) gameObservers.clone();
         for (String username : gameObserverClone.keySet()) {
             GameObserver view = gameObserverClone.get(username);
+
             HashMap<String, String[][]> planceGiocatori = new HashMap<>();
             for (Utente u : listaGiocatori) {
                 planceGiocatori.put(u.getId(), u.getPlancia().rappresentazionePlancia());
             }
+
+            HashMap<String, Integer> segnaliniGiocatori = new HashMap<>();
+            for (Utente u : listaGiocatori) {
+                segnaliniGiocatori.put(u.getId(), u.getSegnalini());
+            }
+
+
 
             ArrayList<String> listCartaUtensile = new ArrayList<>();
 
@@ -631,7 +644,7 @@ public class Partita {
                 tracciato.add(d.toString());
             }
             if (pingClient(view)) {
-                view.updateView(planceGiocatori, listCartaUtensile, getCurrentPlayer().getId(), getTurno(), getTracciatoDelRound().getRoundAttuale(), cercaUtente(username).getSegnalini(), dadiRiserva, "null", carteObiettivoPubblico, listCarteObiettivoPrivato, tracciato, azioniGiocatore);
+                view.updateView(planceGiocatori, listCartaUtensile, getCurrentPlayer().getId(), getTurno(), getTracciatoDelRound().getRoundAttuale(), segnaliniGiocatori, dadiRiserva, "null", carteObiettivoPubblico, listCarteObiettivoPrivato, tracciato, azioniGiocatore);
             } else {
                 removeObserver(username);
             }
@@ -655,6 +668,12 @@ public class Partita {
             for (Utente u : listaGiocatori) {
                 planceGiocatori.put(u.getId(), u.getPlancia().rappresentazionePlancia());
             }
+
+            HashMap<String, Integer> segnaliniGiocatori = new HashMap<>();
+            for (Utente u : listaGiocatori) {
+                segnaliniGiocatori.put(u.getId(), u.getSegnalini());
+            }
+
 
             ArrayList<String> listCartaUtensile = new ArrayList<>();
 
@@ -697,7 +716,7 @@ public class Partita {
                 tracciato.add(d.toString());
             }
             if (pingClient(view)) {
-                view.updateView(planceGiocatori, listCartaUtensile, getCurrentPlayer().getId(), getTurno(), getTracciatoDelRound().getRoundAttuale(),cercaUtente(username).getSegnalini(), dadiRiserva, "null", carteObiettivoPubblico, listCarteObiettivoPrivato, tracciato, azioniGiocatore);
+                view.updateView(planceGiocatori, listCartaUtensile, getCurrentPlayer().getId(), getTurno(), getTracciatoDelRound().getRoundAttuale(),segnaliniGiocatori, dadiRiserva, "null", carteObiettivoPubblico, listCarteObiettivoPrivato, tracciato, azioniGiocatore);
             } else {
                 removeObserver(getCurrentPlayer().getId());
             }

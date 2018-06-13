@@ -128,7 +128,7 @@ public class View extends UnicastRemoteObject implements GameObserver, Remote {
 
     private int round;
 
-    private  int segnalini;
+    private  HashMap<String, Integer> segnaliniGiocatori;
 
     private ArrayList<String> tracciatoDelRound;
 
@@ -306,7 +306,7 @@ public class View extends UnicastRemoteObject implements GameObserver, Remote {
 
 
 
-    public void updateView(HashMap<String, String[][]> planceGiocatori, ArrayList<String> listaCartaUtensile, String giocatoreCorrente, int turno, int round, int segnalini, ArrayList<String> dadiRiserva, String dadoSelezionato, ArrayList<String> carteObiettivoPubblico, HashMap<String, String> carteObiettivoPrivato, ArrayList<String> tracciatoDelRound, HashSet<Integer> azioniGiocatore) throws RemoteException {
+    public void updateView(HashMap<String, String[][]> planceGiocatori, ArrayList<String> listaCartaUtensile, String giocatoreCorrente, int turno, int round, HashMap<String, Integer> segnaliniGiocatori, ArrayList<String> dadiRiserva, String dadoSelezionato, ArrayList<String> carteObiettivoPubblico, HashMap<String, String> carteObiettivoPrivato, ArrayList<String> tracciatoDelRound, HashSet<Integer> azioniGiocatore) throws RemoteException {
 
 
         //per la carta utensile    map <"TPennello Per Eglomise" "descrizione">
@@ -317,7 +317,7 @@ public class View extends UnicastRemoteObject implements GameObserver, Remote {
         this.giocatoreCorrente = giocatoreCorrente;
         this.turno = turno;
         this.round = round;
-        this.segnalini = segnalini;
+        this.segnaliniGiocatori = segnaliniGiocatori;
         this.dadiRiserva = dadiRiserva;
         this.dadoSelezionato = dadoSelezionato;
         this.carteObiettivoPubblico = carteObiettivoPubblico;
@@ -606,7 +606,7 @@ public class View extends UnicastRemoteObject implements GameObserver, Remote {
         System.out.println("\n\n\n\n\n\n\n\n\n\n\n\n");
 
 
-        stampante.printTavoloDiGioco(turno, round, segnalini, tracciatoDelRound, planceGiocatori, 4, 5, giocatoreCorrente, id, carteObiettivoPubblico, carteObiettivoPrivato, carteUtensile, dadiRiserva, dadoSelezionato);
+        stampante.printTavoloDiGioco(turno, round, segnaliniGiocatori, tracciatoDelRound, planceGiocatori, 4, 5, giocatoreCorrente, id, carteObiettivoPubblico, carteObiettivoPrivato, carteUtensile, dadiRiserva, dadoSelezionato);
 
 
         updateView = false;
@@ -1583,7 +1583,7 @@ public class View extends UnicastRemoteObject implements GameObserver, Remote {
                         String s = inputLine.call();
                     }
 
-                    stampante.printTavoloDiGioco(turno, round, segnalini, tracciatoDelRound, planceGiocatori, 4, 5, giocatoreCorrente, id, carteObiettivoPubblico, carteObiettivoPrivato, carteUtensile, dadiRiserva, dadoSelezionato);  //<<-- aggiunte per aggiornare dopo aver letto la descrizione di
+                    stampante.printTavoloDiGioco(turno, round, segnaliniGiocatori, tracciatoDelRound, planceGiocatori, 4, 5, giocatoreCorrente, id, carteObiettivoPubblico, carteObiettivoPrivato, carteUtensile, dadiRiserva, dadoSelezionato);  //<<-- aggiunte per aggiornare dopo aver letto la descrizione di
                     updateView = true;      //<<-- una carta
                     passaturno = false;       //<<--
 
@@ -1615,7 +1615,7 @@ public class View extends UnicastRemoteObject implements GameObserver, Remote {
                         String s = inputLine.call();
                     }
 
-                    stampante.printTavoloDiGioco(turno, round, segnalini, tracciatoDelRound, planceGiocatori, 4, 5, giocatoreCorrente, id, carteObiettivoPubblico, carteObiettivoPrivato, carteUtensile, dadiRiserva, dadoSelezionato);  //<<-- aggiunte per aggiornare dopo aver letto la descrizione di
+                    stampante.printTavoloDiGioco(turno, round, segnaliniGiocatori, tracciatoDelRound, planceGiocatori, 4, 5, giocatoreCorrente, id, carteObiettivoPubblico, carteObiettivoPrivato, carteUtensile, dadiRiserva, dadoSelezionato);  //<<-- aggiunte per aggiornare dopo aver letto la descrizione di
                     updateView = true;      //<<-- una carta
                     passaturno = false;       //<<--
 

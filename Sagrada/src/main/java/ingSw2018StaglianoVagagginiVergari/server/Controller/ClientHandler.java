@@ -139,7 +139,7 @@ public class ClientHandler implements Runnable,GameObserver {
     }
 
     @Override
-    public void updateView(HashMap<String, String[][]> planceGiocatori, ArrayList<String> listaCartaUtensile, String giocatoreCorrente, int turno, int round, int segnalini, ArrayList<String> dadiRiserva, String dadoSelezionato, ArrayList<String> carteObiettivoPubblico, HashMap<String, String> obiettiviPrivati, ArrayList<String> tracciatoDelRound, HashSet<Integer> azioniGiocatore) throws RemoteException {
+    public void updateView(HashMap<String, String[][]> planceGiocatori, ArrayList<String> listaCartaUtensile, String giocatoreCorrente, int turno, int round,HashMap<String, Integer> segnaliniGiocatori, ArrayList<String> dadiRiserva, String dadoSelezionato, ArrayList<String> carteObiettivoPubblico, HashMap<String, String> obiettiviPrivati, ArrayList<String> tracciatoDelRound, HashSet<Integer> azioniGiocatore) throws RemoteException {
         ArrayList<Object> parametriInviati=new ArrayList<>();
         parametriInviati.add(planceGiocatori.clone());
         parametriInviati.add(listaCartaUtensile.clone());
@@ -152,7 +152,7 @@ public class ClientHandler implements Runnable,GameObserver {
         parametriInviati.add(obiettiviPrivati.clone());
         parametriInviati.add(tracciatoDelRound.clone());
         parametriInviati.add(azioniGiocatore.clone());
-        parametriInviati.add(segnalini);
+        parametriInviati.add(segnaliniGiocatori);
         parametriInviati.add("updateView");
         WriteOut(parametriInviati);
 

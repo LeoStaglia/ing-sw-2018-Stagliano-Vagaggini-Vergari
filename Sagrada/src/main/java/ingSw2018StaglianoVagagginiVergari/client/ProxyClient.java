@@ -190,8 +190,9 @@ public class ProxyClient implements Runnable,RemoteMultiController,RemoteControl
                 HashMap<String, String> obiettiviPrivati = (HashMap<String, String>) parametriRicevuti.get(8);
                 ArrayList<String> tracciatoDelRound = (ArrayList<String>) parametriRicevuti.get(9);
                 HashSet<Integer> azioniGiocatore = (HashSet<Integer>) parametriRicevuti.get(10);
-                int segnalini=(int) parametriRicevuti.get(11);
-                view.updateView(planceGiocatori, listaCartaUtensile, giocatoreCorrente, turno, round,segnalini, dadiRiserva, dadoSelezionato, carteObiettivoPubblico, obiettiviPrivati, tracciatoDelRound, azioniGiocatore);
+                HashMap<String, Integer> segnaliniGiocatori = (HashMap<String, Integer>) parametriRicevuti.get(11);
+                //int segnalini=(int) parametriRicevuti.get(11);
+                view.updateView(planceGiocatori, listaCartaUtensile, giocatoreCorrente, turno, round,segnaliniGiocatori, dadiRiserva, dadoSelezionato, carteObiettivoPubblico, obiettiviPrivati, tracciatoDelRound, azioniGiocatore);
                 sbloccaMonitor(monitor);
                 break;
             }
