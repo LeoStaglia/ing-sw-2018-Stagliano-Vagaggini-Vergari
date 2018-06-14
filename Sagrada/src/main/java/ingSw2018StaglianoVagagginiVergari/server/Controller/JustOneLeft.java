@@ -18,6 +18,7 @@ public class JustOneLeft extends Thread{
     public void run() {
         while(true){
             if(partita.getGameObservers().size()==1) {
+                controller.getT().cancel();
                 try {
                     partita.calcolaPunteggioFinale();
                 } catch (RemoteException e) {
@@ -26,5 +27,6 @@ public class JustOneLeft extends Thread{
                 break;
             }
             }
+            return;
         }
     }

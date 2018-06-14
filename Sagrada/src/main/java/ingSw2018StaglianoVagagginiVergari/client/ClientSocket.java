@@ -35,7 +35,7 @@ public class ClientSocket {
         try {
             return ((ArrayList<Object>)in.readObject());
         } catch (IOException e) {
-            System.err.println("Exception on network: " + e.getMessage());
+            // System.err.println("Exception on network: " + e.getMessage());
         } catch (ClassNotFoundException e) {
             throw new RuntimeException("Wrong deserialization: " + e.getMessage());
         }

@@ -21,6 +21,7 @@ public class ProxyClient implements Runnable,RemoteMultiController,RemoteControl
 
 
     Object monitor = new Object(); //object that regulate the flux
+    Object monitor1 = new Object(); //object that regulate the flux
 
     // reference to networking layer
     private ClientSocket clientSocket;
@@ -30,6 +31,7 @@ public class ProxyClient implements Runnable,RemoteMultiController,RemoteControl
     private View view;
 
     private int log=0;
+    private int trovato=0;
 
 
     public ProxyClient(ClientSocket clientSocket) {
@@ -140,15 +142,17 @@ public class ProxyClient implements Runnable,RemoteMultiController,RemoteControl
     }
 
     @Override
-    public int login(GameObserver view, String username, String token) throws RemoteException {
+    public int login(GameObserver view, String username) throws RemoteException {
         ArrayList<Object> parametriInviati=new ArrayList<>();
         ArrayList<Object> parametriRicevuti=new ArrayList<>();
         parametriInviati.add(username);
-        parametriInviati.add(token);
+       // parametriInviati.add(token);
         parametriInviati.add("login");
         clientSocket.request(parametriInviati);
-        bloccoMonitor(monitor);
-        return this.getLog();
+        bloccoMonitor(monitor1);
+        int risultato=log;
+        log=0;
+        return risultato;
     }
 
     // public void notifyUser(String id,String token, String[][] schemaFronte1, String[][] schemaRetro1 ,String[][] schemaFronte2,String[][] schemaRetro2 ,String obiettivoPrivato)
@@ -161,15 +165,15 @@ public class ProxyClient implements Runnable,RemoteMultiController,RemoteControl
         switch (comando) {
             case "notifyUser": {
                 String id = (String) parametriRicevuti.get(0);
-                String token = (String) parametriRicevuti.get(1);
-                String[][] schemaFronte1 = (String[][]) parametriRicevuti.get(2);
-                String[][] schemaRetro1 = (String[][]) parametriRicevuti.get(3);
-                String[][] schemaFronte2 = (String[][]) parametriRicevuti.get(4);
-                String[][] schemaRetro2 = (String[][]) parametriRicevuti.get(5);
-                String obiettivoPrivato = (String) parametriRicevuti.get(6);
-                Integer[] difficoltàCarteSchema= (Integer[]) parametriRicevuti.get(7);
-                String[] nomeCarteSchema= (String[]) parametriRicevuti.get(8);
-                view.notifyUser(id, token, schemaFronte1, schemaRetro1, schemaFronte2, schemaRetro2, obiettivoPrivato,difficoltàCarteSchema,nomeCarteSchema);
+              //  String token = (String) parametriRicevuti.get(1);
+                String[][] schemaFronte1 = (String[][]) parametriRicevuti.get(1);
+                String[][] schemaRetro1 = (String[][]) parametriRicevuti.get(2);
+                String[][] schemaFronte2 = (String[][]) parametriRicevuti.get(3);
+                String[][] schemaRetro2 = (String[][]) parametriRicevuti.get(4);
+                String obiettivoPrivato = (String) parametriRicevuti.get(5);
+                Integer[] difficoltàCarteSchema= (Integer[]) parametriRicevuti.get(6);
+                String[] nomeCarteSchema= (String[]) parametriRicevuti.get(7);
+                view.notifyUser(id,schemaFronte1, schemaRetro1, schemaFronte2, schemaRetro2, obiettivoPrivato,difficoltàCarteSchema,nomeCarteSchema);
                 break;
             }
             case "notifyScheme": {
@@ -240,16 +244,34 @@ public class ProxyClient implements Runnable,RemoteMultiController,RemoteControl
             }
             case "notifyUserExit":{
                 String username=(String) parametriRicevuti.get(0);
-                view.notifyUserExit(username);
+                Thread n = new Thread(
+                        () -> {
+                            try {
+                                view.notifyUserExit(username);
+                            } catch (RemoteException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                );
+                n.start();
                 break;
             }
             case "sbloccoUtensile":{
                 sbloccaMonitor(monitor);
                 break;
             }
+            case "sbloccoLogin":{
+                sbloccaMonitor(monitor1);
+                break;
+            }
             case "username":{
                 int esito=(int)parametriRicevuti.get(0);
                 log=esito;
+                break;
+            }
+            case "esitoricerca":{
+                int esito=(int)parametriRicevuti.get(0);
+                trovato=esito;
                 break;
             }
 
@@ -277,7 +299,7 @@ public class ProxyClient implements Runnable,RemoteMultiController,RemoteControl
             }
             case "notifyTurnTimer":{
                 view.notifyTurnTimer();
-                sbloccaMonitor(monitor);
+                break;
             }
         }
 
@@ -315,18 +337,18 @@ public class ProxyClient implements Runnable,RemoteMultiController,RemoteControl
     @Override
     //This function returns the instance of the controller bound with the use
     public RemoteController CercaController(String username) throws RemoteException {
-        log=0;
+        trovato=0;
         ArrayList<Object> parametriInviati=new ArrayList<>();
         parametriInviati.add(username);
         parametriInviati.add("cercaController");
         clientSocket.request(parametriInviati);
         bloccoMonitor(monitor);
-        if(log==0) {
+        if(trovato==0) {
             return this;
         }
 
         else {
-            log = 0;
+            trovato = 0;
             return null;
         }
     }

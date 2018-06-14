@@ -35,88 +35,88 @@ public class Controller extends UnicastRemoteObject implements RemoteController 
         partita = new Partita();
         status = ControllerStatus.AggiuntaObserver;
         System.out.println("Nuovo Controller");
-        }
+    }
 
-    public synchronized void partecipaPartita(GameObserver view, String username) throws InterruptedException, RemoteException, FullGameException{
-        if (status==ControllerStatus.AggiuntaObserver) {
+    public synchronized void partecipaPartita(GameObserver view, String username) throws InterruptedException, RemoteException, FullGameException {
+        if (status == ControllerStatus.AggiuntaObserver) {
             if (partita.numberOfObserver() == 4) {
                 throw new FullGameException("The game is full");
             }
             partita.addObserver(view, username);
 
             if (partita.numberOfObserver() == 2) {
-                    t = new Timer();
-                    t.schedule(new TimerTask() {
-                        @Override
-                        public void run() {
-                            try {
-                                if (getStatus()==ControllerStatus.AggiuntaObserver) {
-                                    setStatus(ControllerStatus.Preparazione);
-                                    partita.preparaPartita();
-                                    setStatus(ControllerStatus.SceltaSchema);
-                                    System.out.println("preparazione partita effettuata");
-                                }
-                            } catch (RemoteException e) {
-                                e.printStackTrace();
+                t = new Timer();
+                t.schedule(new TimerTask() {
+                    @Override
+                    public void run() {
+                        try {
+                            if (getStatus() == ControllerStatus.AggiuntaObserver) {
+                                setStatus(ControllerStatus.Preparazione);
+                                partita.preparaPartita();
+                                setStatus(ControllerStatus.SceltaSchema);
+                                System.out.println("preparazione partita effettuata");
                             }
+                        } catch (RemoteException e) {
+                            e.printStackTrace();
                         }
-                    }, 6000);
-                timerSetted=true;
+                    }
+                }, 6000);
+                timerSetted = true;
 
-            }else if (partita.numberOfObserver() == 4) {
-                    setStatus(ControllerStatus.Preparazione);
-                    t.cancel();
-                    partita.preparaPartita();
-                    setStatus(ControllerStatus.SceltaSchema);
-                }
+            } else if (partita.numberOfObserver() == 4) {
+                setStatus(ControllerStatus.Preparazione);
+                t.cancel();
+                partita.preparaPartita();
+                setStatus(ControllerStatus.SceltaSchema);
+            }
 
-        }else{
+        } else {
             throw new FullGameException("La partita è già in corso.");
         }
     }
+
     public synchronized void abbandonaPartita(GameObserver view, String username) throws RemoteException {
-        if (getStatus()==ControllerStatus.AggiuntaObserver) {
+        if (getStatus() == ControllerStatus.AggiuntaObserver) {
             partita.removeObserver(username);
             if (partita.numberOfObserver() < 2 && timerSetted) {
                 t.cancel();
-                timerSetted=false;
+                timerSetted = false;
             }
         }
     }
 
     //Fase di scelta dello schema, il controller riceve la view e l'id, setta la faccia della carta schema scelta.
-    public void scegliSchema(GameObserver view, String idUser,boolean carta1, boolean fronte) throws RemoteException{
-        partita.sceltaSchema(view, idUser,carta1, fronte);
-        if(partita.contaSchemi()) {
+    public void scegliSchema(GameObserver view, String idUser, boolean carta1, boolean fronte) throws RemoteException {
+        partita.sceltaSchema(view, idUser, carta1, fronte);
+        if (partita.contaSchemi()) {
             setStatus(ControllerStatus.SvolgimentoPartita);
             t = new Timer();
             t.schedule(new TurnTimer(this, partita), 20000);
             new Pinger(partita, this).start();
-            new JustOneLeft(partita,this).start();
+            new JustOneLeft(partita, this).start();
         }
 
     }
 
-    public void svolgimentoPartita(GameObserver view,ArrayList<Integer> parametri) throws RemoteException {
+    public void svolgimentoPartita(GameObserver view, ArrayList<Integer> parametri) throws RemoteException {
        /* for (Utente u: partita.getOrdineRound()) {
             System.out.println(u.getId());
         }*/
 
-        if (partita.getAzioniGiocatore().contains(parametri.get(0))|| partita.getAzioniGiocatore().contains(4)) {
-            int n=parametri.get(0);
-            if(partita.getAzioniGiocatore().contains(4)&&!(partita.getAzioniGiocatore().contains(1))){
+        if (partita.getAzioniGiocatore().contains(parametri.get(0)) || partita.getAzioniGiocatore().contains(4)) {
+            int n = parametri.get(0);
+            if (partita.getAzioniGiocatore().contains(4) && !(partita.getAzioniGiocatore().contains(1))) {
                 partita.getAzioniGiocatore().remove(4);
-                n=4;
-            }
-            else if(parametri.get(0)!=2) {
+                n = 4;
+            } else if (parametri.get(0) != 2) {
                 partita.getAzioniGiocatore().remove(parametri.get(0));
             }
-            if (n == 1 || n==4) {
+            if (n == 1 || n == 4) {
                 partita.setDadoSelezionato(parametri.get(1));
                 partita.piazzamentoDado(parametri.get(2), parametri.get(3), false, false);
             }
             if (n == 2) {
-                if(this.scegliCartaUtensile(view, parametri.get(1)));
+                if (this.scegliCartaUtensile(view, parametri.get(1))) ;
                 else partita.updatePagamento();
             }
             if (n == 3) this.passaTurno(view);
@@ -176,7 +176,7 @@ public class Controller extends UnicastRemoteObject implements RemoteController 
                     setStatus(ControllerStatus.CartaU12);
                     break;
             }
-        }else {
+        } else {
             try {
                 partita.updateMessage("NON PUOI PAGARE LA CARTA");
                 return false;
@@ -188,13 +188,13 @@ public class Controller extends UnicastRemoteObject implements RemoteController 
     }
 
 
-    public synchronized void usaCartaUtensile(GameObserver view,ArrayList<Integer> parametri) throws RemoteException{
+    public synchronized void usaCartaUtensile(GameObserver view, ArrayList<Integer> parametri) throws RemoteException {
         switch (status) {
             case CartaU1:
-               for (CartaUtensile u : partita.getListaCartaUtensile()) {
+                for (CartaUtensile u : partita.getListaCartaUtensile()) {
                     if (u.getId() == 1) {
                         partita.setDadoSelezionato(parametri.get(0));
-                        PinzaSgrossatrice carta= (PinzaSgrossatrice) u;
+                        PinzaSgrossatrice carta = (PinzaSgrossatrice) u;
                         carta.setScelta(parametri.get(1));
                         carta.usaEffettoCarta(partita);
                     }
@@ -202,21 +202,21 @@ public class Controller extends UnicastRemoteObject implements RemoteController 
 
                 break;
             case CartaU2:
-              for (CartaUtensile u : partita.getListaCartaUtensile()) {
+                for (CartaUtensile u : partita.getListaCartaUtensile()) {
                     if (u.getId() == 2) {
-                        PennelloPerEglomise carta= (PennelloPerEglomise) u;
+                        PennelloPerEglomise carta = (PennelloPerEglomise) u;
                         carta.setxDie(parametri.get(0));
                         carta.setyDie(parametri.get(1));
                         carta.setxCell(parametri.get(2));
                         carta.setyCell(parametri.get(3));
                         carta.usaEffettoCarta(partita);
                     }
-              }
+                }
                 break;
             case CartaU3:
-                 for (CartaUtensile u : partita.getListaCartaUtensile()){
+                for (CartaUtensile u : partita.getListaCartaUtensile()) {
                     if (u.getId() == 3) {
-                        AlesatoreRame carta= (AlesatoreRame) u;
+                        AlesatoreRame carta = (AlesatoreRame) u;
                         carta.setxDie(parametri.get(0));
                         carta.setyDie(parametri.get(1));
                         carta.setxCell(parametri.get(2));
@@ -227,8 +227,8 @@ public class Controller extends UnicastRemoteObject implements RemoteController 
                 break;
             case CartaU4:
                 for (CartaUtensile u : partita.getListaCartaUtensile()) {
-                    if (u.getId()== 4) {
-                        Lathekin carta= (Lathekin) u;
+                    if (u.getId() == 4) {
+                        Lathekin carta = (Lathekin) u;
                         carta.setxDie(parametri.get(0));
                         carta.setyDie(parametri.get(1));
                         carta.setxCell(parametri.get(2));
@@ -240,7 +240,7 @@ public class Controller extends UnicastRemoteObject implements RemoteController 
             case CartaU5:
                 for (CartaUtensile u : partita.getListaCartaUtensile()) {
                     if (u.getId() == 5) {
-                        TaglierinaCircolare carta= (TaglierinaCircolare) u;
+                        TaglierinaCircolare carta = (TaglierinaCircolare) u;
                         partita.setDadoSelezionato(parametri.get(0));
                         carta.setI(parametri.get(1));
                         carta.usaEffettoCarta(partita);
@@ -248,55 +248,56 @@ public class Controller extends UnicastRemoteObject implements RemoteController 
                 }
                 break;
             case CartaU6:
-              for (CartaUtensile u : partita.getListaCartaUtensile()) {
+                for (CartaUtensile u : partita.getListaCartaUtensile()) {
                     if (u.getId() == 6) {
                         if (partita.getAzioniGiocatore().contains(1)) {
                             PennelloPastaSalda carta = (PennelloPastaSalda) u;
                             if (carta.isFase1()) {
                                 partita.setDadoSelezionato(parametri.get(0));
-                               try{ carta.usaEffettoCarta(partita);}
-                               catch (MossaIllegaleException e){
-                                   return;
-                               }
+                                try {
+                                    carta.usaEffettoCarta(partita);
+                                } catch (MossaIllegaleException e) {
+                                    return;
+                                }
 
                                 if (carta.isPiazzabile()) return;
                             } else {
-                                    try {
-                                        carta.setxCell(parametri.get(0));
-                                        carta.setyCell(parametri.get(1));
-                                        carta.usaEffettoCarta(partita);
-                                    }catch (MossaIllegaleException e){
-                                        return;
-                                    }
+                                try {
+                                    carta.setxCell(parametri.get(0));
+                                    carta.setyCell(parametri.get(1));
+                                    carta.usaEffettoCarta(partita);
+                                } catch (MossaIllegaleException e) {
+                                    return;
+                                }
 
 
                             }
-                        }else{
+                        } else {
                             partita.updateGenerale();
                         }
                     }
                 }
                 break;
             case CartaU7:
-                 for (CartaUtensile u : partita.getListaCartaUtensile()) {
-                     if (u.getId()==7) {
-                         Martelletto carta = (Martelletto) u;
-                         carta.usaEffettoCarta(partita);
-                     }
-                 }
-                break;
-            case CartaU8:
-               for (CartaUtensile u : partita.getListaCartaUtensile()) {
-                    if (u.getId() == 8) {
-                        TenagliaARotelle carta= (TenagliaARotelle) u;
+                for (CartaUtensile u : partita.getListaCartaUtensile()) {
+                    if (u.getId() == 7) {
+                        Martelletto carta = (Martelletto) u;
                         carta.usaEffettoCarta(partita);
                     }
-               }
+                }
+                break;
+            case CartaU8:
+                for (CartaUtensile u : partita.getListaCartaUtensile()) {
+                    if (u.getId() == 8) {
+                        TenagliaARotelle carta = (TenagliaARotelle) u;
+                        carta.usaEffettoCarta(partita);
+                    }
+                }
                 break;
             case CartaU9:
                 for (CartaUtensile u : partita.getListaCartaUtensile()) {
                     if (u.getId() == 9) {
-                        RigaInSughero carta= (RigaInSughero) u;
+                        RigaInSughero carta = (RigaInSughero) u;
                         partita.setDadoSelezionato(parametri.get(0));
                         carta.setxCell(parametri.get(1));
                         carta.setyCell(parametri.get(2));
@@ -305,23 +306,22 @@ public class Controller extends UnicastRemoteObject implements RemoteController 
                 }
                 break;
             case CartaU10:
-               for (CartaUtensile u : partita.getListaCartaUtensile()) {
-                    if (u.getId()== 10) {
-                        TamponeDiamantato carta= (TamponeDiamantato)u;
+                for (CartaUtensile u : partita.getListaCartaUtensile()) {
+                    if (u.getId() == 10) {
+                        TamponeDiamantato carta = (TamponeDiamantato) u;
                         carta.setScelta(parametri.get(0));
                         carta.usaEffettoCarta(partita);
                     }
                 }
                 break;
             case CartaU11:
-                 for (CartaUtensile u : partita.getListaCartaUtensile()) {
+                for (CartaUtensile u : partita.getListaCartaUtensile()) {
                     if (u.getId() == 11) {
-                        DiluentePerPastaSalda carta= (DiluentePerPastaSalda) u;
-                        if(!carta.isSecondPhase()){
+                        DiluentePerPastaSalda carta = (DiluentePerPastaSalda) u;
+                        if (!carta.isSecondPhase()) {
                             partita.reInserisciDadoInSacchetto(partita.getDadofromRiserva(parametri.get(0)));
                             partita.setDadoSelezionato(partita.getDadoRandomFromSacchetto());
-                        }
-                        else {
+                        } else {
                             partita.getDadoSelezionato().setNumero(parametri.get(0));
                             carta.setX(parametri.get(1));
                             carta.setY(parametri.get(2));
@@ -332,8 +332,8 @@ public class Controller extends UnicastRemoteObject implements RemoteController 
                 }
                 break;
             case CartaU12:
-               for (CartaUtensile u : partita.getListaCartaUtensile()) {
-                    if ( u.getId()==12) {
+                for (CartaUtensile u : partita.getListaCartaUtensile()) {
+                    if (u.getId() == 12) {
                         TaglierinaManuale carta = (TaglierinaManuale) u;
                         carta.setR(parametri.get(0));
                         carta.setNumeroDadi(parametri.get(1));
@@ -353,7 +353,7 @@ public class Controller extends UnicastRemoteObject implements RemoteController 
                 setStatus(ControllerStatus.SvolgimentoPartita);
                 break;
 
-                //TODO ramo else
+            //TODO ramo else
 
         }
         setStatus(ControllerStatus.SvolgimentoPartita);
@@ -361,45 +361,47 @@ public class Controller extends UnicastRemoteObject implements RemoteController 
     }
 
 
-
     public synchronized void passaTurno(GameObserver view) throws RemoteException {
         partita.inizializzaAzioniGiocatore();
         t.cancel();
-        if(partita.getTurno()==partita.getOrdineRound().size()){
+        if (partita.getTurno() == partita.getOrdineRound().size()) {
             if (partita.getTracciatoDelRound().getRoundAttuale() < 10) {
                 partita.nextRound();
                 t = new Timer();
                 t.schedule(new TurnTimer(this, partita), 20000);
-            } else { setStatus(ControllerStatus.CalcoloPunteggio);
-                partita.calcolaPunteggioFinale();                                               }
-        }
-        else{
+            } else {
+                setStatus(ControllerStatus.CalcoloPunteggio);
+                partita.calcolaPunteggioFinale();
+            }
+        } else {
             partita.incrementaTurno();
-            t= new Timer();
+            t = new Timer();
             t.schedule(new TurnTimer(this, partita), 20000);
 
         }
 
 
-
     }
 
     @Override
-    public int login(GameObserver view, String username, String token) throws RemoteException {
-        if (partita.getUserTokens().keySet().contains(username)){
-            if (partita.getUserTokens().get(username).equals(token)){
-                if (partita.replaceObserver(username, view)){
+    public int login(GameObserver view, String username) throws RemoteException {
+        //  if (partita.getUserTokens().keySet().contains(username)){
+        // if (partita.getUserTokens().get(username).equals(token)){
+        for (Utente u : partita.getListaGiocatori()) {
+            if (u.getId().equals(username)) {
+                if (partita.replaceObserver(username, view)) {
                     return 1;
-                }else{
+                } else {
                     return 2;
                 }
 
-            }else{
-                return 0;
             }
-        }else{
-           return 0;
         }
+        return 0;
+    }
+
+    public Timer getT() {
+        return t;
     }
 
     public synchronized void setStatus(ControllerStatus status) {

@@ -81,7 +81,7 @@ public class View extends UnicastRemoteObject implements GameObserver, Remote {
 
     private int numeroDadiTool12 = 0;
     private int tRound = -1;
-    private String token;
+    //private String token;
     private int login = 0;
 
     //
@@ -201,16 +201,15 @@ public class View extends UnicastRemoteObject implements GameObserver, Remote {
                     }
                 } else if (cmd == 2) {
                     int tentativi = 0;
-                    while (login == 0 && tentativi < 3) {
-                        System.out.println("Login (3 tentativi):");
+                    while (login == 0 && tentativi < 1) {
                         System.out.println("Username:");
                         username = command.next();
-                        String token;
-                        System.out.println("Token:");
-                        token = command.next();
+                      //  String token;
+                       // System.out.println("Token:");
+                       // token = command.next();
                         controller=multiController.CercaController(username);
                         if(controller!=null) {
-                            login = controller.login(this, username, token);
+                            login = controller.login(this, username);
                             System.out.println(controller);
                             tentativi++;
                         }else {
@@ -264,7 +263,7 @@ public class View extends UnicastRemoteObject implements GameObserver, Remote {
 
 
         @Override
-        public synchronized void notifyUser (String id, String token, String[][]schemaFronte1, String[][]
+        public synchronized void notifyUser (String id,String[][]schemaFronte1, String[][]
         schemaRetro1, String[][]schemaFronte2, String[][]schemaRetro2, String obiettivoPrivato, Integer[] difficoltàCarteSchema, String[] nomeCarteSchema) throws RemoteException {
             this.id = id;
             this.setStatus(ViewStatus.SelezioneSchema);
@@ -275,7 +274,7 @@ public class View extends UnicastRemoteObject implements GameObserver, Remote {
             this.difficoltàCarteSchema = difficoltàCarteSchema;
             this.nomeCarteSchema = nomeCarteSchema;
             this.obiettivoPrivato = obiettivoPrivato;
-            this.token = token;
+          //  this.token = token;
             updateView = true;
         }
 
@@ -641,7 +640,7 @@ public class View extends UnicastRemoteObject implements GameObserver, Remote {
         //qui avviene la stampa delle 4 carte schema, una delle quali verrà scelta dall'utente
 
         // prototipo della funzione:  private void stampaSchema(boolean carta1, boolean fronte);
-        System.out.println("Benvenuto " + id + ", il token per accedere alla partita è: " + token);
+        System.out.println("Benvenuto " + id ); // ", il token per accedere alla partita è: " + token);
         System.out.println("============================================================================");
         System.out.println("Questo è l'obiettivo privato:  "+ obiettivoPrivato);
         System.out.println("============================================================================");

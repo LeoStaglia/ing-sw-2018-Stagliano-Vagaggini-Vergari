@@ -344,7 +344,7 @@ public class Printer {
 
             //il punteggio degli altri giocatori
             if (!((String) e.getKey()).equalsIgnoreCase(id))
-                System.out.println("il punteggio di " + (String) e.getKey() + "é " + e.getValue());
+                System.out.println("il punteggio di " + (String) e.getKey() + " é " + e.getValue());
 
         }
         if (id.equals(vincitore)) {

@@ -15,7 +15,7 @@ import java.util.concurrent.TimeUnit;
 public class Partita {
 
     private HashMap<String, GameObserver> gameObservers;
-    private HashMap<String, String> userTokens;
+   // private HashMap<String, String> userTokens;
     private Dado dadoSelezionato = null;
     private ArrayList<String> setOfColors = new ArrayList<String>();
     private ArrayList<Dado> riserva = new ArrayList<Dado>();
@@ -51,7 +51,7 @@ public class Partita {
     public Partita() {
         riempiSetofColors();
         riempiSacchetto();
-        Utente.inizializzaTokenSet();
+       // Utente.inizializzaTokenSet();
         inizializzaCarteSchema();
         inizializzaAzioniGiocatore();
         inizializzaMazzoCarteUtensile();
@@ -59,7 +59,7 @@ public class Partita {
         inizializzaPlance();
         inizializzaObiettiviPrivati();
         gameObservers = new HashMap<>();
-        userTokens = new HashMap<>();
+       // userTokens = new HashMap<>();
     }
 
     public boolean replaceObserver(String username, GameObserver view) throws RemoteException {
@@ -110,9 +110,13 @@ public class Partita {
 
                     ArrayList<String> carteObiettivoPubblico = new ArrayList<>();
                     for (CartaObiettivoPubblico c : listaCartaObiettivoPubblico) {
-                        carteObiettivoPubblico.add(c.getNome());
-                        //TODO inserire descrizione carta
+                        StringBuilder builder = new StringBuilder();
+                        builder.append(c.getNome());
+                        builder.append("*");
+                        builder.append(c.getDescrizione());
+                        carteObiettivoPubblico.add(builder.toString());
                     }
+
                     HashMap<String, String> listCarteObiettivoPrivato = new HashMap<>();
 
                     for (Utente utente : listaGiocatori) {
@@ -143,7 +147,7 @@ public class Partita {
 
 
 
-                            view.notifyUser(utente.getId(), utente.getToken(), scelteSchemi.get(utente).getFirst().stringRepresentation(true), scelteSchemi.get(utente).getFirst().stringRepresentation(false), scelteSchemi.get(utente).getSecond().stringRepresentation(true), scelteSchemi.get(utente).getSecond().stringRepresentation(false), utente.getObiettivoPrivato().get(0).getColore().getDescrizione(), difficoltàCarteSchema, nomeCarteSchema);
+                            view.notifyUser(utente.getId(), scelteSchemi.get(utente).getFirst().stringRepresentation(true), scelteSchemi.get(utente).getFirst().stringRepresentation(false), scelteSchemi.get(utente).getSecond().stringRepresentation(true), scelteSchemi.get(utente).getSecond().stringRepresentation(false), utente.getObiettivoPrivato().get(0).getColore().getDescrizione(), difficoltàCarteSchema, nomeCarteSchema);
                             return false;
                         }
                     }
@@ -185,7 +189,7 @@ public class Partita {
             Utente u = new Utente(this.getPlanciaFromList(), this.getPrivatoFromList());
             u.setId(username);
             listaGiocatori.add(u);
-            userTokens.put(username, u.getToken());
+           // userTokens.put(username, u.getToken());
             scelteSchemi.put(u, new Coppia<Schema, Schema>(getSchemaFromList(), getSchemaFromList()));
 
             Integer[] difficoltàCarteSchema = new Integer[4];
@@ -199,7 +203,7 @@ public class Partita {
             nomeCarteSchema[2] = scelteSchemi.get(u).getSecond().getNomeFronte();
             nomeCarteSchema[3] = scelteSchemi.get(u).getSecond().getNomeRetro();
 
-            view.notifyUser(u.getId(), u.getToken(), scelteSchemi.get(u).getFirst().stringRepresentation(true), scelteSchemi.get(u).getFirst().stringRepresentation(false), scelteSchemi.get(u).getSecond().stringRepresentation(true), scelteSchemi.get(u).getSecond().stringRepresentation(false), u.getObiettivoPrivato().get(0).toString(), difficoltàCarteSchema, nomeCarteSchema);
+            view.notifyUser(u.getId(),scelteSchemi.get(u).getFirst().stringRepresentation(true), scelteSchemi.get(u).getFirst().stringRepresentation(false), scelteSchemi.get(u).getSecond().stringRepresentation(true), scelteSchemi.get(u).getSecond().stringRepresentation(false), u.getObiettivoPrivato().get(0).toString(), difficoltàCarteSchema, nomeCarteSchema);
         }
         riempiRiserva();
         setListaCartaObiettivoPubblico();
@@ -873,24 +877,26 @@ public class Partita {
 
     }
 
-    public HashMap<String, GameObserver> getGameObservers() {
+    public synchronized HashMap<String, GameObserver> getGameObservers() {
         return gameObservers;
     }
 
-    public HashMap<String, String> getUserTokens() {
-        return userTokens;
-    }
+   // public HashMap<String, String> getUserTokens() {
+       // return userTokens;
+    //}
 
-    public void removeObserver(String username){
+    public void removeObserver(String username) {
         gameObservers.remove(username);
-        for (String user:gameObservers.keySet()){
-            try{
-                gameObservers.get(user).notifyUserExit(username);
-            }catch(RemoteException ex){
+        for (String user : gameObservers.keySet()) {
+            try {
+                if (!(user).equals(username))
+                    gameObservers.get(user).notifyUserExit(username);
+            }catch (RemoteException e){
 
             }
         }
     }
+
 
     // end various getter
 

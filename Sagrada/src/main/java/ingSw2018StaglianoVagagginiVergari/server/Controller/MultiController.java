@@ -1,6 +1,7 @@
 package ingSw2018StaglianoVagagginiVergari.server.Controller;
 
 import ingSw2018StaglianoVagagginiVergari.common.RemoteMultiController;
+import ingSw2018StaglianoVagagginiVergari.server.model.Utente;
 
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
@@ -29,7 +30,10 @@ public class MultiController extends UnicastRemoteObject implements RemoteMultiC
 
     public Controller CercaController(String username) throws RemoteException {
         for (Controller controller : controllers) {
-            if (controller.getPartita().getUserTokens().keySet().contains(username)) return controller;
+            for (Utente u: controller.getPartita().getListaGiocatori()) {
+                if (u.getId().equals(username)) return controller;
+            }
+
         }
         return null;
     }

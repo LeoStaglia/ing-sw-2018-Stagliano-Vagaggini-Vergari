@@ -16,8 +16,9 @@ class UtenteTest {
         assertTrue(uMultiplayer.getObiettivoPrivato().get(0).getColore()==Constraint.GIALLO);
 
     }
-    @Test
-    void getObiettivoPrivatoSingleiplayer() {
+
+   /* @Test
+        void getObiettivoPrivatoSingleiplayer() {
         Plancia p = mock(Plancia.class);
         Utente singleplayer = new Utente(p, Constraint.GIALLO, Constraint.ROSSO);
         assertTrue(singleplayer.getObiettivoPrivato().get(0).getColore()==Constraint.GIALLO);
@@ -25,6 +26,7 @@ class UtenteTest {
 
 
     }
+    */
 
     @Test
     void inizializzaIdSetTest() {

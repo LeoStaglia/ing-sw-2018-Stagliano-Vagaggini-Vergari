@@ -12,7 +12,7 @@ public class Utente implements Serializable{
     private Plancia plancia;
     private int segnalini;
     private String id;
-    private String token;
+   // private String token;
     private static HashSet<String> tokenSet = new HashSet<>();
 
     public String getId() {
@@ -22,17 +22,17 @@ public class Utente implements Serializable{
     //multiplayer constructor
     public Utente(Plancia plancia, Constraint coloreObiettivoPrivato){
         this.plancia=plancia;
-        for (String token: tokenSet){
-            this.token =token;
-            tokenSet.remove(token);
-            break;
-        }
+       // for (String token: tokenSet){
+          //  this.token =token;
+           // tokenSet.remove(token);
+           // break;
+        //}
         obiettivoPrivato= new ArrayList<>();
         obiettivoPrivato.add(new CartaObiettivoPrivato(coloreObiettivoPrivato));
 
     }
     //singleplayer constructor
-    public Utente(Plancia plancia, Constraint coloreObiettivoPrivato1, Constraint coloreObiettivoPrivato2){
+    /*public Utente(Plancia plancia, Constraint coloreObiettivoPrivato1, Constraint coloreObiettivoPrivato2){
         for (String token: tokenSet){
             this.token =token;
             tokenSet.remove(token);
@@ -44,7 +44,7 @@ public class Utente implements Serializable{
         obiettivoPrivato.add(new CartaObiettivoPrivato(coloreObiettivoPrivato2));
 
 
-    }
+    }*/
 
     public ArrayList<CartaObiettivoPrivato> getObiettivoPrivato() {
         ArrayList<CartaObiettivoPrivato> risultato=new ArrayList<>();
@@ -74,7 +74,7 @@ public class Utente implements Serializable{
         this.segnalini=difficolta;
     }
 
-    public static void inizializzaTokenSet(){
+    /*public static void inizializzaTokenSet(){
         String alfabeto = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
         Random ran = new Random();
         while(tokenSet.size()<=4){
@@ -85,14 +85,14 @@ public class Utente implements Serializable{
             tokenSet.add(builder.toString());
         }
 
-    }
+    }*/
 
 
     public void setId(String username) {
         this.id = username;
     }
 
-    public String getToken() {
-        return token;
+   /* public String getToken() {
+        return token;*/
     }
-}
+

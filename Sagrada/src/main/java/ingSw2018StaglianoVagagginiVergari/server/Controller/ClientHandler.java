@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
+import java.net.SocketException;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -42,9 +43,9 @@ public class ClientHandler implements Runnable,GameObserver {
 
                 }catch(EOFException e){  //TODO mex
                     this.close();
-                } catch (IOException e1) {
+                }catch (IOException e1) {
                     e1.printStackTrace();
-                } catch (ClassNotFoundException e1) {
+                }catch (ClassNotFoundException e1) {
                     e1.printStackTrace();
                 }
                 if (response != null) {
@@ -108,10 +109,10 @@ public class ClientHandler implements Runnable,GameObserver {
 
 
     @Override
-    public void notifyUser(String id, String token, String[][] schemaFronte1, String[][] schemaRetro1, String[][] schemaFronte2, String[][] schemaRetro2, String obiettivoPrivato, Integer[] difficoltàCarteSchema, String[] nomeCarteSchema) throws RemoteException {
+    public void notifyUser(String id, String[][] schemaFronte1, String[][] schemaRetro1, String[][] schemaFronte2, String[][] schemaRetro2, String obiettivoPrivato, Integer[] difficoltàCarteSchema, String[] nomeCarteSchema) throws RemoteException {
         ArrayList<Object> parametriInviati=new ArrayList<>();
         parametriInviati.add(id);
-        parametriInviati.add(token);
+       // parametriInviati.add(token);
         parametriInviati.add(schemaFronte1.clone());
         parametriInviati.add(schemaRetro1.clone());
         parametriInviati.add(schemaFronte2.clone());
@@ -274,7 +275,7 @@ public class ClientHandler implements Runnable,GameObserver {
 
     @Override
     public void updatePagamento() throws RemoteException {
-
+        //TODO
     }
 
     public void sbloccoUtensile(){
@@ -284,10 +285,26 @@ public class ClientHandler implements Runnable,GameObserver {
         WriteOut(parametriInviati);
     }
 
+
+    public void sbloccoLogin(){
+        ArrayList<Object> parametriInviati=new ArrayList<>();
+
+        parametriInviati.add("sbloccoLogin");
+        WriteOut(parametriInviati);
+    }
+
+
     public void esitoUsername(int esito){
         ArrayList<Object> parametriInviati=new ArrayList<>();
         parametriInviati.add(esito);
         parametriInviati.add("username");
+        WriteOut(parametriInviati);
+    }
+
+    public void esitoRicerca(int esito){
+        ArrayList<Object> parametriInviati=new ArrayList<>();
+        parametriInviati.add(esito);
+        parametriInviati.add("esitoricerca");
         WriteOut(parametriInviati);
     }
 
@@ -315,7 +332,6 @@ public class ClientHandler implements Runnable,GameObserver {
 
         switch (comando){
             case "partecipaPartita":{
-
                 String username=(String)parametriRicevuti.get(0);
                 controller.partecipaPartita(this,username);
                 break;
@@ -354,10 +370,10 @@ public class ClientHandler implements Runnable,GameObserver {
             case "login":{
                 int log;
                 String username=(String) parametriRicevuti.get(0);
-                String token=(String) parametriRicevuti.get(1);
-                log=controller.login(this,username,token);
-                System.out.println("esito"+log);
+               // String token=(String) parametriRicevuti.get(1);
+                log=controller.login(this,username);
                 esitoUsername(log);
+                sbloccoLogin();
                 break;
             }
             case "assegnaController":{
@@ -369,8 +385,9 @@ public class ClientHandler implements Runnable,GameObserver {
                 String username=(String) parametriRicevuti.get(0);
                 controller=multiController.CercaController(username);
                 if(controller==null){
-                    esitoUsername(1);
+                    esitoRicerca(1);
                 }
+
                 sbloccoUtensile();
                 break;
             }

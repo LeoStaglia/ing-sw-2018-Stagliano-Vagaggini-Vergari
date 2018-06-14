@@ -32,21 +32,23 @@ public class Pinger extends Thread {
 
             gameObserverClone = (HashMap<String, GameObserver>) partita.getGameObservers().clone();
             for (String username : gameObserverClone.keySet()) {
+                try {
+                    TimeUnit.MILLISECONDS.sleep(100);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
                 if (partita.pingClient(partita.getGameObservers().get(username))) {
                     pingFailed.replace(partita.getGameObservers().get(username), 0);
-                    try {
-                        TimeUnit.MILLISECONDS.sleep(100);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
                 } else {
                     int n = pingFailed.get(partita.getGameObservers().get(username));
                     n++;
                     pingFailed.replace(partita.getGameObservers().get(username), n);
                 }
-                if (pingFailed.get(partita.getGameObservers().get(username))==3){
-                    partita.removeObserver(username);
-                }
+               if(pingFailed.get(partita.getGameObservers().get(username))!=null) { //serve?
+                    if (pingFailed.get(partita.getGameObservers().get(username)) == 3) {
+                        partita.removeObserver(username);
+                    }
+               }
             }
 
         }
