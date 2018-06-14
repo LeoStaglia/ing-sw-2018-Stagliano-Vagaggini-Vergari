@@ -431,15 +431,13 @@ public class View extends UnicastRemoteObject implements GameObserver, Remote {
 
     }
 
-    public synchronized void updateViewPunteggio(HashMap<String, Integer> punteggi, String vincitore) throws RemoteException {
-
+    public void updateViewPunteggio(HashMap<String, Integer> punteggi, String vincitore) throws RemoteException {
+        if(id.equals(giocatoreCorrente)) t.interrupt();
         this.punteggi = punteggi;
         this.mossaCorretta = true;
         this.vincitore = vincitore;
         setStatus(ViewStatus.CalcoloPunteggio);
         this.updateView = true;
-
-
     }
 
     @Override
@@ -708,7 +706,7 @@ public class View extends UnicastRemoteObject implements GameObserver, Remote {
         }
         // System.out.println(status);
         while (!updateView) {
-            wait();
+            System.out.print("");
         }
         updateView = false;
     }

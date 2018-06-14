@@ -502,7 +502,7 @@ public class Partita {
 
     public void calcolaPunteggioFinale() throws RemoteException {
 
-        String vincitore;
+        String vincitore = null;
         for (Utente u : listaGiocatori) {
             int punteggio = u.getSegnalini();
             int punteggioObiettivoPrivato = 0;
@@ -529,13 +529,17 @@ public class Partita {
 
 
         }
-        vincitore = calcolaVincitore(listaPunteggiUtente, listaPunteggiUtenteObiettivoPrivato);
+        if(gameObservers.size()==1) {
+            for (String username:getGameObservers().keySet())
+                  {
+                vincitore=username;
+            }
+        }else vincitore = calcolaVincitore(listaPunteggiUtente, listaPunteggiUtenteObiettivoPrivato);
 
         for (String username : gameObservers.keySet()) {
             GameObserver view = gameObservers.get(username);
             view.updateViewPunteggio(listaPunteggiUtente, vincitore);
         }
-        // TODO aggiungere calcolo SinglePlayer
     }
 
     public String calcolaVincitore(HashMap<String, Integer> listaPunteggiUtente, HashMap<String, Integer> listaPunteggiUtenteObiettivoPrivato) {
@@ -876,10 +880,10 @@ public class Partita {
     public HashMap<String, String> getUserTokens() {
         return userTokens;
     }
+
     public void removeObserver(String username){
         gameObservers.remove(username);
         for (String user:gameObservers.keySet()){
-            if (!(user).equals(username))
             try{
                 gameObservers.get(user).notifyUserExit(username);
             }catch(RemoteException ex){

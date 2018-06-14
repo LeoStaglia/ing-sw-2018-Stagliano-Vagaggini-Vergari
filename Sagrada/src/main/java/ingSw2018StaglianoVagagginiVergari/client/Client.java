@@ -10,16 +10,24 @@ import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
+import java.util.InputMismatchException;
 import java.util.Scanner;
 
 public class Client {
     public static void main(String[] args) throws RemoteException, NotBoundException, InterruptedException,IOException, MossaIllegaleException {
 
-        Scanner stdin=new Scanner(System.in);
-        int cmd;
+        Scanner stdin = new Scanner(System.in);
+        int cmd = 0;
+        while (cmd != 1 && cmd != 2){
+            System.out.println("Premi (1) per Socket,(2) per RMI:");
+            try {
+                cmd = stdin.nextInt();
+            } catch (InputMismatchException e) {
+                cmd = 0;
+                stdin.nextLine(); //flush the buffer
+            }
+        }
 
-        System.out.println("Premi (1) per Socket,(2) per RMI:");
-        cmd=stdin.nextInt();
 
         if(cmd==1) {
 
@@ -28,7 +36,7 @@ public class Client {
             ProxyClient controller = new ProxyClient(clientSocket);
             controller.run();
             clientSocket.close();
-        }else {
+        }if (cmd==2) {
 
             Registry registry = LocateRegistry.getRegistry(7501);
             RemoteMultiController multiController = (RemoteMultiController) registry.lookup("controller");

@@ -92,16 +92,11 @@ public class Controller extends UnicastRemoteObject implements RemoteController 
             t = new Timer();
             t.schedule(new TurnTimer(this, partita), 20000);
             new Pinger(partita, this).start();
+            new JustOneLeft(partita,this).start();
         }
 
     }
 
-
-
-
-
-
-    //TODO synchronized?
     public void svolgimentoPartita(GameObserver view,ArrayList<Integer> parametri) throws RemoteException {
        /* for (Utente u: partita.getOrdineRound()) {
             System.out.println(u.getId());
