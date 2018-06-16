@@ -82,4 +82,9 @@ public class TenagliaARotelle implements CartaUtensile {
     public String getNome() {
         return Nome;
     }
+
+    @Override
+    public void reset() {
+
+    }
 }

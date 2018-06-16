@@ -97,4 +97,9 @@ public class TamponeDiamantato implements CartaUtensile {
     public void setScelta(int scelta) {
         this.scelta = scelta;
     }
+
+    @Override
+    public void reset() {
+
+    }
 }

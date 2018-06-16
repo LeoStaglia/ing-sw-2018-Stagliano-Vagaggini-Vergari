@@ -140,5 +140,11 @@ public class TaglierinaManuale implements CartaUtensile {
             }
         }
     }
+
+    @Override
+    public void reset() {
+        numeroDadi=0;
+        grigliaGiocoCopy=new Dado[4][5];
+    }
 }
 

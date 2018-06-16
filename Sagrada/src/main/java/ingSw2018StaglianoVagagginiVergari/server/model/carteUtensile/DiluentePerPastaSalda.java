@@ -52,7 +52,7 @@ public class DiluentePerPastaSalda implements CartaUtensile {
 
         if (!secondPhase){
             setGrigliaGiocoCopy(PartitaCorrente,grigliaGiocoCopy);
-           setRiservaCopy(PartitaCorrente,riservaCopy);
+            setRiservaCopy(PartitaCorrente,riservaCopy);
             PartitaCorrente.getAzioniGiocatore().add(2);
             secondPhase=true;
             PartitaCorrente.updateGenerale();
@@ -63,16 +63,17 @@ public class DiluentePerPastaSalda implements CartaUtensile {
             PartitaCorrente.getCurrentPlayer().getPlancia().calcolaMosse(PartitaCorrente.getDadoSelezionato(),false,false);
             try {
                 PartitaCorrente.getAzioniGiocatore().remove(2); //se si arriva a questo punto ho già eseguito la prima parte dell'effetto
+                costo=true;
                 PartitaCorrente.getCurrentPlayer().getPlancia().piazzaDado(x,y,PartitaCorrente.getDadoSelezionato());
                 PartitaCorrente.getAzioniGiocatore().remove(1);
                 PartitaCorrente.getCurrentPlayer().setSegnalini(PartitaCorrente.getCurrentPlayer().getSegnalini() - getCosto());
-                costo=true;
                 PartitaCorrente.updateGenerale();
             }
             catch (MossaIllegaleException e){
-                PartitaCorrente.getCurrentPlayer().getPlancia().setGrigliaGioco(grigliaGiocoCopy);
-                PartitaCorrente.setRiserva(riservaCopy);
-                riservaCopy.clear();
+             //   PartitaCorrente.getCurrentPlayer().getPlancia().setGrigliaGioco(grigliaGiocoCopy);
+               // PartitaCorrente.setRiserva(riservaCopy);
+               // riservaCopy.clear();
+                PartitaCorrente.reInserisciDadoinRiserva(PartitaCorrente.getDadoSelezionato());
                 PartitaCorrente.updateMessage("MOSSA NON VALIDA IL DADO è STATO REINSERITO IN RISERVA !!");
                 PartitaCorrente.updateCurrentPlayer();
             }
@@ -148,5 +149,13 @@ public class DiluentePerPastaSalda implements CartaUtensile {
             riservaCopy.add(d);
         }
 
+    }
+
+
+    @Override
+    public void reset() {
+        secondPhase=false;
+        grigliaGiocoCopy=new Dado[4][5];
+        riservaCopy=new ArrayList<>();
     }
 }

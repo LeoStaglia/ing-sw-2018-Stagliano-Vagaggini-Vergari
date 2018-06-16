@@ -116,4 +116,9 @@ public class PennelloPerEglomise implements CartaUtensile {
             }
         }
     }
+
+    @Override
+    public void reset() {
+
+    }
 }

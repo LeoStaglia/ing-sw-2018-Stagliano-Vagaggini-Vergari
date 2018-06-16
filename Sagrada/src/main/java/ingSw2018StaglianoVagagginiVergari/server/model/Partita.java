@@ -774,11 +774,9 @@ public class Partita {
 
 
     public void updateTool11(String dado) throws RemoteException {
-        for (String username : getGameObservers().keySet()) {
-            GameObserver view = getGameObservers().get(username);
+          GameObserver view = getGameObservers().get(getCurrentPlayer().getId());
             view.updateViewTool11(dado);
         }
-    }
 
     public void updateTool4(boolean fase) throws RemoteException {
             GameObserver view = getGameObservers().get(getCurrentPlayer().getId());

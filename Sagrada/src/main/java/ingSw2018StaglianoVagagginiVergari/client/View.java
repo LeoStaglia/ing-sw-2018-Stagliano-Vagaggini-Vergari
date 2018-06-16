@@ -887,8 +887,8 @@ public class View extends UnicastRemoteObject implements GameObserver, Remote {
                             parametri.add(1, cercaUtensile("Taglierina Manuale"));
                         } else if (lathekinPhase2) {
                             parametri.add(1, cercaUtensile("Lathekin"));
-                        } else if (!diluentePastaSaldaPhase2) {
-                            parametri.add(1, cmd);
+                        } else if (diluentePastaSaldaPhase2) {
+                            parametri.add(1, cercaUtensile("Diluente Per Pasta Salda"));
                         }
                         try {
                             controller.svolgimentoPartita(View.this, parametri);

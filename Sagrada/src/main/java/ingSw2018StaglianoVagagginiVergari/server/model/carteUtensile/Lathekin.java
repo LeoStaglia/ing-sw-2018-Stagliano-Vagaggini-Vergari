@@ -134,4 +134,10 @@ public class Lathekin implements CartaUtensile {
             }
         }
     }
+
+    @Override
+    public void reset() {
+        secondPhase=false;
+        grigliaGiocoCopy=new Dado[4][5];
+    }
 }

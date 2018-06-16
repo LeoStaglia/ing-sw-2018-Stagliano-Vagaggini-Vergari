@@ -119,7 +119,11 @@ public class Controller extends UnicastRemoteObject implements RemoteController 
                 if (this.scegliCartaUtensile(view, parametri.get(1))) ;
                 else partita.updatePagamento();
             }
-            if (n == 3) this.passaTurno(view);
+            if (n == 3){
+                for (CartaUtensile c:partita.getListaCartaUtensile()) {
+                    c.reset();
+                }
+                this.passaTurno(view);}
 
         }
 

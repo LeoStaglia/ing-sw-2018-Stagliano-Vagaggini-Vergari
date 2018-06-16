@@ -89,4 +89,9 @@ public class PinzaSgrossatrice implements CartaUtensile {
     public String getNome() {
         return Nome;
     }
+
+    @Override
+    public void reset() {
+
+    }
 }

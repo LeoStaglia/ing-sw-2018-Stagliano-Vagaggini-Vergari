@@ -106,4 +106,9 @@ public class RigaInSughero implements CartaUtensile {
             }
         }
     }
+
+    @Override
+    public void reset() {
+
+    }
 }

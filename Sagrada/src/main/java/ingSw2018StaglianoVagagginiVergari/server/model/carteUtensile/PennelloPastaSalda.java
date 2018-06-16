@@ -81,7 +81,6 @@ public class PennelloPastaSalda implements CartaUtensile {
                 p.getAzioniGiocatore().remove(1);
                 costo=true;
                 p.updateTool6piazzato(true);
-                System.out.println("PIPPO PLUTO");
                 p.updateGenerale();
                 fase1=true;
 
@@ -134,5 +133,11 @@ public class PennelloPastaSalda implements CartaUtensile {
 
     public boolean isPiazzabile() {
         return piazzabile;
+    }
+
+    @Override
+    public void reset() {
+        fase1=true;
+        piazzabile=false;
     }
 }

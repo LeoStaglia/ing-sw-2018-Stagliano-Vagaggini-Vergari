@@ -114,6 +114,11 @@ public class AlesatoreRame implements CartaUtensile {
             }
         }
     }
+
+    @Override
+    public void reset() {
+
+    }
 }
 
 

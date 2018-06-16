@@ -11,4 +11,5 @@ public interface CartaUtensile {
     public int getId();
     public String getDescrizione();
     public String getNome();
+    public void reset();
 }
