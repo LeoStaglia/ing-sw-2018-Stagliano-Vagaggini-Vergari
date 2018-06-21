@@ -9,40 +9,40 @@ public class FactoryCartaUtensile {
     public static CartaUtensile getCartaUtensile(int Id){
 
         if(Id == 1){ //PinzaSgrossatrice
-            return PinzaSgrossatrice.getInstance();            //chiamata per instanziare un singleton
+            return new PinzaSgrossatrice();            //chiamata per instanziare un singleton
 
         } else if(Id == 2){ //PennelloPerEglomise
-            return PennelloPerEglomise.getInstance();
+            return new PennelloPerEglomise();
 
         } else if(Id == 3){ //AlesatorePerLaminaDiRame
-            return AlesatoreRame.getInstance();
+            return new AlesatoreRame();
 
         } else if(Id == 4){ //Lathekin
-            return Lathekin.getInstance();
+            return new Lathekin();
 
         } else if(Id == 5){ //TaglierinaCircolare
-            return TaglierinaCircolare.getInstance();
+            return new TaglierinaCircolare();
 
         } else if(Id == 6){ //PennelloPerPastaSalda
-            return PennelloPastaSalda.getInstance();
+            return new PennelloPastaSalda();
 
         } else if(Id == 7){ //Martelletto
-            return Martelletto.getInstance();
+            return new Martelletto();
 
         } else if(Id == 8){ //TenagliaARotelle
-            return TenagliaARotelle.getInstance();
+            return new TenagliaARotelle();
 
         } else if(Id == 9){ //RigaInSughero
-            return RigaInSughero.getInstance();
+            return new RigaInSughero();
 
         } else if(Id == 10){ //TamponeDiamantato
-            return TamponeDiamantato.getInstance();
+            return new TamponeDiamantato();
 
         } else if(Id == 11){ //DiluentePerPastaSalda
-            return DiluentePerPastaSalda.getInstance();
+            return new DiluentePerPastaSalda();
 
         } else if(Id == 12){ //TaglierinaManuale
-            return TaglierinaManuale.getInstance();
+            return new TaglierinaManuale();
 
         }
 

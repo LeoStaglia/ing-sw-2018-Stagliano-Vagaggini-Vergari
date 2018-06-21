@@ -6,7 +6,7 @@ import ingSw2018StaglianoVagagginiVergari.server.model.Partita;
 import java.rmi.RemoteException;
 
 public class TenagliaARotelle implements CartaUtensile {
-    boolean costo ; ;
+    boolean costo ;
     String Nome = "Tenaglia A Rotelle";
     int Id = 8;
     String descrizione="Dopo il tuo primo turno scegli\n" +
@@ -20,20 +20,7 @@ public class TenagliaARotelle implements CartaUtensile {
 
 
 
-    //----------------------------all this part is required for Singleton Pattern----------------------------------
 
-    private static TenagliaARotelle instance = new TenagliaARotelle();
-
-    private TenagliaARotelle(){   //il costruttore è privato per il singleton pattern
-        costo=false;
-    }
-
-    public static TenagliaARotelle getInstance(){
-        return instance;
-    }
-
-
-    //----------------------------
 
 
 

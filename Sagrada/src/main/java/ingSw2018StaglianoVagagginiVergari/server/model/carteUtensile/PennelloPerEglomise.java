@@ -26,20 +26,6 @@ public class PennelloPerEglomise implements CartaUtensile {
 
 
 
-
-
-    //----------------------------all this part is required for Singleton Pattern----------------------------------
-
-    private static PennelloPerEglomise instance = new PennelloPerEglomise();
-    public static PennelloPerEglomise getInstance(){
-        return instance;
-    }
-
-
-    //----------------------------
-
-
-
     public void usaEffettoCarta(Partita p) throws RemoteException {
         Dado[][] grigliaGiocoCopy=new Dado[4][5];
         setGrigliaGiocoCopy(p,grigliaGiocoCopy);

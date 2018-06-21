@@ -20,26 +20,6 @@ public class Martelletto implements CartaUtensile {
 
 
 
-
-
-    //----------------------------all this part is required for Singleton Pattern----------------------------------
-
-    private static Martelletto instance = new Martelletto();
-
-    private Martelletto(){   //il costruttore è privato per il singleton pattern
-        costo=false;
-    }
-
-    public static Martelletto getInstance(){
-        return instance;
-    }
-
-
-    //----------------------------
-
-
-
-
     public void usaEffettoCarta(Partita p) throws RemoteException {
         int conta=0;
         for(int i=p.getTurno()-1;i<p.getOrdineRound().size();i++){

@@ -19,24 +19,6 @@ public class PinzaSgrossatrice implements CartaUtensile {
 
 
 
-
-
-    //----------------------------all this part is required for Singleton Pattern----------------------------------
-
-    private static PinzaSgrossatrice instance = new PinzaSgrossatrice();
-
-    private PinzaSgrossatrice(){   //il costruttore è privato per il singleton pattern
-        costo=false;
-    }
-
-    public static PinzaSgrossatrice getInstance(){
-        return instance;
-    }
-
-
-    //----------------------------
-
-
     public void setScelta(int scelta) {
         this.scelta = scelta;
     }

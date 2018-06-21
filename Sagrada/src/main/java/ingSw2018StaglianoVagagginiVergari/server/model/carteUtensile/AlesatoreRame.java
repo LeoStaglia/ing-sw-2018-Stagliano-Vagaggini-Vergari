@@ -29,17 +29,6 @@ public class AlesatoreRame implements CartaUtensile {
 
 
 
-
-
-    //----------------------------all this part is required for Singleton Pattern----------------------------------
-
-    private static AlesatoreRame instance = new AlesatoreRame();
-    public static AlesatoreRame getInstance(){
-        return instance;
-    }
-
-    //----------------------------
-
     @Override
     public void usaEffettoCarta(Partita p) throws RemoteException{
         Dado[][] grigliaGiocoCopy=new Dado[4][5];

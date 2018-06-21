@@ -19,16 +19,6 @@ public class TamponeDiamantato implements CartaUtensile {
             " diventa 3 ecc.";
 
 
-    //----------------------------all this part is required for Singleton Pattern----------------------------------
-
-    private static TamponeDiamantato instance = new TamponeDiamantato();
-
-    public static TamponeDiamantato getInstance() {
-        return instance;
-    }
-
-    //----------------------------
-
     @Override
     public void usaEffettoCarta(Partita PartitaCorrente) throws RemoteException {
         costo = true;

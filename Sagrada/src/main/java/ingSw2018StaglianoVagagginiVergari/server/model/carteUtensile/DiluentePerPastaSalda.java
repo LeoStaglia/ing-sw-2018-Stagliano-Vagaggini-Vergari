@@ -31,22 +31,6 @@ public class DiluentePerPastaSalda implements CartaUtensile {
 
 
 
-
-
-
-
-    //----------------------------all this part is required for Singleton Pattern----------------------------------
-
-    private static DiluentePerPastaSalda instance = new DiluentePerPastaSalda();
-
-    public static DiluentePerPastaSalda getInstance(){
-        return instance;
-    }
-
-
-    //----------------------------
-
-
     @Override
     public void usaEffettoCarta(Partita PartitaCorrente) throws RemoteException {
 

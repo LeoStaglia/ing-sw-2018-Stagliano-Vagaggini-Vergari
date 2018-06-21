@@ -24,18 +24,6 @@ public class PennelloPastaSalda implements CartaUtensile {
     private boolean piazzabile=false;
 
 
-//----------------------------all this part is required for Singleton Pattern----------------------------------
-
-    private static PennelloPastaSalda instance = new PennelloPastaSalda();
-    public static PennelloPastaSalda getInstance(){
-        return instance;
-    }
-
-
-    //----------------------------
-
-
-
 
     @Override
     public void usaEffettoCarta(Partita p) throws RemoteException,MossaIllegaleException{

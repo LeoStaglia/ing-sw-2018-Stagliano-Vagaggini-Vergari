@@ -22,19 +22,6 @@ public class RigaInSughero implements CartaUtensile {
     private int yCell;
 
 
-
-
-
-
-    //----------------------------all this part is required for Singleton Pattern----------------------------------
-
-    private static RigaInSughero instance = new RigaInSughero();
-    public static RigaInSughero getInstance(){
-        return instance;
-    }
-
-    //----------------------------
-
     @Override
     public void usaEffettoCarta(Partita PartitaCorrente) throws RemoteException {
         Dado[][] grigliaGiocoCopy=new Dado[4][5];

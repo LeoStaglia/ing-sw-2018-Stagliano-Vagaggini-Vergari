@@ -783,9 +783,9 @@ public class Partita {
             view.updateViewTool4(fase);
     }
 
-    public void updateTool12(boolean fase) throws RemoteException {
+    public void updateTool12(boolean fase, int numeroTracciatoRound) throws RemoteException {
         GameObserver view = getGameObservers().get(getCurrentPlayer().getId());
-        view.updateViewTool12(fase);
+        view.updateViewTool12(fase, numeroTracciatoRound);
     }
 
     public void updateTool6piazzato(boolean piazzato) throws RemoteException {

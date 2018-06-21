@@ -31,18 +31,6 @@ public class Lathekin implements CartaUtensile {
 
 
 
-    //----------------------------all this part is required for Singleton Pattern----------------------------------
-
-    private static Lathekin instance = new Lathekin();
-
-    public static Lathekin getInstance(){
-        return instance;
-    }
-
-
-    //----------------------------
-
-
     @Override
     public void usaEffettoCarta(Partita p) throws RemoteException{
         if(!secondPhase){
