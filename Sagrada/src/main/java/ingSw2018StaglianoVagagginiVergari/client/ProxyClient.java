@@ -37,7 +37,7 @@ public class ProxyClient implements Runnable,RemoteMultiController,RemoteControl
     public ProxyClient(ClientSocket clientSocket) {
         this.clientSocket = clientSocket;
         try {
-            this.view = new View(this);
+            this.view = new View();
             ClientListener();
         } catch (RemoteException e) {
             e.printStackTrace();
@@ -294,7 +294,7 @@ public class ProxyClient implements Runnable,RemoteMultiController,RemoteControl
             }
             case "updateViewTool12":{
                 boolean fase=(boolean) parametriRicevuti.get(0);
-                view.updateViewTool12(fase, 0);
+                view.updateViewTool12(fase);
                 break;
             }
             case "notifyTurnTimer":{
