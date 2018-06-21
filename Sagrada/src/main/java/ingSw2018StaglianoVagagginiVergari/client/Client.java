@@ -34,8 +34,11 @@ public class Client {
             ClientSocket clientSocket = new ClientSocket("127.0.0.1", 1700);
             clientSocket.init();
             ProxyClient controller = new ProxyClient(clientSocket);
-            controller.getView().setMultiController(controller);
-            controller.run();
+
+            View view=new View();
+            view.setMultiController(controller);
+            controller.setView(view);
+            view.run();
             clientSocket.close();
         }if (cmd==2) {
 

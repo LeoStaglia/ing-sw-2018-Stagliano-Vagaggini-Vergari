@@ -17,7 +17,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.concurrent.Semaphore;
 
-public class ProxyClient implements Runnable,RemoteMultiController,RemoteController {
+public class ProxyClient implements RemoteMultiController,RemoteController {
 
 
     Object monitor = new Object(); //object that regulate the flux
@@ -28,7 +28,7 @@ public class ProxyClient implements Runnable,RemoteMultiController,RemoteControl
     Thread receiver;
 
     // the view
-    private View view;
+    private GameObserver view;
 
     private int log=0;
     private int trovato=0;
@@ -36,12 +36,7 @@ public class ProxyClient implements Runnable,RemoteMultiController,RemoteControl
 
     public ProxyClient(ClientSocket clientSocket) {
         this.clientSocket = clientSocket;
-        try {
-            this.view = new View();
-            ClientListener();
-        } catch (RemoteException e) {
-            e.printStackTrace();
-        }
+        ClientListener();
     }
 
     public void ClientListener() {
@@ -66,10 +61,11 @@ public class ProxyClient implements Runnable,RemoteMultiController,RemoteControl
         receiver.start();
     }
 
+    public void setView(GameObserver view) {
+        this.view = view;
+    }
 
-
-
-    public void run() {
+    /*public void run() {
         try {
             view.run();
         } catch (IOException e) {
@@ -77,7 +73,7 @@ public class ProxyClient implements Runnable,RemoteMultiController,RemoteControl
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-    }
+    }*/
 
     // ----Overridden Methods
 
@@ -128,7 +124,7 @@ public class ProxyClient implements Runnable,RemoteMultiController,RemoteControl
     }
 
 
-    public View getView(){
+    public GameObserver getView(){
         return view;
     }
 
