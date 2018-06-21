@@ -31,23 +31,6 @@ public class TaglierinaManuale implements CartaUtensile {
 
 
 
-
-    //----------------------------all this part is required for Singleton Pattern----------------------------------
-
-    private static TaglierinaManuale instance = new TaglierinaManuale();
-
-    private TaglierinaManuale(){   //il costruttore è privato per il singleton pattern
-        costo=false;
-    }
-
-    public static TaglierinaManuale getInstance(){
-        return instance;
-    }
-
-
-    //----------------------------
-
-
     public void setR(int r) {
         this.r = r;
     }
@@ -90,25 +73,30 @@ public class TaglierinaManuale implements CartaUtensile {
                            p.getAzioniGiocatore().remove(2);
                            p.getCurrentPlayer().setSegnalini(p.getCurrentPlayer().getSegnalini() - getCosto());
                            costo = true;
-                           p.updateTool12(false);
+                           p.updateTool12(false, 0);
                            p.updateGenerale();
                        }
                        else{
-                           p.updateTool12(true);
+                           p.updateTool12(true, r);
                            p.updateGenerale();
                        }
                    } catch (MossaIllegaleException e) {
                        p.getCurrentPlayer().getPlancia().setGrigliaGioco(grigliaGiocoCopy);
                        p.updateMessage("MOSSA NON VALIDA !!");
-                       p.updateTool12(false);
+                       p.updateTool12(false, 0);
                        p.updateCurrentPlayer();
                    }
 
+               }else{
+                   p.getCurrentPlayer().getPlancia().setGrigliaGioco(grigliaGiocoCopy);
+                   p.updateMessage("MOSSA NON VALIDA !!");
+                   p.updateTool12(false, 0);
+                   p.updateCurrentPlayer();
                }
-           }else {
+           }else{
                p.getCurrentPlayer().getPlancia().setGrigliaGioco(grigliaGiocoCopy);
                p.updateMessage("MOSSA NON VALIDA !!");
-                p.updateTool12(false);
+                p.updateTool12(false, 0);
                p.updateCurrentPlayer();}
         }
 
