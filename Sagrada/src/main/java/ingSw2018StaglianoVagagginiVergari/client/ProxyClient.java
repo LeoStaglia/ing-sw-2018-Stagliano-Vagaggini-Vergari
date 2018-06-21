@@ -37,7 +37,7 @@ public class ProxyClient implements Runnable,RemoteMultiController,RemoteControl
     public ProxyClient(ClientSocket clientSocket) {
         this.clientSocket = clientSocket;
         try {
-            this.view = new View(this);
+            this.view = new View();
             ClientListener();
         } catch (RemoteException e) {
             e.printStackTrace();
@@ -360,6 +360,11 @@ public class ProxyClient implements Runnable,RemoteMultiController,RemoteControl
 
     public int getLog() {
         return log;
+    }
+
+
+    public View getView() {
+        return view;
     }
 }
 

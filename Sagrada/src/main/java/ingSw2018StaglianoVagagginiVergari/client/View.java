@@ -145,8 +145,7 @@ public class View extends UnicastRemoteObject implements GameObserver, Remote {
     //==================t
 
 
-    public View(RemoteMultiController controller) throws RemoteException {
-        this.multiController = controller;
+    public View() throws RemoteException {
         setStatus(ViewStatus.Preparazione);
         command = new Scanner(System.in);
         updateView = false;
@@ -1637,4 +1636,7 @@ public class View extends UnicastRemoteObject implements GameObserver, Remote {
 
     }
 
+    public void setMultiController(RemoteMultiController multiController) {
+        this.multiController = multiController;
+    }
 }

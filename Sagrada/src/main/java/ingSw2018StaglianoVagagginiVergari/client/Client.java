@@ -34,13 +34,16 @@ public class Client {
             ClientSocket clientSocket = new ClientSocket("127.0.0.1", 1700);
             clientSocket.init();
             ProxyClient controller = new ProxyClient(clientSocket);
+            controller.getView().setMultiController(controller);
             controller.run();
             clientSocket.close();
         }if (cmd==2) {
 
             Registry registry = LocateRegistry.getRegistry(7501);
             RemoteMultiController multiController = (RemoteMultiController) registry.lookup("controller");
-            new View(multiController).run();
+            View view= new View();
+            view.setMultiController(multiController);
+            view.run();
         }
 
     }
