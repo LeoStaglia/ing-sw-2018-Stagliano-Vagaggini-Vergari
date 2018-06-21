@@ -580,6 +580,10 @@ public class View extends UnicastRemoteObject implements GameObserver, Remote {
 
     }
 
+    public void setMultiController(RemoteMultiController multiController){
+        this.multiController=multiController;
+    }
+
 
     public void svolgimentoPartita() throws IOException, InterruptedException {
         if (lathekinPhase2) {
