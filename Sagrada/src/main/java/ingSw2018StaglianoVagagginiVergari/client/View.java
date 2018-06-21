@@ -472,7 +472,7 @@ public class View extends UnicastRemoteObject implements GameObserver, Remote {
 
 
 
-    public void updateViewTool12 (boolean fase) throws RemoteException {
+    public void updateViewTool12 (boolean fase,int numeroRoundTrack) throws RemoteException {
         if(fase==true){
             numeroDadiTool12--;
         }
