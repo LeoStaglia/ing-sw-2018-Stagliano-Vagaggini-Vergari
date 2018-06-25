@@ -105,6 +105,14 @@ public class PennelloPastaSalda implements CartaUtensile {
         this.yCell = yCell;
     }
 
+    public void setFase(boolean fase1) {
+        this.fase1 = fase1;
+    }
+
+    public void setPiazzabile(boolean piazzabile) {
+        this.piazzabile = piazzabile;
+    }
+
     @Override
     public String getDescrizione() {
         return descrizione;

@@ -100,6 +100,7 @@ public class DiluentePerPastaSalda implements CartaUtensile {
         return Nome;
     }
 
+    /*
     public void setScelta(int scelta) {
         this.scelta = scelta;
     }
@@ -108,12 +109,18 @@ public class DiluentePerPastaSalda implements CartaUtensile {
         this.numeroScelto = numeroScelto;
     }
 
+    */
+
     public void setX(int x) {
         this.x = x;
     }
 
     public void setY(int y) {
         this.y = y;
+    }
+
+    public void setFase(boolean secondPhase) {
+        this.secondPhase = secondPhase;
     }
 
     public boolean isSecondPhase() {
