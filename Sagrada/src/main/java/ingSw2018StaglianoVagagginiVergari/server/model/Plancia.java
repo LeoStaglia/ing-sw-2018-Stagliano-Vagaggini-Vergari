@@ -45,6 +45,11 @@ public class Plancia implements Serializable {
         grigliaGioco[i][j] = null;
     }
 
+    /** Method to read the cell of a Window frame
+     * @param i row
+     * @param j column
+     * @return the die or null if there's nothing */
+
     public Dado leggiPlancia(int i, int j) {
 
         return grigliaGioco[i][j];
@@ -80,9 +85,8 @@ public class Plancia implements Serializable {
 
 
 
-    /*helper method for calcolaMosse(), that verifies for each non-null position of the game grid if its specific near cell are available, excluding the elaboration of
-    the first move on the grid.
-     */
+    /**helper method for calcolaMosse(), that verifies for each non-null position of the game grid if its specific near cell are available, excluding the elaboration of
+    the first move on the grid. */
 
     private void setCelleAdiacenti(int i, int j, Dado dadoSelezionato, boolean attivaUtensile2, boolean attivaUtensile3) {
         if (grigliaGioco[i][j] != null) {
@@ -549,7 +553,8 @@ public class Plancia implements Serializable {
 
         }
 
-        //run-time calculus of available moves based on a selected dice (parameter).
+        /** run-time calculus of available moves based on a selected dice
+         * @param dadoSelezionato the selected dice */
 
     public Boolean[][] calcolaMosse (Dado dadoSelezionato, boolean attivaUtensile2, boolean attivaUtensile3){
             boolean primoPiazzamanto = true;
@@ -630,7 +635,6 @@ public class Plancia implements Serializable {
             }
             return piazzamentiPermessi;
         }
-
 
     public void Tool9( Dado dadoSelezionato){
 
@@ -790,7 +794,7 @@ public class Plancia implements Serializable {
 
 
     }
-
+    /** Method to return a String representation of each cell in Window Frame */
     public String[][] rappresentazionePlancia(){
         String[][] result = new String[4][5];
         for (int i =0; i<4; i++){

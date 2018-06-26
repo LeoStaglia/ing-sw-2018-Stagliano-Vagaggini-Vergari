@@ -157,6 +157,10 @@ public class Partita {
         return false;
     }
 
+    /**
+     * this method adds the view as observer
+     *  @param view
+     *  @param username required to file an association between username and view */
     public void addObserver(GameObserver view, String username) throws RemoteException {
         if (!(gameObservers.containsKey(username))) {
             gameObservers.put(username, view);
@@ -170,6 +174,7 @@ public class Partita {
         return gameObservers.size();
     }
 
+    /** fills a set of integer which contains the possible action which the user can take */
     public void inizializzaAzioniGiocatore() {
         azioniGiocatore.clear();
         for (int i = 1; i <= 3; i++) {
@@ -181,6 +186,7 @@ public class Partita {
         return azioniGiocatore;
     }
 
+    /** Method that prepares the game just before the start */
     public void preparaPartita() throws RemoteException {
 
 
@@ -212,7 +218,12 @@ public class Partita {
         setGiocatoreCorrente();
 
     }
-
+    /**
+     * Assign to a user the chosen scheme
+     *  @param view
+     *  @param idUser
+     *  @param carta1 the chosen card
+     *  @param fronte true if front is chosen, back otherwise*/
     public void sceltaSchema(GameObserver view, String idUser, boolean carta1, boolean fronte) throws RemoteException {
         for (Utente u : listaGiocatori) {
             if (u.getId().equals(idUser)) {
@@ -229,7 +240,7 @@ public class Partita {
 
     }
 
-
+    /** Initialize the list of PrivateObjectiveCards */
     private void inizializzaObiettiviPrivati() {
         riempiSetofColors();
         for (String colore : setOfColors) {
@@ -241,7 +252,7 @@ public class Partita {
         }
 
     }
-
+  /** Initialize the list of window frames*/
     private void inizializzaPlance() {
         riempiSetofColors();
         for (String colore : setOfColors) {
@@ -250,7 +261,7 @@ public class Partita {
         }
 
     }
-
+  /** extract a random scheme from the list of available schemes  */
     public Schema getSchemaFromList() {
         if (listaCarteSchema.size() == 0) {
             inizializzaCarteSchema();
@@ -258,6 +269,7 @@ public class Partita {
         return listaCarteSchema.remove(random.nextInt(listaCarteSchema.size()));
     }
 
+    /** create the list of all the Tool Cards */
     private void inizializzaCarteSchema() {
         for (int i = 1; i <= 12; i++) {
             listaCarteSchema.add(FactorySchema.get(i));
@@ -286,7 +298,7 @@ public class Partita {
         riempiRiserva();
     }
 
-    // populate the SetofColors
+    /** populate the SetofColors */
     public void riempiSetofColors() {
         if (!setOfColors.contains("Blu")) setOfColors.add("Blu");
         if (!setOfColors.contains("Viola")) setOfColors.add("Viola");
@@ -295,7 +307,7 @@ public class Partita {
         if (!setOfColors.contains("Giallo")) setOfColors.add("Giallo");
     }
 
-    // populate the Dice Bag
+    /** populate the Dice Bag */
     public void riempiSacchetto() {
         this.riempiSetofColors();
         for (String colore : setOfColors) {
@@ -307,50 +319,54 @@ public class Partita {
         }
     }
 
-    // print out the Dice Bag
+    /** print out the Dice Bag*/
     public void stampaSacchetto() {
         for (Dado d : sacchetto) {
             System.out.println("Dado " + d.getNumero() + " " + d.getColore());
         }
     }
 
-    // populate the Drafts Pool
+    /** populate the Drafts Pool */
     public void riempiRiserva() {
         for (int i = 0; i < (listaGiocatori.size() * 2 + 1); i++) {
             riserva.add(i, sacchetto.remove(random.nextInt(sacchetto.size() - i)));
         }
     }
 
-    // print out the Drafts Pool
-    public void stampaRiserva() {   // method to print out the pool of dice
+    /** print out the Drafts Pool*/
+    public void stampaRiserva() {
         for (Dado d : riserva) {
             System.out.println("Dado " + d.getNumero() + " " + d.getColore());
         }
     }
 
-    // choose a die from the pool of dice given its position
+    /** choose a die from the pool of dice
+     * @param i position of the die 0--> first element 1-->second ecc..
+     * @return the object die*/
     public Dado getDadofromRiserva(int i) {
         // modificato in i piuttosto che i-1
         return riserva.remove(i);
 
     }
 
-    // reinsert a die in the Draft Pool
+    /** reinsert a die in the Draft Pool */
+    // the die is inserted at the end of the list
     public void reInserisciDadoinRiserva(Dado d) {
         riserva.add(d);
     }
 
-    //reinsert a die in the Dice Bag
+    /** reinsert a die in the Dice Bag*/
+    // the die is inserted at the end of the list
     public void reInserisciDadoInSacchetto(Dado d) {
         sacchetto.add(d);
     }
 
-    // remove a Player from the List of Players (game not started)
+    /** remove a Player from the List of Players (game not started)*/
     public void removeUtente(Utente user) {
         listaGiocatori.remove(user);
     }
 
-    // add a Player from the List of Players
+    /** add a Player to the List of Players */
     public void addUtente(Utente user) {
         listaGiocatori.add(user);
     }
@@ -361,6 +377,7 @@ public class Partita {
     }
 
 
+    /** Initialize the first Round player order*/
     public void inizializzaOrdineRound() {
         for (int k = 0; k < 2 * listaGiocatori.size(); k++) {
             if (k < listaGiocatori.size()) {
@@ -371,7 +388,8 @@ public class Partita {
         }
     }
 
-    // method to be called after the end of each round to set the correct order, perhaps before calling nextRound()
+    /** Initialize the player order after each round */
+    // method to be called after the end of each round to set the correct order
     public void setOrdineRound() {
 
         ordineRound.add(listaGiocatori.size(), ordineRound.get(0));
@@ -401,7 +419,8 @@ public class Partita {
         return (listaGiocatori.size() == 0);
     }
 
-    // increments the round
+    /** increments the round
+     * @exception RemoteException if it's not possible to update correctly the clients*/
     public void nextRound() throws RemoteException {
         if (ordineRound.size() < 2 * listaGiocatori.size())
             setOrdineRoundTool8End(); //called if the tool 8 was used once or more in a round
@@ -416,21 +435,22 @@ public class Partita {
         updateGenerale();
     }
 
+    /** roll again all dice in the draft pool*/
     // method called by card tool 7;
     public void rilanciaDadiInRiserva() {
         for (Dado d : riserva) {
             d.lanciaDado();
         }
     }
-
+    /** remove the second turn of the current player*/
     // method called by card tool 8
     public void setOrdineRoundTool8Start() {
 
             //ordineRound.add(turno, getCurrentPlayer());  //TODO rimuovere in quanto vecchia implementazione
             ordineRound.remove(ordineRound.size() - turno);
     }
-
-    //method called after the use of the card tool 8 to restore the initial situation da testare
+    /** restore the initial round order*/
+    //method called after the use of the card tool 8 to restore the initial situation
     public void setOrdineRoundTool8End() {
         ordineRound.clear();
         this.inizializzaOrdineRound();
@@ -448,7 +468,7 @@ public class Partita {
         this.dadoSelezionato = riserva.remove(posizione);
     }
 
-    // populate the stack of Tool Cards(12)
+    /** populate the stack of Tool Cards(1-12)*/
     private void inizializzaMazzoCarteUtensile() {
         for (int i = 1; i <= 12; i++) {
             mazzoCarteUtensile.add(i);
@@ -463,7 +483,7 @@ public class Partita {
         }
     }
 
-    //method to set the List of Tool Cards in multiplayer
+    /**method to set the List of Tool Cards*/
     public void setListaCartaUtensile() {
         if (listaGiocatori.size() > 1) {
             for (int i = 0; i < 3; i++) {
@@ -474,7 +494,7 @@ public class Partita {
     }
 
 
-    //method to set the List of Tool Cards in singlePlayer, n is the difficult(1-5) chosen by the player
+   /*TODO rimuovere*/ //method to set the List of Tool Cards in singlePlayer, n is the difficult(1-5) chosen by the player
     public void setListaCartaUtensile(int n) {
         if (listaGiocatori.size() == 1 && n > 0) {
 
@@ -485,7 +505,7 @@ public class Partita {
         }
     }
 
-    //method to set the List of Public Objective Cards
+    /**method to set the List of Public Objective Cards*/
     public void setListaCartaObiettivoPubblico() {
 
         if (listaGiocatori.size() > 1) {
@@ -503,7 +523,7 @@ public class Partita {
 
     }
 
-
+    /** calculate the final scores */
     public void calcolaPunteggioFinale() throws RemoteException {
 
         String vincitore = null;
@@ -580,7 +600,7 @@ public class Partita {
         }
         return vincitore;
     }
-
+  /** Verify if all players have chosen a Scheme*/
     public boolean contaSchemi() throws RemoteException {
         int n = 0;
         for (Utente u : listaGiocatori) {
@@ -592,7 +612,7 @@ public class Partita {
 
         return true;
     }
-
+    /** notify all the observers of the changes*/
     public synchronized void updateGenerale() throws RemoteException {
         HashMap<String, GameObserver> gameObserverClone = new HashMap<>();
         gameObserverClone = (HashMap<String, GameObserver>) gameObservers.clone();
@@ -659,14 +679,14 @@ public class Partita {
         }
     }
 
-
+//TODO remove?
     public synchronized Utente cercaUtente(String username){
         for (Utente u: listaGiocatori) {
             if(u.getId().equals(username)) return u;
         }
         return null;
     }
-
+/** notify just the current player observer of the changes */
     public synchronized void updateCurrentPlayer() throws RemoteException {
         HashMap<String, GameObserver> gameObserverClone = new HashMap<>();
         gameObserverClone = (HashMap<String, GameObserver>) gameObservers.clone();
@@ -731,7 +751,7 @@ public class Partita {
         }
     }
 
-
+    /** notify to the observers a message update*/
     public synchronized void updateMessage(String message) throws RemoteException {
         HashMap<String, GameObserver> gameObserverClone = new HashMap<>();
         gameObserverClone = (HashMap<String, GameObserver>) gameObservers.clone();
@@ -743,7 +763,7 @@ public class Partita {
             removeObserver(getCurrentPlayer().getId());
         }
     }
-
+    /** notify the current player that he cannot pay a toolCard **/
     public synchronized void updatePagamento() throws RemoteException {
         HashMap<String, GameObserver> gameObserverClone = new HashMap<>();
         gameObserverClone = (HashMap<String, GameObserver>) gameObservers.clone();
@@ -795,7 +815,12 @@ public class Partita {
 
 
 
-
+/** Place the die in the Window Frame
+ * @param i row number
+ * @param j column number
+ * @param utensile1 true in case of toolcard 2 active
+ * @param utensile2 true in case of tool card 3 active
+ */
     public void piazzamentoDado(int i,int j, boolean utensile1, boolean utensile2) throws RemoteException{
         getCurrentPlayer().getPlancia().calcolaMosse(dadoSelezionato, utensile1, utensile2);
         try{

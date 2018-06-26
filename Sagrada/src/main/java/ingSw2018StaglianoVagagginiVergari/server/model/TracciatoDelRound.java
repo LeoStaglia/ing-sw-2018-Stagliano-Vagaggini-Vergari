@@ -5,9 +5,9 @@ public class TracciatoDelRound {
 
     private int roundAttuale=1;
 
-    // rimanenzeRiserva out are the dice that remained in the Draft Pool after the end of the round except for one
+    /** rimanenzeRiserva out are the dice that remained in the Draft Pool after the end of the round except for one*/
     private ArrayList<Dado> rimanenzeRiservaOut = new ArrayList<>();
-    // rimanenzeRiserva on are the dice that cover the Round Track
+    /** rimanenzeRiserva on are the dice that cover the Round Track*/
     private ArrayList<Dado> rimanenzeRiservaOn = new ArrayList<Dado>();
 
     public int getRoundAttuale() {
@@ -38,7 +38,7 @@ public class TracciatoDelRound {
         return this.rimanenzeRiservaOut;
     }
 
-    // method used to calculate the TargetScore(singlePlayer)
+    /* TODO remove */ // method used to calculate the TargetScore(singlePlayer)
     public int calcolaSommaRimanenzeRiserva() {
         int somma = 0;
         for (Dado dado : rimanenzeRiservaOut) {
@@ -50,11 +50,15 @@ public class TracciatoDelRound {
         return somma;
 
     }
-  // method used to remove a dice on the Roundtrack in order to use a Card Tool
+   /** method used to remove a dice on the Roundtrack in order to use a Card Tool
+    * @return the die removed*/
     public Dado removeRimanenzeRiservaOn(int i) {
         return rimanenzeRiservaOn.remove(i - 1);
     }
 
+    /** method to set the Roundtrack cells
+     * @param i the round to cover (1-10)
+     * @param d the die which "covers" the number of round*/
     public void setRimanenzeRiservaOn(int i,Dado d) {
         this.rimanenzeRiservaOn.add(i - 1,d);
     }
