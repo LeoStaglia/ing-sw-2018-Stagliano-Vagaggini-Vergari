@@ -6,24 +6,25 @@ import ingSw2018StaglianoVagagginiVergari.client.View;
 import ingSw2018StaglianoVagagginiVergari.server.model.*;
 import ingSw2018StaglianoVagagginiVergari.server.model.carteSchema.FactorySchema;
 import ingSw2018StaglianoVagagginiVergari.server.model.carteUtensile.PennelloPastaSalda;
-import org.junit.jupiter.api.Test;
+import org.junit.Test;
 import org.mockito.Mockito;
 
 import java.rmi.RemoteException;
 import java.util.ArrayList;
 
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-
-class PennelloPastaSaldaTest {
+import static org.junit.Assert.assertTrue;
 
 
+public class PennelloPastaSaldaTest {
 
 
 
 
-    @Test   //fase 1 , dado piazzabile
-    void    usaEffettoCarta_test1() throws MossaIllegaleException, RemoteException {
+
+
+    @Test(expected = MossaIllegaleException.class)
+        //fase 1 , dado piazzabile
+    public void    usaEffettoCarta_test1() throws MossaIllegaleException, RemoteException {
 
 
         class DadoPosizione{
@@ -146,7 +147,9 @@ class PennelloPastaSaldaTest {
 
 
 
-        assertThrows(MossaIllegaleException.class, ()->carta1.usaEffettoCarta(PartitaCorrente));
+
+        carta1.usaEffettoCarta(PartitaCorrente);
+        //assertThrows(MossaIllegaleException.class, ()->carta1.usaEffettoCarta(PartitaCorrente));
 
         carta1.reset();
 
@@ -156,7 +159,7 @@ class PennelloPastaSaldaTest {
     }
 
     @Test  //fase 1 , dado non piazzabile
-    void usaEffettoCarta_test2() throws MossaIllegaleException, RemoteException {
+    public void usaEffettoCarta_test2() throws MossaIllegaleException, RemoteException {
 
 
         class DadoPosizione{

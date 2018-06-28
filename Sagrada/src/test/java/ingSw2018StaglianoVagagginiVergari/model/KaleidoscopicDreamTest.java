@@ -2,19 +2,20 @@ package ingSw2018StaglianoVagagginiVergari.model;
 
 import ingSw2018StaglianoVagagginiVergari.server.model.Constraint;
 import ingSw2018StaglianoVagagginiVergari.server.model.carteSchema.KaleidoscopicDream;
-import org.junit.jupiter.api.Test;
+import org.junit.Test;
 
 import java.util.ArrayList;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.Assert.assertEquals;
 
-class KaleidoscopicDreamTest{
+
+public class KaleidoscopicDreamTest{
 
 
 
 
     @Test
-    void get() {
+    public void get() {
        //Verifying singleton integrity.
         KaleidoscopicDream k1 = KaleidoscopicDream.get();
         KaleidoscopicDream k2 = KaleidoscopicDream.get();
@@ -25,7 +26,7 @@ class KaleidoscopicDreamTest{
 
 
     @Test
-    void getRestrizione() {
+    public void getRestrizione() {
         KaleidoscopicDream k = KaleidoscopicDream.get();
         //<---------------------------------------> Testing the integrity of the front face of the card and the method getRestrizione()
         k.scegliFaccia(true); //here we can test the method called scegliFaccia

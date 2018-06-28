@@ -3,20 +3,19 @@ package ingSw2018StaglianoVagagginiVergari.model;
 import ingSw2018StaglianoVagagginiVergari.server.model.Dado;
 import ingSw2018StaglianoVagagginiVergari.server.model.Partita;
 import ingSw2018StaglianoVagagginiVergari.server.model.Utente;
-import org.junit.jupiter.api.Test;
+import org.junit.Test;
 import org.mockito.Mockito;
 
 import java.rmi.RemoteException;
 import java.util.ArrayList;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertIterableEquals;
-import static org.mockito.Mockito.*;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.when;
 
-class PartitaTest {
+public class PartitaTest {
 
     @Test
-    void setOrdineRoundTool8Start() throws RemoteException {
+    public void setOrdineRoundTool8Start() throws RemoteException {
         Partita p=new Partita();
         ArrayList<Utente> test=new ArrayList<Utente>();
 
@@ -59,7 +58,10 @@ class PartitaTest {
             System.out.println(u);
         }
 
-        assertIterableEquals(p.getOrdineRound(),test);
+        //assertIterableEquals(p.getOrdineRound(),test);
+        assertTrue(test.size() == p.getOrdineRound().size());
+        for (int i=0; i<test.size();i++)
+            assertTrue(p.getOrdineRound().get(i).equals(test.get(i)));
 
 
 
@@ -69,7 +71,7 @@ class PartitaTest {
     }
 
     @Test
-    void setOrdineRoundTool8End() throws RemoteException {
+    public void setOrdineRoundTool8End() throws RemoteException {
         Partita p=new Partita();
         ArrayList<Utente> test=new ArrayList<Utente>();
 
@@ -123,12 +125,16 @@ class PartitaTest {
         }
         System.out.println();
 
-        assertIterableEquals(p.getOrdineRound(),test);
+
+        //assertIterableEquals(p.getOrdineRound(),test);
+        assertTrue(test.size() == p.getOrdineRound().size());
+        for (int i=0; i<test.size();i++)
+            assertTrue(p.getOrdineRound().get(i).equals(test.get(i)));
 
     }
 
     @Test
-    void reInserisciDadoinRiserva() {
+    public void reInserisciDadoinRiserva() {
         Partita p=new Partita();
         for(int i=0; i<9;i++) {
             Dado d=Mockito.mock(Dado.class);
@@ -137,23 +143,24 @@ class PartitaTest {
         }
         Dado d1= p.getDadofromRiserva(5);
         p.reInserisciDadoinRiserva(d1);
-        assertEquals(p.getRiserva().get(8),d1);
+        assertTrue(p.getRiserva().get(8).equals(d1));
     }
 
     @Test
-    void getNumeroGiocatori() {
+    public void getNumeroGiocatori() {
         Partita p=new Partita();
         Utente mockedUtente1= Mockito.mock(Utente.class);
         when(mockedUtente1.getId()).thenReturn("1");
         Utente mockedUtente2= Mockito.mock(Utente.class);
         p.getListaGiocatori().add(mockedUtente1);
         p.getListaGiocatori().add(mockedUtente2);
-        assertEquals(2,p.getNumeroGiocatori());
+        assertTrue(p.getNumeroGiocatori() == 2);
+
 
     }
 
     @Test
-    void inizializzaOrdineRound() {
+    public void inizializzaOrdineRound() {
         Partita p=new Partita();
         ArrayList<Utente> test=new ArrayList<Utente>();
         Utente mockedUtente1= Mockito.mock(Utente.class);
@@ -177,11 +184,14 @@ class PartitaTest {
         p.getListaGiocatori().add(mockedUtente3);
         p.getListaGiocatori().add(mockedUtente4);
         p.inizializzaOrdineRound();
-        assertIterableEquals(p.getOrdineRound(),test);
+        //assertIterableEquals(p.getOrdineRound(),test);
+        assertTrue(test.size() == p.getOrdineRound().size());
+        for (int i=0; i<test.size();i++)
+            assertTrue(p.getOrdineRound().get(i).equals(test.get(i)));
     }
 
     @Test
-    void setOrdineRound() {
+    public void setOrdineRound() {
         Partita p=new Partita();
         ArrayList<Utente> test=new ArrayList<Utente>();
         Utente mockedUtente1= Mockito.mock(Utente.class);
@@ -217,13 +227,16 @@ class PartitaTest {
 
         p.setOrdineRound();
         p.setOrdineRound();
-        assertIterableEquals(p.getOrdineRound(),test);
+        //assertIterableEquals(p.getOrdineRound(),test);
+        assertTrue(test.size() == p.getOrdineRound().size());
+        for (int i=0; i<test.size();i++)
+            assertTrue(p.getOrdineRound().get(i).equals(test.get(i)));
 
 
     }
 
     @Test
-    void getCurrentPlayer() throws RemoteException {
+    public void getCurrentPlayer() throws RemoteException {
         Partita p=new Partita();
         int n=7;
 
@@ -249,15 +262,15 @@ class PartitaTest {
             p.incrementaTurno();
         }
 
-        assertEquals(p.getCurrentPlayer(),mockedUtente2);
+        assertTrue(p.getCurrentPlayer().equals(mockedUtente2));
     }
 
     @Test
-    void isEmpty() {
+    public void isEmpty() {
         Partita p=new Partita();
         Utente mockedUtente1= Mockito.mock(Utente.class);
-        assertEquals(p.isEmpty(),true);
+        assertTrue(p.isEmpty() == true);
         p.getListaGiocatori().add(mockedUtente1);
-        assertEquals(p.isEmpty(),false);
+        assertTrue(p.isEmpty() == false);
     }
 }

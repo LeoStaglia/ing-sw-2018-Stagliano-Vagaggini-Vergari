@@ -6,17 +6,18 @@ import ingSw2018StaglianoVagagginiVergari.client.View;
 import ingSw2018StaglianoVagagginiVergari.server.model.*;
 import ingSw2018StaglianoVagagginiVergari.server.model.carteSchema.FactorySchema;
 import ingSw2018StaglianoVagagginiVergari.server.model.carteUtensile.AlesatoreRame;
-import org.junit.jupiter.api.Test;
+import org.junit.Test;
 import org.mockito.Mockito;
 
 import java.rmi.RemoteException;
 import java.util.ArrayList;
 
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.Assert.assertTrue;
 
-class AlesatoreRameTest {
+
+public class AlesatoreRameTest {
     @Test       //caso in cui tutto va a buon fine
-    void usaEffettoCarta_test1() throws MossaIllegaleException, RemoteException {
+    public void usaEffettoCarta_test1() throws MossaIllegaleException, RemoteException {
 
 
         class DadoPosizione{
@@ -141,7 +142,7 @@ class AlesatoreRameTest {
     }
 
     @Test       //caso in cui non si può piazzare nella cella selezionata
-    void usaEffettoCarta_test2() throws MossaIllegaleException, RemoteException {
+    public void usaEffettoCarta_test2() throws MossaIllegaleException, RemoteException {
 
 
         class DadoPosizione{
@@ -271,7 +272,7 @@ class AlesatoreRameTest {
     }
 
     @Test
-    void usaEffettoCarta_test3() throws MossaIllegaleException, RemoteException {
+    public void usaEffettoCarta_test3() throws MossaIllegaleException, RemoteException {
 
 
         class DadoPosizione{

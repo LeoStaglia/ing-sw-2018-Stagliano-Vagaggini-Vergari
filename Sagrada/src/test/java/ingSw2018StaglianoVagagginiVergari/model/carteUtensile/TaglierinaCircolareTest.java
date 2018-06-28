@@ -5,16 +5,17 @@ import ingSw2018StaglianoVagagginiVergari.client.View;
 import ingSw2018StaglianoVagagginiVergari.server.model.*;
 import ingSw2018StaglianoVagagginiVergari.server.model.carteSchema.FactorySchema;
 import ingSw2018StaglianoVagagginiVergari.server.model.carteUtensile.TaglierinaCircolare;
-import org.junit.jupiter.api.Test;
+import org.junit.Test;
 import org.mockito.Mockito;
 
 import java.rmi.RemoteException;
 
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.Assert.assertTrue;
 
-class TaglierinaCircolareTest {
+
+public class TaglierinaCircolareTest {
     @Test
-    void usaEffettoCarta_test1() throws MossaIllegaleException, RemoteException {
+    public void usaEffettoCarta_test1() throws MossaIllegaleException, RemoteException {
 
 
         class DadoPosizione{

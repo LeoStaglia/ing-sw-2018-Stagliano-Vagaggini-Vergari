@@ -4,17 +4,18 @@ import Eccezioni.MossaIllegaleException;
 import ingSw2018StaglianoVagagginiVergari.client.View;
 import ingSw2018StaglianoVagagginiVergari.server.model.*;
 import ingSw2018StaglianoVagagginiVergari.server.model.carteSchema.FactorySchema;
-import org.junit.jupiter.api.Test;
+import org.junit.Test;
 import org.mockito.Mockito;
 
 import java.rmi.RemoteException;
 
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.Assert.assertTrue;
 
-class TenagliaARotelleTest {
 
-    @Test   // caso in cui conta ==2
-    void usaEffettoCarta_test1() throws MossaIllegaleException, RemoteException {
+public class TenagliaARotelleTest {
+
+    @Test // caso in cui conta ==2
+    public void usaEffettoCarta_test1() throws MossaIllegaleException, RemoteException {
 
 
         class DadoPosizione{
@@ -139,7 +140,7 @@ class TenagliaARotelleTest {
     }
 
     @Test
-    void usaEffettoCarta_test2() throws MossaIllegaleException, RemoteException {
+    public void usaEffettoCarta_test2() throws MossaIllegaleException, RemoteException {
 
 
         class DadoPosizione{

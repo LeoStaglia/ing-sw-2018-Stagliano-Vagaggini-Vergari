@@ -3,16 +3,17 @@ package ingSw2018StaglianoVagagginiVergari.model.carteUtensile;
 import Eccezioni.MossaIllegaleException;
 import ingSw2018StaglianoVagagginiVergari.server.model.*;
 import ingSw2018StaglianoVagagginiVergari.server.model.carteUtensile.TamponeDiamantato;
-import org.junit.jupiter.api.Test;
+import org.junit.Test;
 
 import java.rmi.RemoteException;
 
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.Assert.assertTrue;
 
-class TamponeDiamantatoTest {
+
+public class TamponeDiamantatoTest {
 
     @Test
-    void usaEffettoCarta_test1() throws MossaIllegaleException, RemoteException {
+    public void usaEffettoCarta_test1() throws MossaIllegaleException, RemoteException {
 
 
         class DadoPosizione{

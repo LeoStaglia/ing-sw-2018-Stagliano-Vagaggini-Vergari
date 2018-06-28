@@ -2,15 +2,18 @@ package ingSw2018StaglianoVagagginiVergari.model;
 
 import ingSw2018StaglianoVagagginiVergari.server.model.CartaObiettivoPrivato;
 import ingSw2018StaglianoVagagginiVergari.server.model.Constraint;
-import org.junit.jupiter.api.Test;
+import org.junit.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.Assert.assertTrue;
 
-class CartaObiettivoPrivatoTest {
+
+public class CartaObiettivoPrivatoTest {
     @Test
-    void getColore() {
+    public void getColore() {
         CartaObiettivoPrivato c = new CartaObiettivoPrivato(Constraint.GIALLO);
         assertTrue("Giallo".equals(c.getColore().getDescrizione()));
+        System.out.println("toString: "+c.toString()
+        );
 
     }
 

@@ -1,29 +1,45 @@
 package ingSw2018StaglianoVagagginiVergari.model;
 
 import ingSw2018StaglianoVagagginiVergari.server.model.Dado;
-import org.junit.jupiter.api.Test;
+import org.junit.Test;
 
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.Assert.assertTrue;
 
-class DadoTest {
+
+public class DadoTest {
 
     @Test
-    void getNumero() {
+    public void getNumero() {
         Dado d=new Dado("Rosso");
         assertTrue(d.getNumero()>=1 && d.getNumero()<=6);
     }
 
     @Test
-    void getColore() {
+    public void getColore() {
 
         Dado d=new Dado("Rosso");
         assertTrue(d.getColore()=="Rosso");
     }
 
     @Test
-    void lanciaDado() {
+    public void lanciaDado() {
         Dado d=new Dado("Rosso");
         assertTrue(d.getNumero()>=1 && d.getNumero()<=6);
+    }
+
+    @Test
+    public void setNumero(){
+        Dado d=new Dado("Rosso",1);
+        d.setNumero(3);
+        assertTrue(d.getNumero()==3);
+    }
+
+    @Test
+    public void setColore(){
+        Dado d=new Dado("Rosso",1);
+        d.setColore("Blu");
+        assertTrue(d.getColore().equals("Blu"));
+
     }
 
 }

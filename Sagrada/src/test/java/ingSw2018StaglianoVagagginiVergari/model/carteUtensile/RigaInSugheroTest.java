@@ -6,18 +6,19 @@ import ingSw2018StaglianoVagagginiVergari.client.View;
 import ingSw2018StaglianoVagagginiVergari.server.model.*;
 import ingSw2018StaglianoVagagginiVergari.server.model.carteSchema.FactorySchema;
 import ingSw2018StaglianoVagagginiVergari.server.model.carteUtensile.RigaInSughero;
-import org.junit.jupiter.api.Test;
+import org.junit.Test;
 import org.mockito.Mockito;
 
 import java.rmi.RemoteException;
 import java.util.ArrayList;
 
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.Assert.assertTrue;
 
-class RigaInSugheroTest {
 
-    @Test   //test nel caso il piazzamento vada a buon fine
-    void usaEffettoCarta_test1() throws MossaIllegaleException, RemoteException {
+public class RigaInSugheroTest {
+
+    @Test //test nel caso il piazzamento vada a buon fine
+    public void usaEffettoCarta_test1() throws MossaIllegaleException, RemoteException {
 
 
         class DadoPosizione{
@@ -138,7 +139,7 @@ class RigaInSugheroTest {
     }
 
     @Test  //test nel caso in cui non posso posizionare perchè il dado non può andare nella posizione scelta
-    void usaEffettoCarta_test2() throws MossaIllegaleException, RemoteException {
+    public void usaEffettoCarta_test2() throws MossaIllegaleException, RemoteException {
 
 
         class DadoPosizione{
@@ -264,7 +265,7 @@ class RigaInSugheroTest {
     }
 
     @Test  //test nel caso in cui non posso posizionare perchè è gia stato posizionato un dado nel turno
-    void usaEffettoCarta_test3() throws MossaIllegaleException, RemoteException {
+    public void usaEffettoCarta_test3() throws MossaIllegaleException, RemoteException {
 
 
         class DadoPosizione{

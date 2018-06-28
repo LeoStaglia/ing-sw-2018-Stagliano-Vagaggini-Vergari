@@ -4,29 +4,19 @@ import ingSw2018StaglianoVagagginiVergari.server.model.CartaObiettivoPubblico;
 import ingSw2018StaglianoVagagginiVergari.server.model.Dado;
 import ingSw2018StaglianoVagagginiVergari.server.model.FactoryCartaObiettivoPubblico;
 import ingSw2018StaglianoVagagginiVergari.server.model.Plancia;
-import org.junit.jupiter.api.Test;
+import org.junit.Test;
 import org.mockito.Mockito;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.when;
 
-class SfumatureDiverseTest {
-    @Test
-    void getInstance() {
-    }
+public class SfumatureDiverseTest {
 
     @Test
-    void getPuntiVittoria() {
-    }
-
-    @Test
-    void getNome() {
-    }
-
-    @Test
-    void calcolaPunti() {
+    public void calcolaPunti() {
 
         CartaObiettivoPubblico carta1 = FactoryCartaObiettivoPubblico.getCartaObiettivoPubblico(8);
+        System.out.println("Carta: "+carta1.getNome()+"  " +carta1.getDescrizione());
 
 
 
