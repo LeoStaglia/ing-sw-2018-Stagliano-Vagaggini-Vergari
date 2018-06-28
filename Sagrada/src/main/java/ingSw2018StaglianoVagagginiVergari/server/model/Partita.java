@@ -159,7 +159,6 @@ public class Partita {
 
     /**
      * this method adds the view as observer
-     *  @param view
      *  @param username required to file an association between username and view */
     public void addObserver(GameObserver view, String username) throws RemoteException {
         if (!(gameObservers.containsKey(username))) {
@@ -220,8 +219,6 @@ public class Partita {
     }
     /**
      * Assign to a user the chosen scheme
-     *  @param view
-     *  @param idUser
      *  @param carta1 the chosen card
      *  @param fronte true if front is chosen, back otherwise*/
     public void sceltaSchema(GameObserver view, String idUser, boolean carta1, boolean fronte) throws RemoteException {
@@ -341,7 +338,7 @@ public class Partita {
     }
 
     /** choose a die from the pool of dice
-     * @param i position of the die 0--> first element 1-->second ecc..
+     * @param i position of the die 0-first element 1-second ecc..
      * @return the object die*/
     public Dado getDadofromRiserva(int i) {
         // modificato in i piuttosto che i-1
@@ -419,8 +416,7 @@ public class Partita {
         return (listaGiocatori.size() == 0);
     }
 
-    /** increments the round
-     * @exception RemoteException if it's not possible to update correctly the clients*/
+    /** increments the round */
     public void nextRound() throws RemoteException {
         if (ordineRound.size() < 2 * listaGiocatori.size())
             setOrdineRoundTool8End(); //called if the tool 8 was used once or more in a round
@@ -470,13 +466,9 @@ public class Partita {
 
     /** populate the stack of Tool Cards(1-12)*/
     private void inizializzaMazzoCarteUtensile() {
-        //for (int i = 1; i <= 12; i++) {
-            mazzoCarteUtensile.add(8);
-            mazzoCarteUtensile.add(8);
-            mazzoCarteUtensile.add(8);
-
-
-        //}
+        for (int i = 1; i <= 12; i++) {
+            mazzoCarteUtensile.add(i);
+        }
     }
 
 

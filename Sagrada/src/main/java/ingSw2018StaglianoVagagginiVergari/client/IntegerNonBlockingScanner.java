@@ -9,9 +9,7 @@ import java.util.concurrent.Callable;
 
 public class IntegerNonBlockingScanner implements Callable<Integer> {
     /** method to create a non blocking scanner
-     * @return
-     * @throws InterruptedException
-     * @throws InputMismatchException
+     * @return the Integer input given by the user
      */
     public Integer call() throws InterruptedException, InputMismatchException{
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));

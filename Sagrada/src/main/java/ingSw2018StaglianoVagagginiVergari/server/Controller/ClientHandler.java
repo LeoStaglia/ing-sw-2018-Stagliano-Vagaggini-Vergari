@@ -275,7 +275,11 @@ public class ClientHandler implements Runnable,GameObserver {
 
     @Override
     public void updatePagamento(boolean cartaUtilizzabile) throws RemoteException {
-        //TODO
+
+        ArrayList<Object> parametriInviati=new ArrayList<>();
+        parametriInviati.add(cartaUtilizzabile);
+        parametriInviati.add("updatePagamento");
+        WriteOut(parametriInviati);
     }
 
     public void sbloccoUtensile(){
