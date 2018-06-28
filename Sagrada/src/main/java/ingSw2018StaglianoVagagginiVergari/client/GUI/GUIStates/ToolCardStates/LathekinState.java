@@ -66,7 +66,7 @@ public class LathekinState implements GUIState{
                                 }
                                 parametriController.add(2);
                                 parametriController.add(i);
-                                SagradaGUI.getRequestHandler().genericGameRequest(parametriController);
+                                SagradaGUI.getRequestHandler().genericGameRequest(parametriController, gameScene);
                                 gameScene.setState(new LathekinState(gameScene));
                             }
                         }).start();

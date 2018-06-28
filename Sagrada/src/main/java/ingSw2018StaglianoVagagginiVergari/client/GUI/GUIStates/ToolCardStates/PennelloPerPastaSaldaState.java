@@ -20,6 +20,18 @@ public class PennelloPerPastaSaldaState implements GUIState{
         this.gameScene=gameScene;
         this.fase1=fase1;
         parametriController=new ArrayList<>();
+        if (!fase1){
+            parametriController.clear();
+            parametriController.add(2);
+            int i;
+            for (i=0; i<3; i++) {
+                if (SagradaGUI.getRequestHandler().getDataGameObserver().cartaUtensile(i).equals("Pennello Per Pasta Salda")) {
+                    break;
+                }
+            }
+            parametriController.add(i);
+            SagradaGUI.getRequestHandler().genericGameRequest(parametriController, gameScene);
+        }
     }
 
     @Override
@@ -33,16 +45,6 @@ public class PennelloPerPastaSaldaState implements GUIState{
                 fase1=false;
             }
         }else{
-            parametriController.clear();
-            parametriController.add(2);
-            int i;
-            for (i=0; i<3; i++) {
-                if (SagradaGUI.getRequestHandler().getDataGameObserver().cartaUtensile(i).equals("Pennello Per Pasta Salda")) {
-                    break;
-                }
-            }
-            parametriController.add(i);
-            SagradaGUI.getRequestHandler().genericGameRequest(parametriController);
             if (!provenienzaGriglia(event)){
                 new AlertPopup().display("Attenzione", "Scegli dove posizionare il dado!");
             }else{

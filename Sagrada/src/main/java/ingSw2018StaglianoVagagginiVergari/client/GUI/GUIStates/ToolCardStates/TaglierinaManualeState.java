@@ -6,6 +6,7 @@ import ingSw2018StaglianoVagagginiVergari.client.GUI.GUIStates.LoadingState;
 import ingSw2018StaglianoVagagginiVergari.client.GUI.GameScene;
 import ingSw2018StaglianoVagagginiVergari.client.GUI.SagradaGUI;
 import ingSw2018StaglianoVagagginiVergari.client.GUI.Tool12Popup;
+import javafx.application.Platform;
 import javafx.scene.Node;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
@@ -40,7 +41,7 @@ public class TaglierinaManualeState implements GUIState{
             }else if (provenienzaRoundTrack(event) && numeroSpostamenti==null && indiceRoundTrack==null){
                 indiceRoundTrack=indexRoundTrackDice(event);
                 popup = new Tool12Popup();
-                popup.display();
+                Platform.runLater(()->popup.display());
             }else{
                 if (!provenienzaGriglia(event)){
                     new AlertPopup().display("Attenzione", "Sposta il dado!");

@@ -86,6 +86,7 @@ public class ProxyClient implements RemoteMultiController,RemoteController {
         parametriInviati.add("partecipaPartita");
 
         clientSocket.request(parametriInviati);
+        bloccoMonitor(monitor);
     }
 
     @Override
@@ -118,6 +119,7 @@ public class ProxyClient implements RemoteMultiController,RemoteController {
         clientSocket.request(parametriInviati);
       //  if(parametri.get(0)!=2 && parametri.get(0)!=3) {
             bloccoMonitor(monitor);
+        System.out.println("SBLOCCATO SP");
       // }
 
 
@@ -138,6 +140,7 @@ public class ProxyClient implements RemoteMultiController,RemoteController {
         parametriInviati.add("usaCartaUtensile");
         clientSocket.request(parametriInviati);
         bloccoMonitor(monitor);
+        System.out.println("SBLOCCATO CU");
 
     }
 
@@ -231,6 +234,7 @@ public class ProxyClient implements RemoteMultiController,RemoteController {
             case "updateUsername": {
                 boolean usernameOK = (boolean) parametriRicevuti.get(0);
                 view.updateUsername(usernameOK);
+                sbloccaMonitor(monitor);
                 break;
             }
 

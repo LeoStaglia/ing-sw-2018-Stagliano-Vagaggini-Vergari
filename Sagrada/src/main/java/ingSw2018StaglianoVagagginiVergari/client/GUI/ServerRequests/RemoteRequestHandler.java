@@ -3,6 +3,7 @@ package ingSw2018StaglianoVagagginiVergari.client.GUI.ServerRequests;
 import ingSw2018StaglianoVagagginiVergari.client.ClientSocket;
 import ingSw2018StaglianoVagagginiVergari.client.GUI.AlertPopup;
 import ingSw2018StaglianoVagagginiVergari.client.GUI.DataGameObserver;
+import ingSw2018StaglianoVagagginiVergari.client.GUI.GameScene;
 import ingSw2018StaglianoVagagginiVergari.client.ProxyClient;
 import ingSw2018StaglianoVagagginiVergari.common.RemoteController;
 import ingSw2018StaglianoVagagginiVergari.common.RemoteMultiController;
@@ -35,8 +36,8 @@ public class RemoteRequestHandler {
         new SceltaSchemaRequest(controller, carta1, fronte, dataGameObserver).start();
     }
 
-    public void genericGameRequest(ArrayList<Integer> parametri){
-        new GenericGameRequest(dataGameObserver,controller, parametri).start();
+    public void genericGameRequest(ArrayList<Integer> parametri, GameScene gameScene){
+        new GenericGameRequest(dataGameObserver,controller, parametri,gameScene).start();
     }
 
     public void usoCartaUtensileRequest(ArrayList<Integer> parametri){

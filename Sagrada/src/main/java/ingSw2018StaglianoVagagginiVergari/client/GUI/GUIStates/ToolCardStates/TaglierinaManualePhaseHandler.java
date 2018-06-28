@@ -35,7 +35,7 @@ public class TaglierinaManualePhaseHandler extends Thread {
                 }
             }
             parametriController.add(i);
-            SagradaGUI.getRequestHandler().genericGameRequest(parametriController);
+            SagradaGUI.getRequestHandler().genericGameRequest(parametriController, gameScene);
             gameScene.setState(new TaglierinaManualeState(gameScene, false, SagradaGUI.getRequestHandler().getDataGameObserver().getNumeroTracciatoRound()));
         }
     }

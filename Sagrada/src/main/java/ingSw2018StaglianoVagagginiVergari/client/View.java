@@ -501,8 +501,8 @@ public class View extends UnicastRemoteObject implements GameObserver, Remote {
         Pausa(4);
     }
 
-    public void updatePagamento(){
-        this.puoiPagare=false;
+    public void updatePagamento(boolean puoiPagare){
+        this.puoiPagare=puoiPagare;
         this.cartaInUso="";
     }
 

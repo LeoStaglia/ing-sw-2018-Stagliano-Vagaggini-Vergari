@@ -50,11 +50,10 @@ public class DefaultState implements EventHandler<MouseEvent>, GUIState{
                 parametriController.add(1);
                 parametriController.add(indiceRiserva);
                 parametriController.addAll(placementPair);
-                SagradaGUI.getRequestHandler().genericGameRequest(parametriController);
+                SagradaGUI.getRequestHandler().genericGameRequest(parametriController, gameScene);
             }
         }else if(gameScene.getToolCardList().contains(event.getSource())){
             if (azioniGiocatore.contains(2)) {
-                gameScene.setState(new LoadingState());
                 indiceRiserva = null;
                 placementPair.clear();
                 parametriController.clear();
@@ -68,16 +67,7 @@ public class DefaultState implements EventHandler<MouseEvent>, GUIState{
                 }
                 parametriController.add(cardIndex);
                 if (!((SagradaGUI.getRequestHandler().getDataGameObserver().cartaUtensile(cardIndex).equals("Taglierina Circolare") || SagradaGUI.getRequestHandler().getDataGameObserver().cartaUtensile(cardIndex).equals("Taglierina Manuale")) && SagradaGUI.getRequestHandler().getDataGameObserver().roundTrackSize()==0)) {
-                    SagradaGUI.getRequestHandler().genericGameRequest(parametriController);
-                    if (SagradaGUI.getRequestHandler().getDataGameObserver().isCartaUtilizzabile() && !SagradaGUI.getRequestHandler().getDataGameObserver().cartaUtensile(cardIndex).equals("Martelletto")) {
-                        FactoryToolCardStates toolCardStates = new FactoryToolCardStates(gameScene);
-                        SagradaGUI.getRequestHandler().getDataGameObserver().setCartaUtilizzabile(true);
-                        gameScene.setState(toolCardStates.getToolCardState(SagradaGUI.getRequestHandler().getDataGameObserver().cartaUtensile(cardIndex)));
-                    }else if (SagradaGUI.getRequestHandler().getDataGameObserver().isCartaUtilizzabile() && SagradaGUI.getRequestHandler().getDataGameObserver().cartaUtensile(cardIndex).equals("Martelletto")){
-                        SagradaGUI.getRequestHandler().genericGameRequest(parametriController);
-                        SagradaGUI.getRequestHandler().getDataGameObserver().setCartaUtilizzabile(true);
-                        SagradaGUI.getRequestHandler().usoCartaUtensileRequest(null);
-                    }
+                    SagradaGUI.getRequestHandler().genericGameRequest(parametriController, gameScene);
                 }else{
                     new AlertPopup().display("Attenzione", "Carta non utilizzabile, tracciato del round vuoto!");
                 }

@@ -34,6 +34,8 @@ public class FactoryToolCardStates {
             return new TamponeDiamantatoState(gameScene);
         }else if(cardName.equals("Taglierina Manuale")){
             return new TaglierinaManualeState(gameScene, true, 0);
+        }else if (cardName.equals("Martelletto")){
+            return new MartellettoState(gameScene);
         }else{
             return null;
         }

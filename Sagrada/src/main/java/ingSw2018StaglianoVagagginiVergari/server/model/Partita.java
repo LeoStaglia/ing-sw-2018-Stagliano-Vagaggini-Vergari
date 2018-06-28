@@ -470,9 +470,13 @@ public class Partita {
 
     /** populate the stack of Tool Cards(1-12)*/
     private void inizializzaMazzoCarteUtensile() {
-        for (int i = 1; i <= 12; i++) {
-            mazzoCarteUtensile.add(i);
-       }
+        //for (int i = 1; i <= 12; i++) {
+            mazzoCarteUtensile.add(8);
+            mazzoCarteUtensile.add(8);
+            mazzoCarteUtensile.add(8);
+
+
+        //}
     }
 
 
@@ -764,14 +768,14 @@ public class Partita {
         }
     }
     /** notify the current player that he cannot pay a toolCard **/
-    public synchronized void updatePagamento() throws RemoteException {
+    public synchronized void updatePagamento(boolean utilizzabile) throws RemoteException {
         HashMap<String, GameObserver> gameObserverClone = new HashMap<>();
         gameObserverClone = (HashMap<String, GameObserver>) gameObservers.clone();
 
         GameObserver view = gameObserverClone.get(getCurrentPlayer().getId());
 
         if (pingClient(view)) {
-            view.updatePagamento();
+            view.updatePagamento(utilizzabile);
             this.updateCurrentPlayer();
         } else {
             removeObserver(getCurrentPlayer().getId());

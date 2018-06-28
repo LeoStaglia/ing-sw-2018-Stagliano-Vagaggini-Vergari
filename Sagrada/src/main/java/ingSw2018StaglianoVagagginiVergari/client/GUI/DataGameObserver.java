@@ -119,8 +119,8 @@ public class DataGameObserver extends UnicastRemoteObject implements GameObserve
     }
 
     @Override
-    public void updatePagamento() throws RemoteException {
-        cartaUtilizzabile=false;
+    public void updatePagamento(boolean cartaUtilizzabile) throws RemoteException {
+        setCartaUtilizzabile(cartaUtilizzabile);
     }
 
     public int roundTrackSize(){

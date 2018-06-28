@@ -149,7 +149,7 @@ public class GameScene {
             this.setState(new LoadingState());
             ArrayList<Integer> parametri = new ArrayList<>();
             parametri.add(3);
-            SagradaGUI.getRequestHandler().genericGameRequest(parametri);
+            SagradaGUI.getRequestHandler().genericGameRequest(parametri, this);
         }else{
 
         }

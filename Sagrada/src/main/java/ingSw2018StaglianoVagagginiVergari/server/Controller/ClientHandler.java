@@ -274,7 +274,7 @@ public class ClientHandler implements Runnable,GameObserver {
     }
 
     @Override
-    public void updatePagamento() throws RemoteException {
+    public void updatePagamento(boolean cartaUtilizzabile) throws RemoteException {
         //TODO
     }
 

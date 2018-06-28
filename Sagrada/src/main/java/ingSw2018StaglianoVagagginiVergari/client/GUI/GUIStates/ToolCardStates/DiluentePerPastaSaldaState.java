@@ -33,7 +33,7 @@ public class DiluentePerPastaSaldaState implements GUIState{
                 }
             }
             listaParametri.add(i);
-            SagradaGUI.getRequestHandler().genericGameRequest(listaParametri);
+            SagradaGUI.getRequestHandler().genericGameRequest(listaParametri, gameScene);
         }
     }
 
