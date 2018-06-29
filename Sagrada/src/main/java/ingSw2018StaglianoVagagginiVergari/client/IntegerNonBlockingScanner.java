@@ -12,6 +12,11 @@ public class IntegerNonBlockingScanner implements Callable<Integer> {
      * @return the Integer input given by the user
      */
     public Integer call() throws InterruptedException, InputMismatchException{
+        try {
+            System.in.read(new byte[System.in.available()]);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         String input="";
         do {
