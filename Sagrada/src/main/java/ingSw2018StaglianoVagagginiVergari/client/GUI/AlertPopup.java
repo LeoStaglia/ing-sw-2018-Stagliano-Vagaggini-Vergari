@@ -37,7 +37,7 @@ public class AlertPopup {
 
     }
 
-
+    /** Displays the graphical user interface */
     public void display(String title, String message){
         Stage stage = new Stage();
         Scene scene = new Scene(root);

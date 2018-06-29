@@ -686,7 +686,7 @@ public class Partita {
     public synchronized void updateCurrentPlayer() throws RemoteException {
         HashMap<String, GameObserver> gameObserverClone = new HashMap<>();
         gameObserverClone = (HashMap<String, GameObserver>) gameObservers.clone();
-        for (String username : gameObserverClone.keySet()) {
+        //for (String username : gameObserverClone.keySet()) {
             GameObserver view = gameObserverClone.get(getCurrentPlayer().getId());
             HashMap<String, String[][]> planceGiocatori = new HashMap<>();
             for (Utente u : listaGiocatori) {
@@ -745,7 +745,7 @@ public class Partita {
                 removeObserver(getCurrentPlayer().getId());
             }
         }
-    }
+   // }
 
     /** notify to the observers a message update*/
     public synchronized void updateMessage(String message) throws RemoteException {

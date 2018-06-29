@@ -331,7 +331,7 @@ public class ClientHandler implements Runnable,GameObserver {
     }
 
 
-
+    /** method that select the correct invocation to controller (socket)*/
     public void InvocaController(ArrayList<Object> parametriRicevuti) throws InterruptedException, RemoteException, FullGameException {
         String comando;
         comando=(String) parametriRicevuti.remove(parametriRicevuti.size()-1);

@@ -13,6 +13,8 @@ public class Server {
         MultiController controller = new MultiController();
         Registry registry = LocateRegistry.createRegistry(7501);
         registry.bind("controller", controller);
+        UnbindRegistyThread t=new UnbindRegistyThread(Thread.currentThread(),registry);
+        t.start();
         System.out.println("Server rmi is started!");
         SagradaServerPool socketServer = new SagradaServerPool(1700, controller);
         socketServer.run();

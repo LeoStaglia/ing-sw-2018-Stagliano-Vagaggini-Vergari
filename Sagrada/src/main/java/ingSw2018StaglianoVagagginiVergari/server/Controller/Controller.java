@@ -116,8 +116,7 @@ public class Controller extends UnicastRemoteObject implements RemoteController 
                 partita.piazzamentoDado(parametri.get(2), parametri.get(3), false, false);
             }
             if (n == 2) {
-                if (this.scegliCartaUtensile(view, parametri.get(1)))
-                    partita.updatePagamento(true);
+                if (this.scegliCartaUtensile(view, parametri.get(1))) partita.updatePagamento(true);
                 else partita.updatePagamento(false);
             }
             if (n == 3){

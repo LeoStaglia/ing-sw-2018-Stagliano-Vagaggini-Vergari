@@ -27,6 +27,7 @@ public class GrigliaSchema implements GUIElement{
         mouseEffectNode = (VBox)root.lookup("#mouseEffectNode");
 
     }
+    /** Renders Schemes */
     public void render(String[][] constraints, int difficolta, String nome){
         GraphicRenderer.renderSchemeGrid(constraints, schemeGrid);
         difficoltaSchema.setText(Integer.toString(difficolta));
