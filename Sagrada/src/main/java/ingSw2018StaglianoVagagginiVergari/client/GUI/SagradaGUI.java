@@ -33,6 +33,7 @@ public class SagradaGUI extends Application{
 
         requestHandler = new RemoteRequestHandler(new DataGameObserver());
         requestHandler.setRMI(true);
+        requestHandler.setController();
         TransitionHandler.setPrimaryStage(primaryStage);
         WelcomeWindow welcomeWindow = new WelcomeWindow();
         TransitionHandler.setWelcomeWindow(welcomeWindow);

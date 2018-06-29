@@ -29,8 +29,21 @@ public class RemoteRequestHandler {
         this.dataGameObserver = dataGameObserver;
     }
 
+
+
     public void partecipaPartita(String username){
-        setController(username);
+        try {
+            controller = multiController.CercaController(username);
+            if (controller == null) {
+                controller = multiController.AssegnaController();
+                new PartecipaPartitaRequest(controller, username, dataGameObserver).start();
+            } else {
+                new AlertPopup().display("Attenzione", "Username non valido");
+            }
+        }catch (RemoteException e) {
+            new AlertPopup().display("Attenzione", "Problemi nella connessione RMI");
+        }
+
     }
     public void scegliSchema(boolean carta1, boolean fronte){
         new SceltaSchemaRequest(controller, carta1, fronte, dataGameObserver).start();
@@ -47,7 +60,7 @@ public class RemoteRequestHandler {
     public void setRMI(boolean RMI) {
         this.RMI = RMI;
     }
-    private void setController(String username){
+    public void setController(){
         if (RMI) {
             if (multiController==null) {
                 try {
@@ -73,19 +86,6 @@ public class RemoteRequestHandler {
             }
 
 
-        }
-        try {
-            if (multiController!=null) {
-                controller = multiController.CercaController(username);
-                if (controller == null) {
-                    controller = multiController.AssegnaController();
-                    new PartecipaPartitaRequest(controller, username, dataGameObserver).start();
-                } else {
-                    new AlertPopup().display("Attenzione", "Username non valido");
-                }
-            }
-        }catch (RemoteException e) {
-            new AlertPopup().display("Attenzione", "Problemi nella connessione RMI");
         }
 
     }
