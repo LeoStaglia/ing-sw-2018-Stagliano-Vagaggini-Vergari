@@ -61,6 +61,8 @@ public class ClientHandler implements Runnable,GameObserver {
 
                 }
             } while (!stop);
+        } catch (ArrayIndexOutOfBoundsException e){
+            printError(e.getClass().getSimpleName() + " - " + e.getCause());
         } catch (Exception e) {
             printError(e.getClass().getSimpleName() + " - " + e.getMessage());
         }

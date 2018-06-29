@@ -262,8 +262,7 @@ public class View extends UnicastRemoteObject implements GameObserver, Remote {
 
 
         @Override
-        public synchronized void notifyUser (String id,String[][]schemaFronte1, String[][]
-        schemaRetro1, String[][]schemaFronte2, String[][]schemaRetro2, String obiettivoPrivato, Integer[] difficoltàCarteSchema, String[] nomeCarteSchema) throws RemoteException {
+        public synchronized void notifyUser (String id,String[][]schemaFronte1, String[][] schemaRetro1, String[][]schemaFronte2, String[][]schemaRetro2, String obiettivoPrivato, Integer[] difficoltàCarteSchema, String[] nomeCarteSchema) throws RemoteException {
             this.id = id;
             this.setStatus(ViewStatus.SelezioneSchema);
             this.schemaFronte1 = schemaFronte1;
@@ -614,10 +613,11 @@ public class View extends UnicastRemoteObject implements GameObserver, Remote {
         passaturno = false;
 
 
-        if (id.equalsIgnoreCase(giocatoreCorrente) && passaturno == false) {//TODO RIVEDERE non serve il parametro passaturno
+        if (id.equals(giocatoreCorrente) && passaturno == false) {//TODO RIVEDERE non serve il parametro passaturno
 
             t= new CurrentPlayerTurn();
             t.start();
+            t.join();
 
 
         } else{
@@ -733,6 +733,8 @@ public class View extends UnicastRemoteObject implements GameObserver, Remote {
                 synchronized (View.this) {
 
                     System.out.println("\nSEI IL GIOCATORE CORRENTE!\n");
+
+                    cmd=0;
 
 
                     //stampe differite in base a quali comandi abbia già dato l'utente in input (se l'utente sceglie inizialmente di selezionare un dado, sarà settato il flagSceltaDado , cosi che si stampi una scelta di input diversa)
