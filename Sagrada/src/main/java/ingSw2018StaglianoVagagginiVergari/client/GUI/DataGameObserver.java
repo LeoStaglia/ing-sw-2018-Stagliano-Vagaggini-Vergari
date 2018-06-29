@@ -47,6 +47,7 @@ public class DataGameObserver extends UnicastRemoteObject implements GameObserve
     private boolean lathekinPhase2 = false;
     private Boolean tool12Phase2;
     private int numeroTracciatoRound;
+    private HashMap<String, Integer> segnaliniGiocatori;
     private HashMap<String, Integer> punteggi;
     private String vincitore;
 
@@ -217,6 +218,11 @@ public class DataGameObserver extends UnicastRemoteObject implements GameObserve
             Platform.runLater(()->gameScene.renderObiettivoPrivato(obiettiviPrivati.get(username)));
             this.obiettivoPrivato=obiettiviPrivati.get(username);
         }
+        if (this.segnaliniGiocatori==null || !hashMapEquals(this.segnaliniGiocatori, segnaliniGiocatori)){
+            this.segnaliniGiocatori=segnaliniGiocatori;
+            Platform.runLater(()->gameScene.renderSegnaliniCorrente(segnaliniGiocatori.get(username)));
+            Platform.runLater(()->otherBoards.updateSegnalini(this.segnaliniGiocatori));
+        }
 
         this.round=round;
         updateView=true;
@@ -384,6 +390,18 @@ public class DataGameObserver extends UnicastRemoteObject implements GameObserve
         for (int i=0; i<list1.size(); i++){
             if (!list1.get(i).equals(list2.get(i)))
                 return false;
+        }
+        return true;
+    }
+
+    private boolean hashMapEquals(HashMap<String, Integer> hm1, HashMap<String, Integer> hm2){
+        if (!(hm1.keySet().equals(hm2.keySet()))){
+            return false;
+        }
+        for (String user: hm1.keySet()){
+            if (!hm1.get(user).equals(hm2.get(user))){
+                return false;
+            }
         }
         return true;
     }

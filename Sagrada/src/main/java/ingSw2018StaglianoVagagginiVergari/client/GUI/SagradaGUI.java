@@ -32,7 +32,7 @@ public class SagradaGUI extends Application{
     public void start(Stage primaryStage) throws Exception{
 
         requestHandler = new RemoteRequestHandler(new DataGameObserver());
-        requestHandler.setRMI(false);
+        requestHandler.setRMI(true);
         TransitionHandler.setPrimaryStage(primaryStage);
         WelcomeWindow welcomeWindow = new WelcomeWindow();
         TransitionHandler.setWelcomeWindow(welcomeWindow);

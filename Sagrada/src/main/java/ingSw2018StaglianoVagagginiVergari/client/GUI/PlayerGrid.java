@@ -45,4 +45,10 @@ public class PlayerGrid implements GUIElement{
     public void setNumeroSegnalini(int numeroSegnalini){
         this.numeroSegnalini.setText(Integer.toString(numeroSegnalini));
     }
+
+    public String getPlayerName() {
+        return playerName.getText();
+    }
+
+
 }

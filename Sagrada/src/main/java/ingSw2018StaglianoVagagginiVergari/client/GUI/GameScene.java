@@ -28,8 +28,6 @@ public class GameScene {
 
     private HBox riserva;
 
-    private StackPane privateObjectiveArea;
-
     private ArrayList<StackPane> publicObjectiveList;
 
     private ArrayList<StackPane> toolCardList;
@@ -51,8 +49,6 @@ public class GameScene {
     private PlayerGrid playerGrid;
 
     private RoundTrack roundTrack;
-
-    private PrivateObjective privateObjective;
 
     private Button passaTurnButton;
 
@@ -114,7 +110,6 @@ public class GameScene {
         playerGridArea.getChildren().add(playerGrid.getRoot());
         roundTrack=new RoundTrack();
         roundTrackArea.getChildren().add(roundTrack.getRoot());
-        privateObjective= new PrivateObjective();
 
 
     }
@@ -195,6 +190,12 @@ public class GameScene {
 
     }
 
+    public void renderPrivateObjective(){
+
+        ImageView imageView = new ImageView(new Image("/ObiettiviPrivati/"+SagradaGUI.getRequestHandler().getDataGameObserver().getObiettivoPrivato()+".png", 230, 321, true, true));
+        obiettivoPrivato.getChildren().add(imageView);
+    }
+
 
     public void renderToolCardsArea(ArrayList<String> listaCarteUtensile){
         int i=0;
@@ -237,6 +238,9 @@ public class GameScene {
     public void setNotCurrentPlayer(){
         playerGrid.setNotCurrent();
         passaTurnButton.setVisible(false);
+    }
+    public void renderSegnaliniCorrente(int numeroSegnalini){
+        playerGrid.setNumeroSegnalini(numeroSegnalini);
     }
 
     public Pane getRoot() {

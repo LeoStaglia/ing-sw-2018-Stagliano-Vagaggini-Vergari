@@ -9,6 +9,7 @@ import javafx.scene.Node;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
 
+import java.rmi.RemoteException;
 import java.util.ArrayList;
 
 public class DiluentePerPastaSaldaState implements GUIState{
@@ -33,7 +34,11 @@ public class DiluentePerPastaSaldaState implements GUIState{
                 }
             }
             listaParametri.add(i);
-            SagradaGUI.getRequestHandler().genericGameRequest(listaParametri, gameScene);
+            try {
+                SagradaGUI.getRequestHandler().getController().svolgimentoPartita(SagradaGUI.getRequestHandler().getDataGameObserver(),listaParametri);
+            } catch (RemoteException e) {
+                e.printStackTrace();
+            }
         }
     }
 

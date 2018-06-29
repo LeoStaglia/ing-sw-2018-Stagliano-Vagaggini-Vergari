@@ -94,6 +94,10 @@ public class RemoteRequestHandler {
         return clientSocket;
     }
 
+    public RemoteController getController() {
+        return controller;
+    }
+
     public DataGameObserver getDataGameObserver() {
         return dataGameObserver;
     }

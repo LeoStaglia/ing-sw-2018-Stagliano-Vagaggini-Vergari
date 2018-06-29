@@ -11,6 +11,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
 
+import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Stack;
@@ -58,6 +59,7 @@ public class DefaultState implements EventHandler<MouseEvent>, GUIState{
                 placementPair.clear();
                 parametriController.clear();
                 parametriController.add(2);
+                gameScene.setState(new LoadingState());
                 int cardIndex = 0;
                 for (StackPane toolcard : gameScene.getToolCardList()) {
                     if (toolcard == event.getSource()) {
@@ -67,12 +69,25 @@ public class DefaultState implements EventHandler<MouseEvent>, GUIState{
                 }
                 parametriController.add(cardIndex);
                 if (!((SagradaGUI.getRequestHandler().getDataGameObserver().cartaUtensile(cardIndex).equals("Taglierina Circolare") || SagradaGUI.getRequestHandler().getDataGameObserver().cartaUtensile(cardIndex).equals("Taglierina Manuale")) && SagradaGUI.getRequestHandler().getDataGameObserver().roundTrackSize()==0)) {
-                    SagradaGUI.getRequestHandler().genericGameRequest(parametriController, gameScene);
+                    try {
+                        SagradaGUI.getRequestHandler().getController().svolgimentoPartita(SagradaGUI.getRequestHandler().getDataGameObserver(), parametriController);
+                        if (SagradaGUI.getRequestHandler().getDataGameObserver().isCartaUtilizzabile()){
+                            FactoryToolCardStates toolCardStates = new FactoryToolCardStates(gameScene);
+                            gameScene.setState(toolCardStates.getToolCardState(SagradaGUI.getRequestHandler().getDataGameObserver().cartaUtensile(cardIndex)));
+                        }else{
+                            gameScene.setState(new DefaultState(gameScene, azioniGiocatore));
+                        }
+                    } catch (RemoteException e) {
+                        e.printStackTrace();
+                    }
                 }else{
                     new AlertPopup().display("Attenzione", "Carta non utilizzabile, tracciato del round vuoto!");
+                    gameScene.setState(new DefaultState(gameScene, azioniGiocatore));
                 }
             }else{
                 new AlertPopup().display("Attenzione", "Hai già usato una carta.");
+                gameScene.setState(new DefaultState(gameScene, azioniGiocatore));
+
             }
 
         }
