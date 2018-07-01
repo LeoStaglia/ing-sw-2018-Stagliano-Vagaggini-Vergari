@@ -44,6 +44,8 @@ public class View extends UnicastRemoteObject implements GameObserver, Remote {
 
     private CurrentPlayerTurn t;
 
+    private PlayerSchemeTimer ts;
+
 
     private ArrayList<Integer> parametri = new ArrayList<Integer>();
 
@@ -502,7 +504,9 @@ public class View extends UnicastRemoteObject implements GameObserver, Remote {
 
     public void updatePagamento(boolean puoiPagare){
         this.puoiPagare=puoiPagare;
-        this.cartaInUso="";
+        if(!puoiPagare){
+            this.cartaInUso="";
+        }
     }
 
 
@@ -638,7 +642,67 @@ public class View extends UnicastRemoteObject implements GameObserver, Remote {
 
     }
 
-    public void selezioneSchema() throws IOException{
+    private class PlayerSchemeTimer extends Thread {
+        @Override
+        public void run() {
+            try {
+                cmd = 0;
+                while (cmd != 1 && cmd != 2) {
+                    System.out.println("(1) per scegliere la prima carta (2) per scegliere la seconda carta");
+                    try {
+                        cmd = input.call();
+                    } catch (InputMismatchException e) {
+                        cmd = -1;
+                        inputCommand.nextLine();// flush the buffer
+                    }
+                }
+                if (cmd == 1) {
+                    carta1 = true;
+                } else {
+                    carta1 = false;
+                }
+                cmd = 0;
+                while (cmd != 1 && cmd != 2) {
+                    System.out.println("(1) per scegliere il fronte (2) per scegliere il retro");
+                    try {
+                        cmd = input.call();
+                    } catch (InputMismatchException e) {
+                        cmd = -1;
+                        inputCommand.nextLine();// flush the buffer
+                    }
+                }
+                if (cmd == 1) {
+                    try {
+                        controller.scegliSchema(View.this, id, carta1, true);
+                    } catch (RemoteException e) {
+                        e.printStackTrace();
+                    }
+                } else {
+                    try {
+                        controller.scegliSchema(View.this, id, carta1, false);
+                    } catch (RemoteException e) {
+                        e.printStackTrace();
+                    }
+                }
+                while (!updateView) {
+
+                }
+                updateView = false;
+
+
+            } catch (InterruptedException ex) {
+                return;
+            }
+        }
+    }
+
+
+
+
+
+
+
+    public void selezioneSchema() throws IOException, InterruptedException {
 
         //qui avviene la stampa delle 4 carte schema, una delle quali verrà scelta dall'utente
 
@@ -651,42 +715,17 @@ public class View extends UnicastRemoteObject implements GameObserver, Remote {
         stampante.printCarteSchema(schemaFronte1, schemaRetro1, schemaFronte2, schemaRetro2, 4, 5, difficoltàCarteSchema, nomeCarteSchema);
         System.out.println();
 
+        ts= new PlayerSchemeTimer();
+        ts.start();
+        ts.join();
 
-        cmd = 0;
-        while (cmd != 1 && cmd != 2) {
-            System.out.println("(1) per scegliere la prima carta (2) per scegliere la seconda carta");
-            try {
-                cmd = inputCommand.nextInt();
-            } catch (InputMismatchException e) {
-                cmd = -1;
-                inputCommand.nextLine();// flush the buffer
-            }
-        }
-        if (cmd == 1) {
-            carta1 = true;
-        } else {
-            carta1 = false;
-        }
-        cmd = 0;
-        while (cmd != 1 && cmd != 2) {
-            System.out.println("(1) per scegliere il fronte (2) per scegliere il retro");
-            try {
-                cmd = inputCommand.nextInt();
-            } catch (InputMismatchException e) {
-                cmd = -1;
-                inputCommand.nextLine();// flush the buffer
-            }
-        }
-        if (cmd == 1) {
-            controller.scegliSchema(this, id, carta1, true);
-        } else {
-            controller.scegliSchema(this, id, carta1, false);
-        }
-        while (!updateView) {
 
-        }
-        updateView = false;
+    }
 
+
+    public void notifySchemeTimer(){
+        ts.interrupt();
+      //  updateView=true;
 
     }
 
@@ -733,8 +772,6 @@ public class View extends UnicastRemoteObject implements GameObserver, Remote {
                 synchronized (View.this) {
 
                     System.out.println("\nSEI IL GIOCATORE CORRENTE!\n");
-
-                    cmd=0;
 
 
                     //stampe differite in base a quali comandi abbia già dato l'utente in input (se l'utente sceglie inizialmente di selezionare un dado, sarà settato il flagSceltaDado , cosi che si stampi una scelta di input diversa)

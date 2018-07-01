@@ -24,8 +24,8 @@ public class SchemeTimer extends TimerTask {
             if(u.getPlancia().getCartaSchema()==null){
                 GameObserver view= partita.getGameObservers().get(u.getId());
                 try {
-                    controller.scegliSchema(view,u.getId(),true,true);
                     view.notifySchemeTimer();
+                    controller.scegliSchema(view,u.getId(),true,true);
                 } catch (RemoteException e) {
                     e.printStackTrace();
                 }
