@@ -10,6 +10,8 @@ import java.util.ArrayList;
 
 public class MultiController extends UnicastRemoteObject implements RemoteMultiController {
     ArrayList<Controller> controllers;
+    private int timerTurn;
+    private int joinTimer;
     public MultiController() throws RemoteException {
          controllers=new ArrayList<>();
     }
@@ -23,6 +25,12 @@ public class MultiController extends UnicastRemoteObject implements RemoteMultiC
             }
         }
         Controller controller=new Controller();
+        if(timerTurn!=0) {
+            controller.setTimerTurn(timerTurn);
+        }else controller.setTimerTurn(20000);
+        if(joinTimer!=0){
+            controller.setJoinTimer(joinTimer);
+        }else controller.setJoinTimer(6000);
         controllers.add(controller);
         return controller;
     }
@@ -36,5 +44,13 @@ public class MultiController extends UnicastRemoteObject implements RemoteMultiC
 
         }
         return null;
+    }
+
+    public void setTimerTurn(int timerTurn) {
+        this.timerTurn = timerTurn;
+    }
+
+    public void setJoinTimer(int joinTimer) {
+        this.joinTimer = joinTimer;
     }
 }

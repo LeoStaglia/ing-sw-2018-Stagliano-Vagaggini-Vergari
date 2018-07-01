@@ -303,6 +303,12 @@ public class ProxyClient implements RemoteMultiController,RemoteController {
                 view.notifyTurnTimer();
                 break;
             }
+
+            case "notifySchemeTimer":{
+                view.notifySchemeTimer();
+                break;
+            }
+
             case "updatePagamento":{
                 boolean utilizzabile=(boolean) parametriRicevuti.get(0);
                 view.updatePagamento(utilizzabile);

@@ -25,7 +25,13 @@ public class Controller extends UnicastRemoteObject implements RemoteController 
 
     private final Partita partita;
 
+    private int timerTurn;
+
+    private int joinTimer;
+
     private Timer t;
+
+    private Timer ts;
 
     private ControllerStatus status;
 
@@ -60,7 +66,7 @@ public class Controller extends UnicastRemoteObject implements RemoteController 
                             e.printStackTrace();
                         }
                     }
-                }, 6000);
+                }, joinTimer);
                 timerSetted = true;
 
             } else if (partita.numberOfObserver() == 4) {
@@ -88,10 +94,15 @@ public class Controller extends UnicastRemoteObject implements RemoteController 
     //Fase di scelta dello schema, il controller riceve la view e l'id, setta la faccia della carta schema scelta.
     public void scegliSchema(GameObserver view, String idUser, boolean carta1, boolean fronte) throws RemoteException {
         partita.sceltaSchema(view, idUser, carta1, fronte);
+        if(ts==null){
+            ts=new Timer();
+            ts.schedule(new SchemeTimer(this, partita),timerTurn);
+        }
         if (partita.contaSchemi()) {
+            ts.cancel();
             setStatus(ControllerStatus.SvolgimentoPartita);
             t = new Timer();
-            t.schedule(new TurnTimer(this, partita), 20000);
+            t.schedule(new TurnTimer(this, partita), timerTurn);
             new Pinger(partita, this).start();
             new JustOneLeft(partita, this).start();
         }
@@ -373,7 +384,7 @@ public class Controller extends UnicastRemoteObject implements RemoteController 
                 partita.nextRound();
                 if (partita.getGameObservers().keySet().contains(partita.getCurrentPlayer().getId())) {
                     t = new Timer();
-                    t.schedule(new TurnTimer(this, partita), 20000);
+                    t.schedule(new TurnTimer(this, partita), timerTurn);
                 }else {
                     salta(view);
                 }
@@ -385,7 +396,7 @@ public class Controller extends UnicastRemoteObject implements RemoteController 
             partita.incrementaTurno();
             if (partita.getGameObservers().keySet().contains(partita.getCurrentPlayer().getId())) {
                 t = new Timer();
-                t.schedule(new TurnTimer(this, partita), 20000);
+                t.schedule(new TurnTimer(this, partita), timerTurn);
             } else {
                 salta(view);
             }
@@ -424,6 +435,14 @@ public class Controller extends UnicastRemoteObject implements RemoteController 
 
     public Timer getT() {
         return t;
+    }
+
+    public void setTimerTurn(int timerTurn) {
+        this.timerTurn = timerTurn;
+    }
+
+    public void setJoinTimer(int joinTimer){
+        this.joinTimer=joinTimer;
     }
 
     public synchronized void setStatus(ControllerStatus status) {

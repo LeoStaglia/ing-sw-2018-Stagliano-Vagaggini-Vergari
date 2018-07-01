@@ -118,4 +118,6 @@ public interface GameObserver extends Remote {
     public void updateViewTool12 (boolean fase, int numeroTracciatoRound) throws RemoteException;
     public void notifyTurnTimer() throws RemoteException;
     public void updatePagamento(boolean utilizzabile) throws RemoteException;
+
+    public void notifySchemeTimer() throws RemoteException;
 }

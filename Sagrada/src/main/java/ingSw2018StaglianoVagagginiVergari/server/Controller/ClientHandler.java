@@ -62,7 +62,7 @@ public class ClientHandler implements Runnable,GameObserver {
                 }
             } while (!stop);
         } catch (ArrayIndexOutOfBoundsException e){
-            printError(e.getClass().getSimpleName() + " - " + e.getCause());
+             e.printStackTrace();
         } catch (Exception e) {
             printError(e.getClass().getSimpleName() + " - " + e.getMessage());
         }
@@ -318,6 +318,13 @@ public class ClientHandler implements Runnable,GameObserver {
     public void notifyTurnTimer() throws RemoteException {
         ArrayList<Object> parametriInviati=new ArrayList<>();
         parametriInviati.add("notifyTurnTimer");
+        WriteOut(parametriInviati);
+    }
+
+    @Override
+    public void notifySchemeTimer() {
+        ArrayList<Object> parametriInviati=new ArrayList<>();
+        parametriInviati.add("notifySchemeTimer");
         WriteOut(parametriInviati);
     }
 

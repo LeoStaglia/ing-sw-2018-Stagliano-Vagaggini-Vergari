@@ -768,7 +768,7 @@ public class Partita {
 
         if (pingClient(view)) {
             view.updatePagamento(utilizzabile);
-            this.updateCurrentPlayer();
+          // this.updateCurrentPlayer();
         } else {
             removeObserver(getCurrentPlayer().getId());
         }
@@ -907,12 +907,18 @@ public class Partita {
     public void removeObserver(String username) {
         gameObservers.remove(username);
         for (String user : gameObservers.keySet()) {
-            try {
-                if (!(user).equals(username))
-                    gameObservers.get(user).notifyUserExit(username);
-            }catch (RemoteException e){
-
-            }
+            if (!(user).equals(username)) {
+                    Thread n = new Thread(
+                            () -> {
+                                try {
+                                    gameObservers.get(user).notifyUserExit(username);
+                                } catch (RemoteException e) {
+                                    e.printStackTrace();
+                                }
+                            }
+                    );
+                    n.start();
+                }
         }
     }
 
