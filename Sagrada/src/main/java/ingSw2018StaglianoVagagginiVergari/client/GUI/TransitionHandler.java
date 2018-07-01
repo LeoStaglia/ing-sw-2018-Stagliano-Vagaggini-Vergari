@@ -1,8 +1,11 @@
 package ingSw2018StaglianoVagagginiVergari.client.GUI;
 
+import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
+import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 
+import java.io.IOException;
 import java.util.HashMap;
 
 public class TransitionHandler {
@@ -12,9 +15,12 @@ public class TransitionHandler {
     private static Scene sceltaSchemaScene;
     private static Scene gameScene;
     private static Scene otherBoardsScene;
+    private static Scene loadingScene;
+    private static Scene loginScene;
 
     public TransitionHandler(Stage primaryStage){
         this.primaryStage=primaryStage;
+
     }
 
     private static void goTo(Scene scene){
@@ -37,6 +43,20 @@ public class TransitionHandler {
         goTo(scene);
     }
 
+    public static void toLoadingScene(){
+      goTo(loadingScene);
+    }
+
+    public static void setLoadingScene(Scene loadingScene) {
+        TransitionHandler.loadingScene = loadingScene;
+    }
+
+    public static void setLoginScene(LoginView loginView){
+        TransitionHandler.loginScene = new Scene(loginView.getRoot());
+    }
+    public static void toLoginScene(){
+        goTo(loginScene);
+    }
 
     public static void setGameScene(GameScene gameScene){
         TransitionHandler.gameScene=new Scene(gameScene.getRoot());

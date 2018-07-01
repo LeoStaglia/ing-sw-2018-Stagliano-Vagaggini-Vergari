@@ -23,18 +23,6 @@ public class SceltaSchemaRequest extends Thread {
 
     @Override
     public void run() {
-
-        try {
-            OtherBoards otherBoards = new OtherBoards();
-            TransitionHandler.setOtherBoardsScene(otherBoards);
-            GameScene gameScene = new GameScene();
-            gameScene.renderPrivateObjective();
-            dataGameObserver.setGameScene(gameScene);
-            dataGameObserver.setOtherBoards(otherBoards);
-            TransitionHandler.setGameScene(gameScene);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
         try {
             controller.scegliSchema(dataGameObserver,dataGameObserver.getUsername(), carta1, fronteScelto);
         } catch (RemoteException e) {

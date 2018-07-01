@@ -13,14 +13,14 @@ public class Pinger extends Thread {
 
     private Partita partita;
     private Controller controller;
-    private HashMap<GameObserver, Integer> pingFailed;
+    private HashMap<String, Integer> pingFailed;
 
     public Pinger(Partita partita, Controller controller){
         this.partita=partita;
         this.controller=controller;
         pingFailed=new HashMap<>();
         for (Utente u: partita.getListaGiocatori()){
-            pingFailed.put(partita.getGameObservers().get(u.getId()), 0);
+            pingFailed.put(u.getId(), 0);
         }
     }
 
@@ -38,15 +38,16 @@ public class Pinger extends Thread {
                     e.printStackTrace();
                 }
                 if (partita.pingClient(partita.getGameObservers().get(username))) {
-                    pingFailed.replace(partita.getGameObservers().get(username), 0);
+                    pingFailed.replace(username, 0);
                 } else {
-                    int n = pingFailed.get(partita.getGameObservers().get(username));
+                    int n = pingFailed.get(username);
                     n++;
-                    pingFailed.replace(partita.getGameObservers().get(username), n);
+                    pingFailed.replace(username, n);
                 }
-               if(pingFailed.get(partita.getGameObservers().get(username))!=null) { //serve?
-                    if (pingFailed.get(partita.getGameObservers().get(username)) == 3) {
+               if(pingFailed.get(username)!=null) { //serve?
+                    if (pingFailed.get(username) == 3) {
                         partita.removeObserver(username);
+                        pingFailed.replace(username, 0);
                     }
                }
             }

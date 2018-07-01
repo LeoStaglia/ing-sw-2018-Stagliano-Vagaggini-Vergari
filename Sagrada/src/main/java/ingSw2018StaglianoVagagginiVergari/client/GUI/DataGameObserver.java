@@ -131,6 +131,7 @@ public class DataGameObserver extends UnicastRemoteObject implements GameObserve
 
     @Override
     public synchronized void notifyUser(String id,String[][] schemaFronte1, String[][] schemaRetro1 ,String[][] schemaFronte2,String[][] schemaRetro2 ,String obiettivoPrivato, Integer[] difficoltàCarteSchema, String[] nomeCarteSchema) throws RemoteException{
+        this.username=id;
         this.token=token;
         this.schemaFronte1=schemaFronte1;
         this.schemaRetro1=schemaRetro1;
@@ -171,6 +172,7 @@ public class DataGameObserver extends UnicastRemoteObject implements GameObserve
             otherBoards.setPlanceGiocatori(planceGiocatori);
             Platform.runLater(()->otherBoards.render());
             Platform.runLater(()->gameScene.renderPlayerGridArea(planceGiocatori.get(username), username));
+            Platform.runLater(()->otherBoards.updateSegnalini(segnaliniGiocatori));
         }
         if (isCurrentPlayer()){
             if (!lathekinPhase2 && !(tool12Phase2!=null && tool12Phase2)) {
@@ -298,6 +300,7 @@ public class DataGameObserver extends UnicastRemoteObject implements GameObserve
 
     @Override
     public void updateViewTool12(boolean fase, int numeroTracciatoRound) throws RemoteException {
+        System.out.println("FASE 12:"+fase);
         this.numeroTracciatoRound=numeroTracciatoRound;
         tool12Phase2=fase;
     }

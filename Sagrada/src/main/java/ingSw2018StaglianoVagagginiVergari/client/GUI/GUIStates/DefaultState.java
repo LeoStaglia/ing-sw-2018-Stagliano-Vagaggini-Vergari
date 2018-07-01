@@ -70,6 +70,7 @@ public class DefaultState implements EventHandler<MouseEvent>, GUIState{
                 parametriController.add(cardIndex);
                 if (!((SagradaGUI.getRequestHandler().getDataGameObserver().cartaUtensile(cardIndex).equals("Taglierina Circolare") || SagradaGUI.getRequestHandler().getDataGameObserver().cartaUtensile(cardIndex).equals("Taglierina Manuale")) && SagradaGUI.getRequestHandler().getDataGameObserver().roundTrackSize()==0)) {
                     try {
+                        System.out.println("Parametri"+parametriController);
                         SagradaGUI.getRequestHandler().getController().svolgimentoPartita(SagradaGUI.getRequestHandler().getDataGameObserver(), parametriController);
                         if (SagradaGUI.getRequestHandler().getDataGameObserver().isCartaUtilizzabile()){
                             FactoryToolCardStates toolCardStates = new FactoryToolCardStates(gameScene);

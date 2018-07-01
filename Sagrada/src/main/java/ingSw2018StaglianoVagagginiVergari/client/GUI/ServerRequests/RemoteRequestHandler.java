@@ -57,6 +57,14 @@ public class RemoteRequestHandler {
         new UtilizzoCartaUtensileRequest(dataGameObserver, controller, parametri).start();
     }
 
+    public void setController(RemoteController controller) {
+        this.controller = controller;
+    }
+
+    public void login(String username){
+        new LoginRequest(multiController, username, dataGameObserver).start();
+    }
+
     public void setRMI(boolean RMI) {
         this.RMI = RMI;
     }
@@ -74,7 +82,7 @@ public class RemoteRequestHandler {
             }
         }else{
 
-            ClientSocket clientSocket = new ClientSocket("127.0.0.1", 1700);
+            ClientSocket clientSocket = new ClientSocket( "localhost",1700);
             try {
                 clientSocket.init();
               //  this.clientSocket=clientSocket;

@@ -22,6 +22,7 @@ public class PennelloPerEglomiseState implements GUIState {
     private ArrayList<Integer> parametriController;
 
     public PennelloPerEglomiseState(GameScene gameScene){
+        System.out.println("pennello");
         this.gameScene=gameScene;
         indiciDado=new ArrayList<>();
         indiciPiazzamento=new ArrayList<>();

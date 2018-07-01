@@ -8,11 +8,13 @@ import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 //import sun.plugin2.ipc.windows.WindowsEvent;
 
 import java.beans.EventHandler;
+import java.io.IOException;
 import java.rmi.NoSuchObjectException;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
@@ -35,7 +37,21 @@ public class SagradaGUI extends Application{
         requestHandler.setRMI(true);
         requestHandler.setController();
         TransitionHandler.setPrimaryStage(primaryStage);
+        OtherBoards otherBoards = new OtherBoards();
+        TransitionHandler.setOtherBoardsScene(otherBoards);
+        GameScene gameScene = new GameScene();
+        TransitionHandler.setGameScene(gameScene);
+        requestHandler.getDataGameObserver().setGameScene(gameScene);
+        requestHandler.getDataGameObserver().setOtherBoards(otherBoards);
         WelcomeWindow welcomeWindow = new WelcomeWindow();
+        try {
+            Pane loadginRoot = FXMLLoader.load(getClass().getResource("/loadingScene.fxml"));
+            Scene loadingScene = new Scene(loadginRoot);
+            TransitionHandler.setLoadingScene(loadingScene);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        TransitionHandler.setLoginScene(new LoginView());
         TransitionHandler.setWelcomeWindow(welcomeWindow);
         TransitionHandler.setNewGameScene(new NewGameScene());
         TransitionHandler.toWelcomeWindow();

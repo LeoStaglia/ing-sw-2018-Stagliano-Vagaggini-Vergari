@@ -20,6 +20,7 @@ public class WelcomeWindow{
         newGameButton = (Button)root.lookup("#newGameButton");
         newGameButton.setOnAction((ActionEvent e)->TransitionHandler.toNewGameScene());
         loginButton = (Button)root.lookup("#loginButton");
+        loginButton.setOnAction((ActionEvent e)->TransitionHandler.toLoginScene());
 
     }
     public Parent getRoot(){

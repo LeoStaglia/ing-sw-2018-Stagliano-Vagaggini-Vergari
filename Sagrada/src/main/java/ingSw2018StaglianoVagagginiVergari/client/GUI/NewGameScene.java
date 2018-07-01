@@ -28,6 +28,7 @@ public class NewGameScene {
             public void handle(ActionEvent event) {
                 if (usernameTextField.getText().length()>0){
                     SagradaGUI.getRequestHandler().partecipaPartita(usernameTextField.getText());
+                    TransitionHandler.toLoadingScene();
                 }else{
                     new AlertPopup().display("Attenzione", "Inserisci un nome valido");
                 }
