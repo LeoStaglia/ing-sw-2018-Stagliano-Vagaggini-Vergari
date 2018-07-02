@@ -85,7 +85,7 @@ public class RemoteRequestHandler {
             ClientSocket clientSocket = new ClientSocket( "localhost",1700);
             try {
                 clientSocket.init();
-              //  this.clientSocket=clientSocket;
+                this.clientSocket=clientSocket;
                 ProxyClient controller = new ProxyClient(clientSocket);
                 this.multiController=controller;
                 controller.setView(dataGameObserver);
@@ -98,8 +98,20 @@ public class RemoteRequestHandler {
 
     }
 
+    public boolean isRMI() {
+        return RMI;
+    }
+
     public ClientSocket getClientSocket() {
         return clientSocket;
+    }
+
+    public void closeSocketConnection(){
+        try {
+            clientSocket.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public RemoteController getController() {

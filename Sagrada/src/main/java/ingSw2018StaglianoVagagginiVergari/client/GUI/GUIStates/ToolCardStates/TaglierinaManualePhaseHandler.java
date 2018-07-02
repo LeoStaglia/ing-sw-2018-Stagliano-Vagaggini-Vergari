@@ -16,6 +16,7 @@ public class TaglierinaManualePhaseHandler extends Thread {
     @Override
     public void run() {
         synchronized (SagradaGUI.getRequestHandler().getDataGameObserver()){
+            SagradaGUI.getRequestHandler().getDataGameObserver().setTool12Phase2(null);
             while(SagradaGUI.getRequestHandler().getDataGameObserver().getTool12Phase2()==null){
                 try {
                     SagradaGUI.getRequestHandler().getDataGameObserver().wait();
@@ -24,9 +25,7 @@ public class TaglierinaManualePhaseHandler extends Thread {
                 }
             }
         }
-        System.out.println(SagradaGUI.getRequestHandler().getDataGameObserver().getTool12Phase2());
         if (SagradaGUI.getRequestHandler().getDataGameObserver().getTool12Phase2()){
-            SagradaGUI.getRequestHandler().getDataGameObserver().setTool12Phase2(null);
             ArrayList<Integer> parametriController = new ArrayList<>();
             parametriController.add(2);
             int i;

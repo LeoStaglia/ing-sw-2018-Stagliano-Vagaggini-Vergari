@@ -50,6 +50,7 @@ public class DataGameObserver extends UnicastRemoteObject implements GameObserve
     private HashMap<String, Integer> segnaliniGiocatori;
     private HashMap<String, Integer> punteggi;
     private String vincitore;
+    private boolean schemeTimer;
 
     protected DataGameObserver() throws RemoteException {
 
@@ -152,6 +153,10 @@ public class DataGameObserver extends UnicastRemoteObject implements GameObserve
 
     @Override
     public synchronized void updateView(HashMap< String,String[][]> planceGiocatori , ArrayList<String> listaCartaUtensile, String giocatoreCorrente, int turno, int round, HashMap<String, Integer> segnaliniGiocatori, ArrayList<String > dadiRiserva, String dadoSelezionato, ArrayList<String> carteObiettivoPubblico, HashMap<String,String> obiettiviPrivati, ArrayList<String> tracciatoDelRound,HashSet<Integer> azioniGiocatore) throws RemoteException {
+        if (schemeTimer){
+            Platform.runLater(()->TransitionHandler.toGameScene());
+            schemeTimer=false;
+        }
         this.giocatoreCorrente=giocatoreCorrente;
         boolean different=false;
         if (this.planceGiocatori!=null) {
@@ -182,6 +187,9 @@ public class DataGameObserver extends UnicastRemoteObject implements GameObserve
         }else{
             Platform.runLater(()->gameScene.setNotCurrentPlayer());
             gameScene.setState(new NotCurrentState(gameScene));
+            if (lathekinPhase2){
+                lathekinPhase2=false;
+            }
         }
         if (turno!=this.turno){
             Platform.runLater(()->gameScene.updateTurn(turno));
@@ -236,6 +244,9 @@ public class DataGameObserver extends UnicastRemoteObject implements GameObserve
 
     @Override
     public void updateViewPunteggio(HashMap<String, Integer> punteggi, String vincitore) throws RemoteException {
+        if (!SagradaGUI.getRequestHandler().isRMI()) {
+            SagradaGUI.getRequestHandler().closeSocketConnection();
+        }
         Platform.runLater(()->TransitionHandler.toPointsScene(punteggi, vincitore));
     }
 
@@ -409,4 +420,8 @@ public class DataGameObserver extends UnicastRemoteObject implements GameObserve
         return true;
     }
 
+    @Override
+    public void notifySchemeTimer() throws RemoteException {
+        schemeTimer=true;
+    }
 }

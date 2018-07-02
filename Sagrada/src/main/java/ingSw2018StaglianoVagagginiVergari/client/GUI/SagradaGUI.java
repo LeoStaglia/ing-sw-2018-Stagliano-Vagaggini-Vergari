@@ -34,8 +34,6 @@ public class SagradaGUI extends Application{
     public void start(Stage primaryStage) throws Exception{
 
         requestHandler = new RemoteRequestHandler(new DataGameObserver());
-        requestHandler.setRMI(true);
-        requestHandler.setController();
         TransitionHandler.setPrimaryStage(primaryStage);
         OtherBoards otherBoards = new OtherBoards();
         TransitionHandler.setOtherBoardsScene(otherBoards);
@@ -61,12 +59,16 @@ public class SagradaGUI extends Application{
             public void handle(WindowEvent event) {
                 try {
                     UnicastRemoteObject.unexportObject(requestHandler.getDataGameObserver(), true);
+                    if (!requestHandler.isRMI()){
+                        requestHandler.closeSocketConnection();
+                    }
                 } catch (NoSuchObjectException e) {
                     e.printStackTrace();
                 }
             }
         });
         primaryStage.show();
+        new PopupConnection().display();
     }
 
 

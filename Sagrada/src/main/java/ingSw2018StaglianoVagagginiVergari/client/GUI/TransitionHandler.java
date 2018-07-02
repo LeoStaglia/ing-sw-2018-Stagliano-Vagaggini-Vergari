@@ -86,4 +86,6 @@ public class TransitionHandler {
     public static void setPrimaryStage(Stage primaryStage) {
         TransitionHandler.primaryStage = primaryStage;
     }
+
+
 }
