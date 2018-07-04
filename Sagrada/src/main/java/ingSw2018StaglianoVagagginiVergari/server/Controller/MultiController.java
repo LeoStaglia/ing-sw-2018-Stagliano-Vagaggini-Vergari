@@ -12,6 +12,7 @@ public class MultiController extends UnicastRemoteObject implements RemoteMultiC
     ArrayList<Controller> controllers;
     private int timerTurn;
     private int joinTimer;
+    private int schemeTimer;
     public MultiController() throws RemoteException {
          controllers=new ArrayList<>();
     }
@@ -31,6 +32,9 @@ public class MultiController extends UnicastRemoteObject implements RemoteMultiC
         if(joinTimer!=0){
             controller.setJoinTimer(joinTimer);
         }else controller.setJoinTimer(6000);
+        if(schemeTimer!=0){
+            controller.setSchemeTimer(schemeTimer);
+        }else controller.setSchemeTimer(8000);
         controllers.add(controller);
         return controller;
     }
@@ -52,5 +56,9 @@ public class MultiController extends UnicastRemoteObject implements RemoteMultiC
 
     public void setJoinTimer(int joinTimer) {
         this.joinTimer = joinTimer;
+    }
+
+    public void setSchemeTimer(int schemeTimer) {
+        this.schemeTimer = schemeTimer;
     }
 }

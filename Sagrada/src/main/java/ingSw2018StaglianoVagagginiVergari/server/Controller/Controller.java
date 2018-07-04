@@ -29,6 +29,8 @@ public class Controller extends UnicastRemoteObject implements RemoteController 
 
     private int joinTimer;
 
+    private int schemeTimer;
+
     private Timer t;
 
     private Timer ts;
@@ -96,7 +98,7 @@ public class Controller extends UnicastRemoteObject implements RemoteController 
         partita.sceltaSchema(view, idUser, carta1, fronte);
         if(ts==null){
             ts=new Timer();
-            ts.schedule(new SchemeTimer(this, partita),timerTurn);
+            ts.schedule(new SchemeTimer(this, partita),schemeTimer);
         }
         if (partita.contaSchemi()) {
             ts.cancel();
@@ -443,6 +445,10 @@ public class Controller extends UnicastRemoteObject implements RemoteController 
 
     public void setJoinTimer(int joinTimer){
         this.joinTimer=joinTimer;
+    }
+
+    public void setSchemeTimer(int schemeTimer) {
+        this.schemeTimer = schemeTimer;
     }
 
     public synchronized void setStatus(ControllerStatus status) {

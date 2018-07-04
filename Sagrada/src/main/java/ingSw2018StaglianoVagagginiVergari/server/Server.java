@@ -12,15 +12,22 @@ public class Server {
     public static void main(String[] args) throws IOException, AlreadyBoundException {
         int turnTimer = 0;
         int joinTimer=0;
+        int schemeTimer=0;
+
+
         if(args[0]!=null) {
             turnTimer = Integer.parseInt(args[0]);
         }
         if(args[1]!=null){
             joinTimer=Integer.parseInt((args[1]));
         }
+        if(args[2]!=null){
+            schemeTimer=Integer.parseInt(args[2]);
+        }
         MultiController controller = new MultiController();
         controller.setTimerTurn(turnTimer);
         controller.setJoinTimer(joinTimer);
+        controller.setSchemeTimer(schemeTimer);
         Registry registry = LocateRegistry.createRegistry(7501);
         registry.bind("controller", controller);
         UnbindRegistyThread t=new UnbindRegistyThread(Thread.currentThread(),registry);
