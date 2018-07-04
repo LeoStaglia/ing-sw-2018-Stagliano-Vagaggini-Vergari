@@ -244,9 +244,6 @@ public class DataGameObserver extends UnicastRemoteObject implements GameObserve
 
     @Override
     public void updateViewPunteggio(HashMap<String, Integer> punteggi, String vincitore) throws RemoteException {
-        if (!SagradaGUI.getRequestHandler().isRMI()) {
-            SagradaGUI.getRequestHandler().closeSocketConnection();
-        }
         Platform.runLater(()->TransitionHandler.toPointsScene(punteggi, vincitore));
     }
 

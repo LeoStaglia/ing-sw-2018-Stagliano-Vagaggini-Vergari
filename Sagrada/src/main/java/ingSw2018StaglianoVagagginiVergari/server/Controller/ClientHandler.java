@@ -331,7 +331,9 @@ public class ClientHandler implements Runnable,GameObserver {
 
     public void WriteOut(ArrayList<Object> parametriInviati) {
         try {
-            out.writeObject(parametriInviati);
+            if (!socket.isClosed()) {
+                out.writeObject(parametriInviati);
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }

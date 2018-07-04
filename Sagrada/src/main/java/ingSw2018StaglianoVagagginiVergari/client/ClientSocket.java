@@ -45,7 +45,9 @@ public class ClientSocket {
 
     public void request(ArrayList<Object> request) {
         try {
-            out.writeObject(request);
+            if (!connection.isClosed()) {
+                out.writeObject(request);
+            }
         } catch (IOException e) {
             System.err.println("Exception on network: " + e.getMessage());
         }

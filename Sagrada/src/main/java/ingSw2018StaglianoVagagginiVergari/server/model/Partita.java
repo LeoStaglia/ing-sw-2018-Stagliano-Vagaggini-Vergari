@@ -780,8 +780,10 @@ public class Partita {
     public boolean pingClient(GameObserver view){
         boolean result=false;
         try{
-            view.ping();
-            result=true;
+            if (view!=null) {
+                view.ping();
+                result=true;
+            }
         }catch(RemoteException ex){
             return result;
         }
