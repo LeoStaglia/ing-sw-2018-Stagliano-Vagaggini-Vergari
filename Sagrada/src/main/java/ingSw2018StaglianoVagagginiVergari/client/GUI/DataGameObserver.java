@@ -224,10 +224,10 @@ public class DataGameObserver extends UnicastRemoteObject implements GameObserve
             Platform.runLater(()->gameScene.renderPublicObjectiveArea(carteObiettivoPubblico));
             this.carteObiettivoPubblico=carteObiettivoPubblico;
         }
-        if (this.obiettivoPrivato==null){
-            Platform.runLater(()->gameScene.renderObiettivoPrivato(obiettiviPrivati.get(username)));
-            this.obiettivoPrivato=obiettiviPrivati.get(username);
-        }
+
+        Platform.runLater(()->gameScene.renderObiettivoPrivato(obiettiviPrivati.get(username)));
+        this.obiettivoPrivato=obiettiviPrivati.get(username);
+
         if (this.segnaliniGiocatori==null || !hashMapEquals(this.segnaliniGiocatori, segnaliniGiocatori)){
             this.segnaliniGiocatori=segnaliniGiocatori;
             Platform.runLater(()->gameScene.renderSegnaliniCorrente(segnaliniGiocatori.get(username)));

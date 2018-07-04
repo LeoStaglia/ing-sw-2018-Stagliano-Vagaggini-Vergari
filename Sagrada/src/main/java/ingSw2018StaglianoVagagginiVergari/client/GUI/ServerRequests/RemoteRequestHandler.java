@@ -4,10 +4,12 @@ import ingSw2018StaglianoVagagginiVergari.client.ClientSocket;
 import ingSw2018StaglianoVagagginiVergari.client.GUI.AlertPopup;
 import ingSw2018StaglianoVagagginiVergari.client.GUI.DataGameObserver;
 import ingSw2018StaglianoVagagginiVergari.client.GUI.GameScene;
+import ingSw2018StaglianoVagagginiVergari.client.GUI.TransitionHandler;
 import ingSw2018StaglianoVagagginiVergari.client.ProxyClient;
 import ingSw2018StaglianoVagagginiVergari.common.RemoteController;
 import ingSw2018StaglianoVagagginiVergari.common.RemoteMultiController;
 import ingSw2018StaglianoVagagginiVergari.server.Controller.MultiController;
+import javafx.application.Platform;
 
 import javax.xml.crypto.Data;
 import java.io.IOException;
@@ -34,11 +36,13 @@ public class RemoteRequestHandler {
     public void partecipaPartita(String username){
         try {
             controller = multiController.CercaController(username);
+            System.out.println(controller);
             if (controller == null) {
                 controller = multiController.AssegnaController();
                 new PartecipaPartitaRequest(controller, username, dataGameObserver).start();
             } else {
                 new AlertPopup().display("Attenzione", "Username non valido");
+                Platform.runLater(()->TransitionHandler.toNewGameScene());
             }
         }catch (RemoteException e) {
             new AlertPopup().display("Attenzione", "Problemi nella connessione RMI");

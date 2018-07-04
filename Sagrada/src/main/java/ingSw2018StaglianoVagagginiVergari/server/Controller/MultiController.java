@@ -42,8 +42,8 @@ public class MultiController extends UnicastRemoteObject implements RemoteMultiC
 
     public Controller CercaController(String username) throws RemoteException {
         for (Controller controller : controllers) {
-            for (Utente u: controller.getPartita().getListaGiocatori()) {
-                if (u.getId().equals(username)) return controller;
+            for (String user: controller.getPartita().getGameObservers().keySet()) {
+                if (username.equals(user)) return controller;
             }
 
         }
