@@ -27,6 +27,12 @@ public class RemoteRequestHandler {
     private ClientSocket clientSocket;
     private boolean RMI;
 
+    String ip;
+    int portar;
+    int portas;
+
+
+
     public RemoteRequestHandler(DataGameObserver dataGameObserver){
         this.dataGameObserver = dataGameObserver;
     }
@@ -36,13 +42,11 @@ public class RemoteRequestHandler {
     public void partecipaPartita(String username){
         try {
             controller = multiController.CercaController(username);
-            System.out.println(controller);
             if (controller == null) {
                 controller = multiController.AssegnaController();
                 new PartecipaPartitaRequest(controller, username, dataGameObserver).start();
             } else {
                 new AlertPopup().display("Attenzione", "Username non valido");
-                Platform.runLater(()->TransitionHandler.toNewGameScene());
             }
         }catch (RemoteException e) {
             new AlertPopup().display("Attenzione", "Problemi nella connessione RMI");
@@ -76,7 +80,7 @@ public class RemoteRequestHandler {
         if (RMI) {
             if (multiController==null) {
                 try {
-                    Registry registry = LocateRegistry.getRegistry(7501);
+                    Registry registry = LocateRegistry.getRegistry(portar);
                     multiController = (RemoteMultiController) registry.lookup("controller");
                 } catch (RemoteException ex) {
                     new AlertPopup().display("Attenzione", "Problemi nella connessione RMI");
@@ -86,7 +90,7 @@ public class RemoteRequestHandler {
             }
         }else{
 
-            ClientSocket clientSocket = new ClientSocket( "localhost",1700);
+            ClientSocket clientSocket = new ClientSocket( ip,portas);
             try {
                 clientSocket.init();
                 this.clientSocket=clientSocket;
@@ -124,5 +128,17 @@ public class RemoteRequestHandler {
 
     public DataGameObserver getDataGameObserver() {
         return dataGameObserver;
+    }
+
+    public void setIp(String ip) {
+        this.ip = ip;
+    }
+
+    public void setPortar(int portar) {
+        this.portar = portar;
+    }
+
+    public void setPortas(int portas) {
+        this.portas = portas;
     }
 }

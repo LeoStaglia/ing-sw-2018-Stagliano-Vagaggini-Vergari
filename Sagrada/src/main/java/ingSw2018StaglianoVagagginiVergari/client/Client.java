@@ -31,7 +31,7 @@ public class Client {
 
         if(cmd==1) {
 
-            ClientSocket clientSocket = new ClientSocket("127.0.0.1", 1700);
+            ClientSocket clientSocket = new ClientSocket(args[2],Integer.parseInt(args[0]));
             clientSocket.init();
             ProxyClient controller = new ProxyClient(clientSocket);
 
@@ -42,7 +42,7 @@ public class Client {
             clientSocket.close();
         }if (cmd==2) {
 
-            Registry registry = LocateRegistry.getRegistry(7501);
+            Registry registry = LocateRegistry.getRegistry(args[1]);
             RemoteMultiController multiController = (RemoteMultiController) registry.lookup("controller");
             View view= new View();
             view.setMultiController(multiController);

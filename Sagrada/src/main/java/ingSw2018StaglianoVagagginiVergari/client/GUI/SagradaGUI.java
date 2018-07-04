@@ -33,7 +33,6 @@ public class SagradaGUI extends Application{
     @Override
     public void start(Stage primaryStage) throws Exception{
 
-        requestHandler = new RemoteRequestHandler(new DataGameObserver());
         TransitionHandler.setPrimaryStage(primaryStage);
         OtherBoards otherBoards = new OtherBoards();
         TransitionHandler.setOtherBoardsScene(otherBoards);
@@ -74,6 +73,16 @@ public class SagradaGUI extends Application{
 
 
     public static void main(String[] args) {
+        try{
+            requestHandler=new RemoteRequestHandler(new DataGameObserver());
+            requestHandler.setPortas(Integer.parseInt(args[0]));
+            requestHandler.setPortar(Integer.parseInt(args[1]));
+            requestHandler.setIp(args[2]);
+
+
+        }catch(RemoteException ex){
+            ex.printStackTrace();
+        }
         launch(args);
     }
 

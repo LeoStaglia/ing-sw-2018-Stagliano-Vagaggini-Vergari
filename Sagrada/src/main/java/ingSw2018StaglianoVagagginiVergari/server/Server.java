@@ -7,6 +7,8 @@ import java.rmi.AlreadyBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
+import java.util.InputMismatchException;
+import java.util.Scanner;
 
 public class Server {
     public static void main(String[] args) throws IOException, AlreadyBoundException {
@@ -14,26 +16,87 @@ public class Server {
         int joinTimer=0;
         int schemeTimer=0;
 
+        Scanner inp= new Scanner(System.in);
+        int def;
+        int portas=1700;
+        int portar=7501;
 
-        if(args[0]!=null) {
-            turnTimer = Integer.parseInt(args[0]);
+
+        while (true) {
+            System.out.println("Inserisci 0 per usare config di default, un altro valore per settare parametri di rete");
+            try{
+                def = inp.nextInt();
+                break;
+            }catch (InputMismatchException e){
+                System.out.println("scelta non valida");
+                inp.nextLine();
+            }
+
         }
-        if(args[1]!=null){
-            joinTimer=Integer.parseInt((args[1]));
+        if(def==0){}
+        else {
+            while (true){
+            System.out.println("Inserisci porta socket");
+            try {
+                portas = inp.nextInt();
+                break;
+            }catch (InputMismatchException e){
+                System.out.println("porta non valida");
+                inp.nextLine();
+            }
+            }
+
+            while (true){
+                System.out.println("Inserisci porta rmi");
+            try {
+                portar = inp.nextInt();
+                break;
+            }catch (InputMismatchException e){
+                System.out.println("porta non valida");
+                inp.nextLine();
+            }
+
+            }
+
+            while (true) {
+                System.out.println("Inserisci timer del turno (millisecondi)");
+               try{
+                   turnTimer = inp.nextInt();
+                   break;
+               }catch (InputMismatchException e){
+                   System.out.println("scelta non valida");
+               }
+            }
+            while (true) {
+                System.out.println("Inserisci timer di attesa registrazione (millisecondi)");
+               try {
+                   joinTimer = inp.nextInt();
+                   break;
+               }catch (InputMismatchException e){
+                   System.out.println("scelta non valida");
+               }
+            }
+            while (true) {
+                System.out.println("Inserisci timer degli schemi (millisecondi)");
+                try{
+                    schemeTimer = inp.nextInt();
+                    break;
+                }catch (InputMismatchException e){
+                    System.out.println("scelta non valida");
+                }
+            }
         }
-        if(args[2]!=null){
-            schemeTimer=Integer.parseInt(args[2]);
-        }
+
         MultiController controller = new MultiController();
         controller.setTimerTurn(turnTimer);
         controller.setJoinTimer(joinTimer);
         controller.setSchemeTimer(schemeTimer);
-        Registry registry = LocateRegistry.createRegistry(7501);
+        Registry registry = LocateRegistry.createRegistry(portar);
         registry.bind("controller", controller);
         UnbindRegistyThread t=new UnbindRegistyThread(Thread.currentThread(),registry);
         t.start();
         System.out.println("Server rmi is started!");
-        SagradaServerPool socketServer = new SagradaServerPool(1700, controller);
+        SagradaServerPool socketServer = new SagradaServerPool(portas, controller);
         socketServer.run();
     }
 }
