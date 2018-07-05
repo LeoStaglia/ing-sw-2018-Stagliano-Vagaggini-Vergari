@@ -23,6 +23,13 @@
 5. Socket
 6. FA: Multipartita
 
+## Pattern MVC:
+1. Server: 
+   1. Controller
+   2. Model
+2. Client:
+    1. View
+
 # Impostare una partita:
 1. Avviare un server,verra richiesta la configurazione da command line dei seguenti parametri:
    1. porta socket
@@ -48,7 +55,8 @@
   1. Pinza Sgrossatrice: se si prova a incrementare un 6 o a decrementare un 1 la carta non viene pagata e viene segnalata l'impossibilità di effettuare l'operazione
   2. Pennello per Eglomise: se si prova a spostare un dado in una posizione non valida viene segnalata mossa non valida e la carta non viene pagata
   3. Alesatore per Lamina di Rame: se si prova a spostare un dado in una posizione non valida viene segnalata mossa non valida e la carta non viene pagata.
-  4. Lathekin: 1. Non essendo esplicitamente indicata la necessità di dover spostare due dadi distinti abbiamo deciso di lasciare la possibilità di spostare lo stesso dado due volte(poco sensato ma strategicamente possibile ad esempio utilizzo la carta solo per aumentarne il costo)
+  4. Lathekin: 
+              1. Non essendo esplicitamente indicata la necessità di dover spostare due dadi distinti abbiamo deciso di                        lasciare la possibilità di spostare lo stesso dado due volte(poco sensato ma strategicamente possibile ad                      esempio utilizzo la carta solo per aumentarne il costo)
               2. I due dadi vengono spostati uno alla volta e il calcolo delle mosse per il piazzamento del secondo dado tiene conto ovviamente dello schema considerando il primo già piazzato.
               3. Se un giocatore effettua una mossa non valida durante il piazzamento si ripristina l'effetto della carta
               4. In caso di disconnessione tra lo spostamento del primo dado e lo spostamento del secondo non viene ripristinato l'effetto della carta e il costo rimane a 1 nel caso fosse precedentemente a 1
@@ -61,8 +69,11 @@
   11. Diluente Per Pasta Salda:se un giocatore esce dopo aver scambiato il dado del sacchetto con quello nella riserva, la carta utensile verrà ritenuta utilizzata e il dado sarà riposto in riserva
   12. Taglerina Manuale: nel caso di scelta di spostamento di due dadi valgono le stesse scelte effettuate per lathekin.
   
-  ## Problematiche note: 
-  ritardo rilevazione disconnessione giocatore in caso di disconnessione fisica della rete(spegnimento wifi,rimozione lan ecc.)
+  # Problematiche note e limitazioni: 
+  ## 1. Non siamo riusciti a generare dei file jar per tempo a causa di alcune problematiche legate al render delle immagini   in        Gui per tale ragione non è presente un file jar nella repo. Per avviare il gioco lanciare le classi:
+        1. LaunchClient per lanciare il client
+        2. Server per lanciare il server
+  2. ritardo rilevazione disconnessione giocatore in caso di disconnessione fisica della rete(spegnimento wifi,rimozione lan ecc.)
   In ogni caso tale disconnessione viene rilevata alla fine di un timer turn.
   
   
