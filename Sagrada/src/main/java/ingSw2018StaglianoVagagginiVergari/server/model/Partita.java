@@ -15,7 +15,6 @@ import java.util.concurrent.TimeUnit;
 public class Partita {
 
     private HashMap<String, GameObserver> gameObservers;
-   // private HashMap<String, String> userTokens;
     private Dado dadoSelezionato = null;
     private ArrayList<String> setOfColors = new ArrayList<String>();
     private ArrayList<Dado> riserva = new ArrayList<Dado>();
@@ -316,12 +315,6 @@ public class Partita {
         }
     }
 
-    /** print out the Dice Bag*/
-    public void stampaSacchetto() {
-        for (Dado d : sacchetto) {
-            System.out.println("Dado " + d.getNumero() + " " + d.getColore());
-        }
-    }
 
     /** populate the Drafts Pool */
     public void riempiRiserva() {
@@ -330,12 +323,6 @@ public class Partita {
         }
     }
 
-    /** print out the Drafts Pool*/
-    public void stampaRiserva() {
-        for (Dado d : riserva) {
-            System.out.println("Dado " + d.getNumero() + " " + d.getColore());
-        }
-    }
 
     /** choose a die from the pool of dice
      * @param i position of the die 0-first element 1-second ecc..
@@ -358,10 +345,6 @@ public class Partita {
         sacchetto.add(d);
     }
 
-    /** remove a Player from the List of Players (game not started)*/
-    public void removeUtente(Utente user) {
-        listaGiocatori.remove(user);
-    }
 
     /** add a Player to the List of Players */
     public void addUtente(Utente user) {
@@ -490,16 +473,6 @@ public class Partita {
     }
 
 
-   /*TODO rimuovere*/ //method to set the List of Tool Cards in singlePlayer, n is the difficult(1-5) chosen by the player
-    public void setListaCartaUtensile(int n) {
-        if (listaGiocatori.size() == 1 && n > 0) {
-
-            for (int i = 0; i < n; i++) {
-                int o = mazzoCarteUtensile.remove(random.nextInt(mazzoCarteUtensile.size()));
-                listaCartaUtensile.add(FactoryCartaUtensile.getCartaUtensile(o));
-            }
-        }
-    }
 
     /**method to set the List of Public Objective Cards*/
     public void setListaCartaObiettivoPubblico() {
@@ -675,13 +648,6 @@ public class Partita {
         }
     }
 
-//TODO remove?
-    public synchronized Utente cercaUtente(String username){
-        for (Utente u: listaGiocatori) {
-            if(u.getId().equals(username)) return u;
-        }
-        return null;
-    }
 /** notify just the current player observer of the changes */
     public synchronized void updateCurrentPlayer() throws RemoteException {
         HashMap<String, GameObserver> gameObserverClone = new HashMap<>();
@@ -856,9 +822,6 @@ public class Partita {
         return listaGiocatori;
     }
 
-    public ArrayList<Dado> getSacchetto() {
-        return sacchetto;
-    }
 
     public TracciatoDelRound getTracciatoDelRound() {
         return tracciatoDelRound;
@@ -868,17 +831,11 @@ public class Partita {
         return listaCartaUtensile;
     }
 
-    public ArrayList<CartaObiettivoPubblico> getListaCartaObiettivoPubblico() {
-        return listaCartaObiettivoPubblico;
-    }
 
     public Random getRandom() {
         return random;
     }
 
-    public ArrayList<String> getSetOfColors() {
-        return setOfColors;
-    }
 
     public ArrayList<Utente> getOrdineRound() {
         return ordineRound;

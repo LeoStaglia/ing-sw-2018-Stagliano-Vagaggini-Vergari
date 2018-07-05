@@ -38,18 +38,6 @@ public class TracciatoDelRound {
         return this.rimanenzeRiservaOut;
     }
 
-    /* TODO remove */ // method used to calculate the TargetScore(singlePlayer)
-    public int calcolaSommaRimanenzeRiserva() {
-        int somma = 0;
-        for (Dado dado : rimanenzeRiservaOut) {
-            somma += dado.getNumero();
-        }
-        for (Dado d : rimanenzeRiservaOn) {
-            somma += d.getNumero();
-        }
-        return somma;
-
-    }
    /** method used to remove a dice on the Roundtrack in order to use a Card Tool
     * @return the die removed*/
     public Dado removeRimanenzeRiservaOn(int i) {
@@ -63,8 +51,5 @@ public class TracciatoDelRound {
         this.rimanenzeRiservaOn.add(i - 1,d);
     }
 
-    public void setRimanenzeRiservaOut(Dado d) {
-        this.rimanenzeRiservaOut.add(d);
-    }
 }
 
