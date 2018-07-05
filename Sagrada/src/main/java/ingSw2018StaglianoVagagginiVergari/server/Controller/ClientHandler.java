@@ -270,6 +270,7 @@ public class ClientHandler implements Runnable,GameObserver {
     public void updateViewTool12(boolean fase, int numeroRoundTrack) throws RemoteException {
         ArrayList<Object> parametriInviati=new ArrayList<>();
         parametriInviati.add(fase);
+        parametriInviati.add(numeroRoundTrack);
         parametriInviati.add("updateViewTool12");
         WriteOut(parametriInviati);
 

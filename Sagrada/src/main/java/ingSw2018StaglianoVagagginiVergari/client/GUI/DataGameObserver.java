@@ -308,7 +308,6 @@ public class DataGameObserver extends UnicastRemoteObject implements GameObserve
 
     @Override
     public void updateViewTool12(boolean fase, int numeroTracciatoRound) throws RemoteException {
-        System.out.println("FASE 12:"+fase);
         this.numeroTracciatoRound=numeroTracciatoRound;
         tool12Phase2=fase;
     }

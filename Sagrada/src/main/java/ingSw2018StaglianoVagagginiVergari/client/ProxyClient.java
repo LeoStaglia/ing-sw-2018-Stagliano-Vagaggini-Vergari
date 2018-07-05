@@ -296,7 +296,8 @@ public class ProxyClient implements RemoteMultiController,RemoteController {
             }
             case "updateViewTool12":{
                 boolean fase=(boolean) parametriRicevuti.get(0);
-                view.updateViewTool12(fase, 0);
+                int roundtrack=(int) parametriRicevuti.get(1);
+                view.updateViewTool12(fase, roundtrack);
                 break;
             }
             case "notifyTurnTimer":{

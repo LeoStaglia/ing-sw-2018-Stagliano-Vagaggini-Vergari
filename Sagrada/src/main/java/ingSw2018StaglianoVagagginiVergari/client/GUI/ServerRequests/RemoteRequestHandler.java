@@ -46,6 +46,7 @@ public class RemoteRequestHandler {
                 controller = multiController.AssegnaController();
                 new PartecipaPartitaRequest(controller, username, dataGameObserver).start();
             } else {
+                Platform.runLater(()->TransitionHandler.toNewGameScene());
                 new AlertPopup().display("Attenzione", "Username non valido");
             }
         }catch (RemoteException e) {
