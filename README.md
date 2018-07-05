@@ -9,8 +9,11 @@
     https://github.com/LeoStaglia/ing-sw-2018-Stagliano-Vagaggini-Vergari/blob/master/ScreenShotTestCoverage.pdf
 
 ## Link diagramma UML:
-    File presente nella repo:
+    File presenti nella repo:
+    UML completo:
     https://github.com/LeoStaglia/ing-sw-2018-Stagliano-Vagaggini-Vergari/blob/master/Diagramma_UMLpdf.pdf
+    UML struttura:
+    https://github.com/LeoStaglia/ing-sw-2018-Stagliano-Vagaggini-Vergari/blob/master/UML_Astratto(struttura).pdf
 
 ## Funzionalità implementate:
 1. Regole Complete
