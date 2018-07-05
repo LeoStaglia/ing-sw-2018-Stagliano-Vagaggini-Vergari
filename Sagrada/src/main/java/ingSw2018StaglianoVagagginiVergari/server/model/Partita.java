@@ -927,5 +927,10 @@ public class Partita {
 
     // end various getter
 
+    public HashMap<String, Integer> getListaPunteggiUtente(){
+        return listaPunteggiUtente;
+    }
+
+
 }
 

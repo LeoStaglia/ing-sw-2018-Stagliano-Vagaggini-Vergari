@@ -1,13 +1,15 @@
 package ingSw2018StaglianoVagagginiVergari.model;
 
-import ingSw2018StaglianoVagagginiVergari.server.model.Dado;
-import ingSw2018StaglianoVagagginiVergari.server.model.Partita;
-import ingSw2018StaglianoVagagginiVergari.server.model.Utente;
+import Eccezioni.MossaIllegaleException;
+import ingSw2018StaglianoVagagginiVergari.client.View;
+import ingSw2018StaglianoVagagginiVergari.server.model.*;
+import ingSw2018StaglianoVagagginiVergari.server.model.carteSchema.FactorySchema;
 import org.junit.Test;
 import org.mockito.Mockito;
 
 import java.rmi.RemoteException;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.when;
@@ -273,4 +275,261 @@ public class PartitaTest {
         p.getListaGiocatori().add(mockedUtente1);
         assertTrue(p.isEmpty() == false);
     }
+
+
+    @Test
+    public void calcolaVincitore(){
+
+
+        Partita PartitaCorrente = new Partita();
+
+
+
+        Utente marco = new Utente( new Plancia("colore della vetrata") , Constraint.ROSSO);
+        Utente maurizio = new Utente( new Plancia("colore della vetrata") , Constraint.ROSSO);
+        Utente leonardo = new Utente( new Plancia("colore della vetrata") , Constraint.ROSSO);
+
+        marco.setId("marco");
+        maurizio.setId("maurizio");
+        leonardo.setId("leonardo");
+
+
+        PartitaCorrente.addUtente(marco);
+        PartitaCorrente.addUtente(maurizio);
+        PartitaCorrente.addUtente(leonardo);
+
+        PartitaCorrente.getOrdineRound().add(marco);
+        PartitaCorrente.getOrdineRound().add(maurizio);
+        PartitaCorrente.getOrdineRound().add(leonardo);
+
+
+
+
+        System.out.println("\n\nquesta è la lista dei giocatori: "+PartitaCorrente.getListaGiocatori().get(0).getId()+"\n\n");
+
+
+        ArrayList<Utente> listaGiocatori = new ArrayList<Utente>();
+
+
+        marco.setSegnalini(1);
+        maurizio.setSegnalini(6);
+        leonardo.setSegnalini(12);
+
+
+        listaGiocatori.add(marco);
+        listaGiocatori.add(maurizio);
+        listaGiocatori.add(leonardo);
+
+
+        HashMap<String, Integer> listaPunteggiUtente = new HashMap<>();
+        HashMap<String, Integer> listaPunteggiUtenteObiettivoPrivato = new HashMap<>();
+
+
+        listaPunteggiUtente.put("marco",1);
+        listaPunteggiUtente.put("maurizio",2);
+        listaPunteggiUtente.put("leonardo",3);
+
+        listaPunteggiUtenteObiettivoPrivato.put("marco",5);
+        listaPunteggiUtenteObiettivoPrivato.put("maurizio",6);
+        listaPunteggiUtenteObiettivoPrivato.put("leonardo",2);
+
+        System.out.println("prova:");
+        System.out.println("listaPunteggiUtente "+listaPunteggiUtente+"listaPunteggiUtenteObiettivoPrivato "+listaPunteggiUtenteObiettivoPrivato);
+
+        String vincitore = new String();
+
+        vincitore = PartitaCorrente.calcolaVincitore(listaPunteggiUtente,listaPunteggiUtenteObiettivoPrivato);
+
+        assertTrue(vincitore.equals("leonardo"));
+
+
+
+
+    }
+
+    @Test
+    public void piazzamentoDado(){
+
+
+        Dado dadoSelezionato = new Dado("Verde",6);
+
+        Partita PartitaCorrente = new Partita();
+
+        Utente marco = new Utente( new Plancia("colore della vetrata") , Constraint.ROSSO);
+
+        PartitaCorrente.setGiocatoreCorrente(marco);
+        PartitaCorrente.setDadoSelezionato(dadoSelezionato);
+
+        marco.setId("marco");
+        PartitaCorrente.addUtente(marco);
+        PartitaCorrente.getOrdineRound().add(marco);
+
+
+        int i=0;
+        int j=0;
+
+
+
+        View view = Mockito.mock(View.class );
+
+
+        String schema = "LuzCelestial";
+        Boolean fronte = true;
+
+        int schemaN = 0;
+
+        if (schema.equals("KaleidoscopicDream")){
+            schemaN=1;
+        }else if(schema.equals("Virtus")){
+            schemaN=2;
+        }else if(schema.equals("AuroraeMagnificus")){
+            schemaN=3;
+        }else if(schema.equals("ViaLux")){
+            schemaN=4;
+        }else if(schema.equals("SunCatcher")){
+            schemaN=5;
+        }else if(schema.equals("Bellesguard")){
+            schemaN=6;
+        }else if(schema.equals("Gravitas")){
+            schemaN=7;
+        }else if(schema.equals("FractalDrops")){
+            schemaN=8;
+        }else if(schema.equals("LuxAstram")){
+            schemaN=9;
+        }else if(schema.equals("ChromaticSplendor")){
+            schemaN=10;
+        }else if(schema.equals("Firelight")){
+            schemaN=11;
+        }else if(schema.equals("LuzCelestial")) {
+            schemaN = 12;
+        }
+
+
+        PartitaCorrente.getCurrentPlayer().getPlancia().inserisciCartaSchema(FactorySchema.get(schemaN));
+        PartitaCorrente.getCurrentPlayer().scegliFacciaSchema(fronte);
+
+        System.out.println(PartitaCorrente.getCurrentPlayer().getPlancia().getCartaSchema());
+
+        try {
+            PartitaCorrente.piazzamentoDado(i,j,false,false);
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
+
+        assertTrue(PartitaCorrente.getCurrentPlayer().getPlancia().leggiPlancia(0,0).getNumero() == 6);
+        assertTrue(PartitaCorrente.getCurrentPlayer().getPlancia().leggiPlancia(0,0).getColore().equals("Verde"));
+
+
+        i=3;
+        j=3;
+
+        try {
+            PartitaCorrente.piazzamentoDado(i,j,false,false);
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
+
+        assertTrue(PartitaCorrente.getCurrentPlayer().getPlancia().leggiPlancia(3,3) == null);
+
+
+
+    }
+
+    @Test
+    public void calcolaPunteggioFinale() throws MossaIllegaleException {
+
+        Partita PartitaCorrente = new Partita();
+        PartitaCorrente.setListaCartaObiettivoPubblico();
+        PartitaCorrente.setListaCartaUtensile();
+
+
+
+        Utente marco = new Utente( new Plancia("colore della vetrata") , Constraint.VERDE);
+        Utente maurizio = new Utente( new Plancia("colore della vetrata") , Constraint.ROSSO);
+        Utente leonardo = new Utente( new Plancia("colore della vetrata") , Constraint.ROSSO);
+
+        marco.setId("marco");
+        maurizio.setId("maurizio");
+        leonardo.setId("leonardo");
+
+
+
+
+        marco.getPlancia().inserisciCartaSchema(FactorySchema.get(12));
+        marco.scegliFacciaSchema(true);
+        Dado d1 = new Dado("Verde",6);
+        marco.getPlancia().calcolaMosse(d1,false,false);
+        marco.getPlancia().piazzaDado(0,0,d1);
+
+        maurizio.getPlancia().inserisciCartaSchema(FactorySchema.get(12));
+        maurizio.scegliFacciaSchema(true);
+        Dado d2 = new Dado("Verde",6);
+        maurizio.getPlancia().calcolaMosse(d2,false,false);
+        maurizio.getPlancia().piazzaDado(0,0,d2);
+
+        leonardo.getPlancia().inserisciCartaSchema(FactorySchema.get(12));
+        leonardo.scegliFacciaSchema(true);
+        //Dado d1 = new Dado("Verde",6);
+        //leonardo.getPlancia().calcolaMosse(d1,false,false);
+        //leonardo.getPlancia().piazzaDado(0,0,d1);
+
+
+
+
+        PartitaCorrente.addUtente(marco);
+        PartitaCorrente.addUtente(maurizio);
+        PartitaCorrente.addUtente(leonardo);
+
+        PartitaCorrente.getOrdineRound().add(marco);
+        PartitaCorrente.getOrdineRound().add(maurizio);
+        PartitaCorrente.getOrdineRound().add(leonardo);
+
+        PartitaCorrente.setListaCartaUtensile();
+        PartitaCorrente.inizializzaMazzoCarteObiettivoPubblico();
+        PartitaCorrente.setListaCartaObiettivoPubblico();
+
+
+
+
+        System.out.println("\n\nquesta è la lista dei giocatori: "+PartitaCorrente.getListaGiocatori()+"\n\n");
+
+
+        marco.setSegnalini(1);
+        maurizio.setSegnalini(6);
+        leonardo.setSegnalini(12);
+
+        /*
+        ArrayList<Utente> listaGiocatori = new ArrayList<Utente>();
+
+
+
+
+
+        listaGiocatori.add(marco);
+        listaGiocatori.add(maurizio);
+        listaGiocatori.add(leonardo);
+        */
+
+
+        try {
+            PartitaCorrente.calcolaPunteggioFinale();
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
+
+        System.out.println("marco "+PartitaCorrente.getListaPunteggiUtente().get("marco"));
+        System.out.println("maurizio "+PartitaCorrente.getListaPunteggiUtente().get("maurizio"));
+        System.out.println("leonardo "+PartitaCorrente.getListaPunteggiUtente().get("leonardo"));
+
+        assertTrue(PartitaCorrente.getListaPunteggiUtente().get("marco") == -12);
+        assertTrue(PartitaCorrente.getListaPunteggiUtente().get("maurizio") == -13);
+        assertTrue(PartitaCorrente.getListaPunteggiUtente().get("leonardo") == -8);
+
+
+    }
+
+
+
+
+
 }
