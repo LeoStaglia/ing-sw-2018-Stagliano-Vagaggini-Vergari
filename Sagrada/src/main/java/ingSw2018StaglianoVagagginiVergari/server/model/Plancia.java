@@ -125,7 +125,7 @@ public class Plancia implements Serializable {
                     piazzamentiPermessi[i+1][j+1]=false;
                 }
             } else if (i == 0 && j < 4 && j > 0) {
-                if (grigliaGioco[i][j - 1] == null && (cartaSchema.getRestrizione(i, j - 1) == Constraint.NONE || cartaSchema.getRestrizione(i, j - 1).getDescrizione().equals(dadoSelezionato.getColore()) || cartaSchema.getRestrizione(i, j - 1).getDescrizione().equals(new Integer(dadoSelezionato.getNumero()).toString()) || (attivaUtensile2 && checkUtensile2(i, j-11, dadoSelezionato)) || (attivaUtensile3 && checkUtensile3(i, j-1, dadoSelezionato)))) {
+                if (grigliaGioco[i][j - 1] == null && (cartaSchema.getRestrizione(i, j - 1) == Constraint.NONE || cartaSchema.getRestrizione(i, j - 1).getDescrizione().equals(dadoSelezionato.getColore()) || cartaSchema.getRestrizione(i, j - 1).getDescrizione().equals(new Integer(dadoSelezionato.getNumero()).toString()) || (attivaUtensile2 && checkUtensile2(i, j-1, dadoSelezionato)) || (attivaUtensile3 && checkUtensile3(i, j-1, dadoSelezionato)))) {
                     if (!(grigliaGioco[i][j].getNumero() == dadoSelezionato.getNumero() || grigliaGioco[i][j].getColore().equals(dadoSelezionato.getColore()))) {
                         if (piazzamentiPermessi[i][j - 1] == null) {
 
@@ -313,7 +313,7 @@ public class Plancia implements Serializable {
                     }
                 }else{
                     piazzamentiPermessi[i][j+1] = false;
-                }if (grigliaGioco[i][j-1] == null && (cartaSchema.getRestrizione(i, j-1) == Constraint.NONE || cartaSchema.getRestrizione(i, j-1).getDescrizione().equals(dadoSelezionato.getColore()) || cartaSchema.getRestrizione(i, j-1).getDescrizione().equals(new Integer(dadoSelezionato.getNumero()).toString())|| (attivaUtensile2 && checkUtensile2(i, j-11, dadoSelezionato)) || (attivaUtensile3 && checkUtensile3(i, j-11, dadoSelezionato)))){
+                }if (grigliaGioco[i][j-1] == null && (cartaSchema.getRestrizione(i, j-1) == Constraint.NONE || cartaSchema.getRestrizione(i, j-1).getDescrizione().equals(dadoSelezionato.getColore()) || cartaSchema.getRestrizione(i, j-1).getDescrizione().equals(new Integer(dadoSelezionato.getNumero()).toString())|| (attivaUtensile2 && checkUtensile2(i, j-1, dadoSelezionato)) || (attivaUtensile3 && checkUtensile3(i, j-1, dadoSelezionato)))){
                     if (!(grigliaGioco[i][j].getNumero() == dadoSelezionato.getNumero() || grigliaGioco[i][j].getColore().equals(dadoSelezionato.getColore()))) {
                         if (piazzamentiPermessi[i][j-1] == null) {
 

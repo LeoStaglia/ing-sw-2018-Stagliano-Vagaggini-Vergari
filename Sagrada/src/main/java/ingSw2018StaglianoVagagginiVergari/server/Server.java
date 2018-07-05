@@ -17,75 +17,81 @@ public class Server {
         int schemeTimer=0;
 
         Scanner inp= new Scanner(System.in);
-        int def;
+        int def = 0;
         int portas=1700;
         int portar=7501;
-
+        String mioIp="127.0.0.1";
 
         while (true) {
             System.out.println("Inserisci 0 per usare config di default, un altro valore per settare parametri di rete");
             try{
                 def = inp.nextInt();
-                break;
             }catch (InputMismatchException e){
                 System.out.println("scelta non valida");
                 inp.nextLine();
             }
+            break;
 
         }
-        if(def==0){}
+        if(def==0);
         else {
             while (true){
             System.out.println("Inserisci porta socket");
             try {
                 portas = inp.nextInt();
-                break;
             }catch (InputMismatchException e){
                 System.out.println("porta non valida");
                 inp.nextLine();
             }
+                break;
             }
 
             while (true){
                 System.out.println("Inserisci porta rmi");
             try {
                 portar = inp.nextInt();
-                break;
+
             }catch (InputMismatchException e){
                 System.out.println("porta non valida");
                 inp.nextLine();
             }
+                break;
 
             }
+
+            System.out.println("Inserisci ip del server");
+            mioIp=inp.next();
 
             while (true) {
                 System.out.println("Inserisci timer del turno (millisecondi)");
                try{
                    turnTimer = inp.nextInt();
-                   break;
                }catch (InputMismatchException e){
                    System.out.println("scelta non valida");
                }
+               break;
             }
             while (true) {
                 System.out.println("Inserisci timer di attesa registrazione (millisecondi)");
                try {
                    joinTimer = inp.nextInt();
-                   break;
                }catch (InputMismatchException e){
                    System.out.println("scelta non valida");
                }
+                break;
             }
             while (true) {
                 System.out.println("Inserisci timer degli schemi (millisecondi)");
                 try{
                     schemeTimer = inp.nextInt();
-                    break;
                 }catch (InputMismatchException e){
                     System.out.println("scelta non valida");
                 }
+                break;
             }
         }
+
+        System.setProperty("java.rmi.server.hostname",mioIp);
 
         MultiController controller = new MultiController();
         controller.setTimerTurn(turnTimer);

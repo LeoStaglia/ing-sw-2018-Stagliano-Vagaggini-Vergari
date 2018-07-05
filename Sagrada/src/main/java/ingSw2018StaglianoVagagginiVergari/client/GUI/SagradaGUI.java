@@ -78,6 +78,7 @@ public class SagradaGUI extends Application{
             requestHandler.setPortas(Integer.parseInt(args[0]));
             requestHandler.setPortar(Integer.parseInt(args[1]));
             requestHandler.setIp(args[2]);
+            requestHandler.setMioIp(args[3]);
 
 
         }catch(RemoteException ex){

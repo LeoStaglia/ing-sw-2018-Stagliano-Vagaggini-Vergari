@@ -27,10 +27,10 @@ public class RemoteRequestHandler {
     private ClientSocket clientSocket;
     private boolean RMI;
 
-    String ip;
-    int portar;
-    int portas;
-
+    private String ip;
+    private int portar;
+    private int portas;
+    private String mioIp;
 
 
     public RemoteRequestHandler(DataGameObserver dataGameObserver){
@@ -80,7 +80,8 @@ public class RemoteRequestHandler {
         if (RMI) {
             if (multiController==null) {
                 try {
-                    Registry registry = LocateRegistry.getRegistry(portar);
+                    System.setProperty("java.rmi.server.hostname",mioIp);
+                    Registry registry = LocateRegistry.getRegistry(ip,portar);
                     multiController = (RemoteMultiController) registry.lookup("controller");
                 } catch (RemoteException ex) {
                     new AlertPopup().display("Attenzione", "Problemi nella connessione RMI");
@@ -140,5 +141,9 @@ public class RemoteRequestHandler {
 
     public void setPortas(int portas) {
         this.portas = portas;
+    }
+
+    public void setMioIp(String mioIp) {
+        this.mioIp = mioIp;
     }
 }

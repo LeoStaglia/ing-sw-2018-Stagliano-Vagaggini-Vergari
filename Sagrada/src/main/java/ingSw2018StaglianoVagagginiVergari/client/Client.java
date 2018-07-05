@@ -41,8 +41,8 @@ public class Client {
             view.run();
             clientSocket.close();
         }if (cmd==2) {
-
-            Registry registry = LocateRegistry.getRegistry(args[1]);
+            System.setProperty("java.rmi.server.hostname",args[3]);
+            Registry registry = LocateRegistry.getRegistry(args[2],Integer.parseInt(args[1]));
             RemoteMultiController multiController = (RemoteMultiController) registry.lookup("controller");
             View view= new View();
             view.setMultiController(multiController);
